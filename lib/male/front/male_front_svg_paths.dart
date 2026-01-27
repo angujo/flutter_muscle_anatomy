@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 const double FRONT_SVG_WIDTH = 55.564434;
 const double FRONT_SVG_HEIGHT = 120.7597;
+const Size FRONT_SVG_SIZE = Size(FRONT_SVG_WIDTH, FRONT_SVG_HEIGHT);
 
 // =======================================
 // AUTO-GENERATED — DO NOT EDIT BY HAND
@@ -344,10 +347,7 @@ const List<String> front = [
   rightFlexorFasciaeLatae,
 ];
 
-const List<String> digastric = [
-  leftDigastric,
-  rightDigastric,
-];
+const List<String> digastric = [leftDigastric, rightDigastric];
 
 const List<String> sternocleidomastoid = [
   leftSternocleidomastoid2,
@@ -366,15 +366,9 @@ const List<String> rightSternocleidomastoid = [
   rightSternocleidomastoid1,
 ];
 
-const List<String> scalene = [
-  leftScalene,
-  rightScalene,
-];
+const List<String> scalene = [leftScalene, rightScalene];
 
-const List<String> trapezius = [
-  leftTrapezius,
-  rightTrapezius,
-];
+const List<String> trapezius = [leftTrapezius, rightTrapezius];
 
 const List<String> deltoid = [
   leftDeltoid1,
@@ -383,15 +377,9 @@ const List<String> deltoid = [
   rightDeltoid2,
 ];
 
-const List<String> leftDeltoid = [
-  leftDeltoid1,
-  leftDeltoid2,
-];
+const List<String> leftDeltoid = [leftDeltoid1, leftDeltoid2];
 
-const List<String> rightDeltoid = [
-  rightDeltoid1,
-  rightDeltoid2,
-];
+const List<String> rightDeltoid = [rightDeltoid1, rightDeltoid2];
 
 const List<String> biceps = [
   leftBiceps2,
@@ -400,15 +388,9 @@ const List<String> biceps = [
   rightBiceps1,
 ];
 
-const List<String> leftBiceps = [
-  leftBiceps2,
-  leftBiceps1,
-];
+const List<String> leftBiceps = [leftBiceps2, leftBiceps1];
 
-const List<String> rightBiceps = [
-  rightBiceps2,
-  rightBiceps1,
-];
+const List<String> rightBiceps = [rightBiceps2, rightBiceps1];
 
 const List<String> latissimusDorsi = [
   leftLatissimusDorsi,
@@ -482,40 +464,22 @@ const List<String> rightExternalAbdominalOblique = [
   rightExternalAbdominalOblique1,
 ];
 
-const List<String> adductorLongus = [
-  leftAdductorLongus,
-  rightAdductorLongus,
-];
+const List<String> adductorLongus = [leftAdductorLongus, rightAdductorLongus];
 
 const List<String> tensorFasciaeLatae = [
   leftTensorFasciaeLatae,
   rightTensorFasciaeLatae,
 ];
 
-const List<String> pectineus = [
-  leftPectineus,
-  rightPectineus,
-];
+const List<String> pectineus = [leftPectineus, rightPectineus];
 
-const List<String> iliopsoas = [
-  leftIliopsoas,
-  rightIliopsoas,
-];
+const List<String> iliopsoas = [leftIliopsoas, rightIliopsoas];
 
-const List<String> gracilis = [
-  leftGracilis,
-  rightGracilis,
-];
+const List<String> gracilis = [leftGracilis, rightGracilis];
 
-const List<String> rectusFemoris = [
-  leftRectusFemoris,
-  rightRectusFemoris,
-];
+const List<String> rectusFemoris = [leftRectusFemoris, rightRectusFemoris];
 
-const List<String> vastusMedialis = [
-  leftVastusMedialis,
-  rightVastusMedialis,
-];
+const List<String> vastusMedialis = [leftVastusMedialis, rightVastusMedialis];
 
 const List<String> vastusLateralis = [
   leftVastusLateralis,
@@ -529,25 +493,13 @@ const List<String> sartorius = [
   rightSartorius2,
 ];
 
-const List<String> leftSartorius = [
-  leftSartorius1,
-  leftSartorius2,
-];
+const List<String> leftSartorius = [leftSartorius1, leftSartorius2];
 
-const List<String> rightSartorius = [
-  rightSartorius1,
-  rightSartorius2,
-];
+const List<String> rightSartorius = [rightSartorius1, rightSartorius2];
 
-const List<String> gastrocnemius = [
-  leftGastrocnemius,
-  rightGastrocnemius,
-];
+const List<String> gastrocnemius = [leftGastrocnemius, rightGastrocnemius];
 
-const List<String> soleus = [
-  leftSoleus,
-  rightSoleus,
-];
+const List<String> soleus = [leftSoleus, rightSoleus];
 
 const List<String> tibialisAnterior = [
   leftTibialisAnterior,
@@ -559,28 +511,18 @@ const List<String> extensorDigitorumLongus = [
   rightExtensorDigitorumLongus,
 ];
 
-const List<String> peroneusLongus = [
-  leftPeroneusLongus,
-  rightPeroneusLongus,
-];
+const List<String> peroneusLongus = [leftPeroneusLongus, rightPeroneusLongus];
 
-const List<String> brachialis = [
-  leftBrachialis,
-  rightBrachialis,
-];
+const List<String> brachialis = [leftBrachialis, rightBrachialis];
 
 const List<String> brachioradialis = [
   leftBrachioradialis,
   rightBrachioradialis,
 ];
 
-const List<String> pronatorTeres = [
-  leftPronatorTeres,
-  rightPronatorTeres,
-];
+const List<String> pronatorTeres = [leftPronatorTeres, rightPronatorTeres];
 
 const List<String> flexorFasciaeLatae = [
   leftFlexorFasciaeLatae,
   rightFlexorFasciaeLatae,
 ];
-

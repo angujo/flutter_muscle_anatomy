@@ -2,23 +2,27 @@ import 'dart:ui';
 import 'dart:math' as math;
 import 'package:vector_math/vector_math_64.dart';
 
+List<String> flattenSvgPath<T>(T svgPaths) {
+  if (svgPaths is List) {
+    return svgPaths.map((ep) => flattenSvgPath(ep)).expand((ls) => ls).toList();
+  }
+  if (svgPaths is String) {
+    return [svgPaths];
+  }
+  throw UnimplementedError('Svg Path can only be a String or List<String>!');
+}
+
 List<Path> getMusclePaths<T>(
-  T entryPoint, {
+  T svgPath, {
   required Size size,
   required Size svgSize,
 }) {
-  if (entryPoint is List) {
-    return entryPoint
-        .map((ep) => getMusclePaths(ep, size: size, svgSize: svgSize))
-        .expand((ls) => ls)
-        .toList();
-  }
-  if (entryPoint is String) {
-    return [
-      svgPathToFlutterPath(svgPath: entryPoint, size: size, svgSize: svgSize),
-    ];
-  }
-  throw UnimplementedError('Path can only be a String or List<String>!');
+  final svgPaths = flattenSvgPath(svgPath);
+  return svgPaths
+      .map(
+        (ep) => svgPathToFlutterPath(svgPath: ep, size: size, svgSize: svgSize),
+      )
+      .toList();
 }
 
 Path svgPathToFlutterPath({

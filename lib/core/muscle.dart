@@ -1,33 +1,21 @@
 import 'dart:ui';
 
-import 'package:flutter_muscle_anatomy/muscle_painter.dart';
+import 'package:flutter_muscle_anatomy/core/app_enums.dart';
+import 'package:flutter_muscle_anatomy/male/front/male_front_svg_paths.dart';
+
+abstract class SvgMuscle {
+  static const Size svgSize = Size(FRONT_SVG_WIDTH, FRONT_SVG_HEIGHT);
+}
 
 abstract class Muscle {
-  final Size _size;
-  final Paint? strokePaint;
-  final Paint? fillPaint;
+  List<String> get rightSvgPath;
 
-  Size get size => _size;
+  List<String> get leftSvgPath;
 
-  Muscle(this._size, {this.strokePaint, this.fillPaint});
+  List<String> get svgPaths;
 
-  List<Path> get paths;
-
-  List<Path> get leftPaths;
-
-  List<Path> get rightPaths;
-
-  MusclePainter _paint(List<Path> pts) {
-    return MusclePainter(
-      paths: pts,
-      strokePaint: strokePaint,
-      fillPaint: fillPaint,
-    );
-  }
-
-  MusclePainter painter() => _paint(paths);
-
-  MusclePainter rightPainter() => _paint(rightPaths);
-
-  MusclePainter leftPainter() => _paint(leftPaths);
+  List<Path> getPaths({
+    required Size size,
+    MusclePosition position = MusclePosition.both,
+  });
 }
