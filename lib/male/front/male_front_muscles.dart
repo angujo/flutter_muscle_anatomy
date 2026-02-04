@@ -1,4 +1,4 @@
-part of 'front_library.dart';
+part of 'male_front_library.dart';
 
 enum FrontMuscle implements Muscle {
   // Front Muscles
@@ -49,6 +49,61 @@ enum FrontMuscle implements Muscle {
   @override
   List<String> get svgPaths => [...leftSvgPath, ...rightSvgPath];
 
+  List<String> getSvgPath(MusclePosition? position) {
+    switch (position) {
+      case MusclePosition.left:
+        return leftSvgPath;
+      case MusclePosition.right:
+        return rightSvgPath;
+      case MusclePosition.both:
+      default:
+        return svgPaths;
+    }
+  }
+
+  SvgElement toSvgElement(
+    MusclePosition? position, {
+    Color fillColor = Colors.transparent,
+    double fillOpacity = 0,
+    Color strokeColor = Colors.black,
+    double strokeWidth = 1,
+  }) {
+    String id = switch (position) {
+      MusclePosition.left => 'left$name',
+      MusclePosition.right => 'right$name',
+      MusclePosition.both => name,
+      _ => name,
+    };
+    final elmt = SvgGroup(id: id);
+    final paths = getSvgPath(position)
+        .asMap()
+        .map(
+          (idx, path) => MapEntry(
+            idx,
+            SvgPath(id: '$id$idx', d: path)
+              ..fill(fillColor, opacity: fillOpacity)
+              ..stroke(strokeColor, width: strokeWidth),
+          ),
+        )
+        .values;
+    elmt.addChildren(paths);
+    return elmt;
+  }
+
+  static SvgElement fromHighlight(
+    MuscleHighlight<FrontMuscle> highlight, {
+    Color? strokeColor,
+    double? strokeWidth,
+  }) {
+    return highlight.muscle.toSvgElement(
+      highlight.position,
+      fillColor: highlight.color,
+      fillOpacity: highlight.opacity,
+      strokeColor: strokeColor ?? highlight.color,
+      strokeWidth: strokeWidth ?? highlight.opacity,
+    );
+  }
+
   @override
   List<Path> getPaths({
     required Size size,
@@ -61,200 +116,4 @@ enum FrontMuscle implements Muscle {
   }
 
   const FrontMuscle(this._leftSvgPath, this._rightSvgPath);
-}
-
-class Digastric extends MaleFrontMuscle {
-  Digastric(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.digastric;
-}
-
-class Sternocleidomastoid extends MaleFrontMuscle {
-  Sternocleidomastoid(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.sternocleidomastoid;
-}
-
-class Scalene extends MaleFrontMuscle {
-  Scalene(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.scalene;
-}
-
-class Trapezius extends MaleFrontMuscle {
-  Trapezius(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.trapezius;
-}
-
-class Deltoid extends MaleFrontMuscle {
-  Deltoid(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.deltoid;
-}
-
-class Biceps extends MaleFrontMuscle {
-  Biceps(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.biceps;
-}
-
-class LatissimusDorsi extends MaleFrontMuscle {
-  LatissimusDorsi(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.latissimusDorsi;
-}
-
-class PectolarisMajor extends MaleFrontMuscle {
-  PectolarisMajor(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.pectolarisMajor;
-}
-
-class RectusAbdominis extends MaleFrontMuscle {
-  RectusAbdominis(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.rectusAbdominis;
-}
-
-class ExternalAbdominalOblique extends MaleFrontMuscle {
-  ExternalAbdominalOblique(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.externalAbdominalOblique;
-}
-
-class AdductorLongus extends MaleFrontMuscle {
-  AdductorLongus(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.adductorLongus;
-}
-
-class TensorFasciaeLatae extends MaleFrontMuscle {
-  TensorFasciaeLatae(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.tensorFasciaeLatae;
-}
-
-class Pectineus extends MaleFrontMuscle {
-  Pectineus(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.pectineus;
-}
-
-class Iliopsoas extends MaleFrontMuscle {
-  Iliopsoas(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.iliopsoas;
-}
-
-class Gracilis extends MaleFrontMuscle {
-  Gracilis(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.gracilis;
-}
-
-class RectusFemoris extends MaleFrontMuscle {
-  RectusFemoris(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.rectusFemoris;
-}
-
-class VastusMedialis extends MaleFrontMuscle {
-  VastusMedialis(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.vastusMedialis;
-}
-
-class VastusLateralis extends MaleFrontMuscle {
-  VastusLateralis(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.vastusLateralis;
-}
-
-class Sartorius extends MaleFrontMuscle {
-  Sartorius(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.sartorius;
-}
-
-class Gastrocnemius extends MaleFrontMuscle {
-  Gastrocnemius(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.gastrocnemius;
-}
-
-class Soleus extends MaleFrontMuscle {
-  Soleus(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.soleus;
-}
-
-class TibialisAnterior extends MaleFrontMuscle {
-  TibialisAnterior(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.tibialisAnterior;
-}
-
-class ExtensorDigitorumLongus extends MaleFrontMuscle {
-  ExtensorDigitorumLongus(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.extensorDigitorumLongus;
-}
-
-class PeroneusLongus extends MaleFrontMuscle {
-  PeroneusLongus(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.peroneusLongus;
-}
-
-class Brachialis extends MaleFrontMuscle {
-  Brachialis(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.brachialis;
-}
-
-class Brachioradialis extends MaleFrontMuscle {
-  Brachioradialis(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.brachioradialis;
-}
-
-class PronatorTeres extends MaleFrontMuscle {
-  PronatorTeres(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.pronatorTeres;
-}
-
-class FlexorFasciaeLatae extends MaleFrontMuscle {
-  FlexorFasciaeLatae(super.size);
-
-  @override
-  FrontMuscle get muscle => FrontMuscle.flexorFasciaeLatae;
 }

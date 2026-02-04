@@ -1,6 +1,46 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_muscle_anatomy/core/app_enums.dart';
 import 'package:flutter_muscle_anatomy/core/muscle.dart';
+import 'package:flutter_muscle_anatomy/core/svg_file.dart';
+
+class MuscleHighlight<T extends Muscle> {
+  final T muscle;
+  final MusclePosition position;
+  final Color color;
+  final double opacity;
+
+  MuscleHighlight({
+    required this.position,
+    required this.color,
+    required this.opacity,
+    required this.muscle,
+  });
+
+  MuscleHighlight<T> copyWith({
+    T? muscle,
+    MusclePosition? position,
+    Color? color,
+    double? opacity,
+  }) {
+    return MuscleHighlight(
+      muscle: muscle ?? this.muscle,
+      position: position ?? this.position,
+      color: color ?? this.color,
+      opacity: opacity ?? this.opacity,
+    );
+  }
+
+  List<SvgElement> toSvgElements() {
+    List<String> paths = muscle.svgPaths;
+    if (position == MusclePosition.left) paths = muscle.leftSvgPath;
+    if (position == MusclePosition.right) paths = muscle.rightSvgPath;
+    return paths
+        .map((p) => SvgPath(id: 'path', d: p)..fill(color, opacity: opacity))
+        .toList();
+  }
+}
 
 class ItemPaint<T> {
   final T _item;
@@ -23,55 +63,40 @@ class MusclePaint<T extends Muscle> extends ItemPaint<T> {
   MusclePaint(super.item, {super.strokePaint, super.leftFill, super.rightFill});
 }
 
-class PathsPainter extends CustomPainter {
-  final Iterable<PathPaint> _pathPaints;
-  final Paint? _strokePaint;
-  final Paint? _fillPaint;
+class PathPainter extends CustomPainter {
+  final Path path;
+  final Paint strokePaint;
+  final Paint? fillPaint;
+  final Size svgSize;
+  static final Paint _defaultStrokePaint = Paint()
+    ..color = Colors.grey
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 0.5;
 
-  PathsPainter({
+  PathPainter({
     super.repaint,
-    required Iterable<PathPaint> pathPaints,
-    required Paint? strokePaint,
-    required Paint? fillPaint,
-  }) : _pathPaints = pathPaints,
-       _strokePaint = strokePaint,
-       _fillPaint = fillPaint;
+    required this.svgSize,
+    required this.path,
+    required this.strokePaint,
+    this.fillPaint,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
-    for (final pathPaint in _pathPaints) {
-      _paintPath(pathPaint, canvas);
-    }
-  }
+    final scaleX = size.width / svgSize.width;
+    final scaleY = size.height / svgSize.height;
 
-  void _paintPath(PathPaint pathPaint, Canvas canvas) {
-    Paint stroke = pathPaint.strokePaint ?? _strokePaint ?? Paint()
-      ..color = Colors.grey
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0;
+    canvas.save();
+    canvas.scale(scaleX, scaleY);
 
-    Paint fill = _fillPaint ?? Paint()
-      ..color = Colors.transparent
-      ..style = PaintingStyle.fill;
-    canvas.drawPath(pathPaint.path, stroke);
-    canvas.drawPath(pathPaint.path, fill);
+    canvas.drawPath(path, strokePaint);
+    if (null != fillPaint) canvas.drawPath(path, fillPaint!);
+    canvas.restore();
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+  bool shouldRepaint(covariant PathPainter oldDelegate) {
     return false;
-  }
-
-  static PathsPainter fromPaths(
-    Iterable<Path> paths, {
-    Paint? strokePaint,
-    Paint? fillPaint,
-  }) {
-    return PathsPainter(
-      pathPaints: paths.map((p) => PathPaint(p)),
-      strokePaint: strokePaint,
-      fillPaint: fillPaint,
-    );
   }
 }
 
@@ -152,5 +177,69 @@ class MusclesPainter extends CustomPainter {
       strokePaint: strokePaint,
       fillPaint: fillPaint,
     );
+  }
+}
+
+
+class MoldFillPainter extends CustomPainter {
+  final Path outlinePath;
+  final double fillLevel; // 0.0 → 1.0
+  final Color fillColor;
+
+  MoldFillPainter({
+    required this.outlinePath,
+    required this.fillLevel,
+    required this.fillColor,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final bounds = outlinePath.getBounds();
+
+    // Scale uniformly to fit width
+    final scale = size.width / bounds.width;
+
+    // Center the path
+    final dx = (size.width - bounds.width * scale) / 2 - bounds.left * scale;
+    final dy = (size.height - bounds.height * scale) / 2 - bounds.top * scale;
+
+    final matrix = Matrix4.identity()
+      ..translate(dx, dy)
+      ..scale(scale);
+
+    final transformedPath = outlinePath.transform(matrix.storage);
+
+    // --- Draw liquid ---
+    canvas.save();
+    canvas.clipPath(transformedPath);
+
+    final liquidHeight = size.height * fillLevel;
+    canvas.drawRect(
+      Rect.fromLTWH(
+        0,
+        size.height - liquidHeight,
+        size.width,
+        liquidHeight,
+      ),
+      Paint()..color = fillColor,
+    );
+
+    canvas.restore();
+
+    // --- Draw outline ---
+    canvas.drawPath(
+      transformedPath,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.5
+        ..color = Colors.black26,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant MoldFillPainter oldDelegate) {
+    return oldDelegate.fillLevel != fillLevel ||
+        oldDelegate.fillColor != fillColor ||
+        oldDelegate.outlinePath != outlinePath;
   }
 }

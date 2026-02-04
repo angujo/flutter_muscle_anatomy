@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'dart:math' as math;
 import 'package:vector_math/vector_math_64.dart';
+import 'package:path_drawing/path_drawing.dart';
 
 List<String> flattenSvgPath<T>(T svgPaths) {
   if (svgPaths is List) {
@@ -20,7 +21,9 @@ List<Path> getMusclePaths<T>(
   final svgPaths = flattenSvgPath(svgPath);
   return svgPaths
       .map(
-        (ep) => svgPathToFlutterPath(svgPath: ep, size: size, svgSize: svgSize),
+        (ep) => parseSvgPathData(
+          ep,
+        ), // svgPathToFlutterPath(svgPath: ep, size: size, svgSize: svgSize),
       )
       .toList();
 }
@@ -30,6 +33,7 @@ Path svgPathToFlutterPath({
   required Size size,
   required Size svgSize,
 }) {
+  final p = parseSvgPathData(svgPath);
   final path = Path();
 
   double x = 0, y = 0;

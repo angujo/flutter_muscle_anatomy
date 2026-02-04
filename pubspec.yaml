@@ -11,6 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
   vector_math: ^2.2.0
+  xml: ^6.6.1
+  path_drawing: ^1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -22,6 +24,10 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  assets:
+    - assets/male_back.svg
+    - assets/male_front.svg
+
 
   # To add assets to your package, add an assets section, like this:
   # assets:

@@ -1,12 +1,22 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_muscle_anatomy/core/app_enums.dart';
+import 'package:flutter_muscle_anatomy/flutter_muscle_anatomy.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:flutter_muscle_anatomy/flutter_muscle_anatomy.dart';
-
 void main() {
-  test('adds one to input values', () {
-    final calculator = Calculator();
-    expect(calculator.addOne(2), 3);
-    expect(calculator.addOne(-7), -6);
-    expect(calculator.addOne(0), 1);
+  group('Test Canvas drawings', () {
+    testWidgets('Render Outline', (WidgetTester tester) async {
+      final mf = MaleFront(muscles: [FrontMuscle.trapezius]);
+      mf.highlight(
+        FrontMuscle.biceps,
+        position: MusclePosition.right,
+        color: Colors.green,
+      );
+      mf.highlights([
+        FrontMuscle.brachialis,
+        FrontMuscle.extensorDigitorumLongus,
+      ], color: Colors.blue);
+      print(mf.toString());
+    });
   });
 }
