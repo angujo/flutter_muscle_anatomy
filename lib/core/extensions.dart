@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+part of 'core.dart';
 
 extension ColorHex on Color {
   /// Returns hex string in AARRGGBB or RRGGBB format

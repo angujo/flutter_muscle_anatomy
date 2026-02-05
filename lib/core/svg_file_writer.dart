@@ -1,14 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_muscle_anatomy/core/extensions.dart';
-import 'package:xml/xml.dart';
+part of 'core.dart';
 
-final class SvgFile {
+final class SvgFileWriter {
   final _builder = XmlBuilder();
   final Size _size;
   final List<SvgElement> _elements = [];
   XmlDocument? _document;
 
-  SvgFile(this._size);
+  SvgFileWriter(this._size);
 
   void addElement(SvgElement element) {
     _elements.add(element);

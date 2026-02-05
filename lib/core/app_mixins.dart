@@ -1,7 +1,4 @@
-import 'dart:ui';
-
-import 'package:flutter_muscle_anatomy/core/muscle.dart';
-import 'package:flutter_muscle_anatomy/core/muscle_painter.dart';
+part of 'core.dart';
 
 mixin HasPaint {
   Paint? strokePaint;
