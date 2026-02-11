@@ -5,8 +5,6 @@ import 'package:flutter_muscle_anatomy/core/core.dart';
 import 'dart:math' as math;
 import 'package:path_drawing/path_drawing.dart';
 
-part 'male_front.dart';
-
 abstract class _Body {
   final Color _strokeColor;
   final double _strokeWidth;
@@ -16,12 +14,10 @@ abstract class _Body {
   final double _defHighlightOpacity;
   final Map<(Muscle, MusclePosition), MuscleHighlight<Muscle>> _highlights = {};
   late SvgFileWriter _svgFile;
-
-  SvgElement get _bodySvgElement;
+  final BodyView _view;
+  String? _hairOutlineId;
 
   SvgPathReader get _svgPathReader;
-
-  String get _outlineId;
 
   List<Muscle> get _muscles;
 
@@ -29,8 +25,50 @@ abstract class _Body {
 
   Size get svgSize => Size(_svgPathReader.width, _svgPathReader.height);
 
-  Path get outlinePath =>
-      parseSvgPathData(_svgPathReader.getPathDs(_outlineId).first);
+  List<Path> get outlinePaths {
+    final paths = <Path>[];
+    switch (_view) {
+      case BodyView.front:
+        paths.add(
+          parseSvgPathData(_svgPathReader.getPathDs('outline_front').first),
+        );
+        break;
+      case BodyView.back:
+        paths.add(
+          parseSvgPathData(_svgPathReader.getPathDs('outline_back').first),
+        );
+        break;
+      case BodyView.both:
+        paths.add(
+          parseSvgPathData(_svgPathReader.getPathDs('outline_front').first),
+        );
+        paths.add(
+          parseSvgPathData(_svgPathReader.getPathDs('outline_back').first),
+        );
+        break;
+      case BodyView.any:
+        if (_frontHighlighted()) {
+          paths.add(
+            parseSvgPathData(_svgPathReader.getPathDs('outline_front').first),
+          );
+        }
+        if (_backHighlighted()) {
+          paths.add(
+            parseSvgPathData(_svgPathReader.getPathDs('outline_back').first),
+          );
+        }
+        if (!_frontHighlighted() && !_backHighlighted()) {
+          paths.add(
+            parseSvgPathData(_svgPathReader.getPathDs('outline_front').first),
+          );
+          paths.add(
+            parseSvgPathData(_svgPathReader.getPathDs('outline_back').first),
+          );
+        }
+        break;
+    }
+    return paths;
+  }
 
   List<(Muscle, MusclePosition)> get highlightedMuscles =>
       _highlights.keys.toList();
@@ -64,11 +102,13 @@ abstract class _Body {
     Color defHighlightColor = Colors.red,
     double defHighlightOpacity = 0.5,
     List<Muscle> muscles = const [],
+    required BodyView view,
   }) : _defHighlightOpacity = defHighlightOpacity,
        _defHighlightColor = defHighlightColor,
        _defFillOpacity = defFillOpacity,
        _defFillColor = defFillColor,
        _strokeWidth = strokeWidth,
+       _view = view,
        _strokeColor = strokeColor {
     final entries = muscles
         .map(
@@ -83,27 +123,28 @@ abstract class _Body {
     _highlights.addAll(Map.fromEntries(entries));
   }
 
-  void _prepareBuild() {
-    _svgFile = SvgFileWriter(svgSize);
-    final path = SvgPath(
-      id: 'outline',
-      d: _svgPathReader.getPathDs(_outlineId).first,
-    )..stroke(_strokeColor, width: _strokeWidth);
-    _bodySvgElement.addChild(path);
-  }
-
   void rebuild() {
     _built = false;
     build();
   }
 
-  void build() {
-    if (_built) return;
-    _prepareBuild();
-    _built = true;
+  bool _frontHighlighted() => highlightedMuscles
+      .map((hm) => hm.$1)
+      .any((m) => m.view == BodyView.front);
 
+  bool _backHighlighted() =>
+      highlightedMuscles.map((hm) => hm.$1).any((m) => m.view == BodyView.back);
+
+  void _builder(String name, BodyView view) {
+    final build = SvgGroup(id: name);
+    final outline = SvgPath(
+      id: 'outline_$name',
+      d: _svgPathReader.getPathDs('outline_$name').first,
+    );
+    build.addChild(outline);
     for (var (muscle, position) in nonHighlightedMuscles) {
-      _bodySvgElement.addChild(
+      if (muscle.view != view) continue;
+      build.addChild(
         muscle.toSvgElement(
           position,
           fillColor: _defFillColor,
@@ -114,7 +155,8 @@ abstract class _Body {
       );
     }
     for (final highlight in _highlights.values) {
-      _bodySvgElement.addChild(
+      if (highlight.muscle.view != view) continue;
+      build.addChild(
         Muscle.fromHighlight(
           highlight,
           strokeColor: _strokeColor,
@@ -122,8 +164,49 @@ abstract class _Body {
         ),
       );
     }
+    if (null != _hairOutlineId) {
+      build.addChild(
+        SvgPath(
+          id: '${_hairOutlineId}_$name',
+          d: _svgPathReader.getPathDs('${_hairOutlineId}_$name').first,
+        ),
+      );
+    }
+    _svgFile.addElement(build);
+  }
 
-    _svgFile.addElement(_bodySvgElement);
+  void _buildFront() => _builder('front', BodyView.front);
+
+  void _buildBack() => _builder('back', BodyView.back);
+
+  void build() {
+    if (_built) return;
+    _svgFile = SvgFileWriter(svgSize);
+    switch (_view) {
+      case BodyView.front:
+        _buildFront();
+        break;
+      case BodyView.back:
+        _buildBack();
+        break;
+      case BodyView.both:
+        _buildFront();
+        _buildBack();
+        break;
+      case BodyView.any:
+        if (_frontHighlighted()) {
+          _buildFront();
+        }
+        if (_backHighlighted()) {
+          _buildBack();
+        }
+        if (!_frontHighlighted() && !_backHighlighted()) {
+          _buildFront();
+          _buildBack();
+        }
+        break;
+    }
+    _built = true;
     _svgFile.build();
   }
 
@@ -171,19 +254,69 @@ abstract class _Body {
     }
   }
 
-  PathPainter outlinePainter({required Paint stroke, Paint? fill}) {
-    return PathPainter(
-      path: outlinePath,
-      svgSize: svgSize,
-      strokePaint: stroke,
-      fillPaint: fill,
-    );
-  }
-
   Size scaledSize(Size size, {bool fill = false}) {
     final mW = size.width / svgSize.width;
     final mH = size.height / svgSize.height;
     final scale = fill ? math.max(mW, mH) : math.min(mW, mH);
     return Size(svgSize.width * scale, svgSize.height * scale);
   }
+}
+
+class Male extends _Body {
+  static final BodyMuscles muscles = BodyMuscle.male;
+
+  @override
+  late final List<Muscle> _muscles = muscles.all;
+
+  @override
+  SvgPathReader _svgPathReader = SvgPathReader.male();
+
+  Male({
+    super.strokeColor = Colors.black,
+    super.strokeWidth = 0.2,
+    super.defFillColor = Colors.transparent,
+    super.defFillOpacity = 0,
+    super.defHighlightColor = Colors.red,
+    super.defHighlightOpacity = 0.5,
+    super.muscles = const [],
+    super.view = BodyView.both,
+  }) : _svgPathReader = SvgPathReader.male(view: view);
+
+  static Male front({
+    Color strokeColor = Colors.black,
+    double strokeWidth = 0.2,
+    Color defFillColor = Colors.transparent,
+    double defFillOpacity = 0,
+    Color defHighlightColor = Colors.red,
+    double defHighlightOpacity = 0.5,
+    List<Muscle> muscles = const [],
+  }) => Male(
+    muscles: muscles,
+    strokeColor: strokeColor,
+    strokeWidth: strokeWidth,
+    defFillColor: defFillColor,
+    defFillOpacity: defFillOpacity,
+    defHighlightColor: defHighlightColor,
+    defHighlightOpacity: defHighlightOpacity,
+    view: BodyView.front,
+  ).._svgPathReader = SvgPathReader.male(view: BodyView.front);
+
+  static Male back({
+    Color strokeColor = Colors.black,
+    double strokeWidth = 0.2,
+    Color defFillColor = Colors.transparent,
+    double defFillOpacity = 0,
+    Color defHighlightColor = Colors.red,
+    double defHighlightOpacity = 0.5,
+    List<Muscle> muscles = const [],
+  }) => Male(
+    muscles: muscles,
+    strokeColor: strokeColor,
+    strokeWidth: strokeWidth,
+    defFillColor: defFillColor,
+    defFillOpacity: defFillOpacity,
+    defHighlightColor: defHighlightColor,
+    defHighlightOpacity: defHighlightOpacity,
+    view: BodyView.back,
+  ).._svgPathReader = SvgPathReader.male(view: BodyView.back);
 }

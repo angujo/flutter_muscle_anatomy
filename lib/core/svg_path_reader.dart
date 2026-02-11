@@ -7,6 +7,7 @@ class SvgPathReader {
   XmlDocument? _document;
   double? _width;
   double? _height;
+  BodyView _view = BodyView.both;
 
   // Cache for path IDs: pathId -> path d
   final Map<String, String> _pathCache = {};
@@ -17,24 +18,28 @@ class SvgPathReader {
   SvgPathReader._(this._filePath);
 
   /// Factory method
-  static SvgPathReader _fromFile(String filePath) {
+  static SvgPathReader _fromFile(String filePath, {required BodyView view}) {
     if (_instances.containsKey(filePath)) {
-      return _instances[filePath]!;
+      return _instances[filePath]!.._view = view;
     }
-    final inst = SvgPathReader._(filePath);
+    final inst = SvgPathReader._(filePath).._view = view;
     _instances[filePath] = inst;
     return inst;
   }
 
-  static SvgPathReader maleFront() => _fromFile('assets/male_front.svg');
+  static SvgPathReader male({BodyView view = BodyView.both}) =>
+      _fromFile('assets/male.svg', view: view);
 
-  static SvgPathReader maleBack() => _fromFile('assets/male_back.svg');
+  static SvgPathReader female({BodyView view = BodyView.both}) =>
+      _fromFile('assets/female.svg', view: view);
 
   /// SVG width (from <svg width="...">)
   double get width {
     _ensureLoaded();
     _loadDimensionsIfNeeded();
-    return _width ?? 0.0;
+    final w = _width ?? 0.0;
+    if (_view == BodyView.back || _view == BodyView.front) return w / 2;
+    return w;
   }
 
   /// SVG height (from <svg height="...">)
@@ -61,6 +66,82 @@ class SvgPathReader {
     return numeric != null ? double.tryParse(numeric) : null;
   }
 
+  String _pathByView(String d) {
+    if (_view != BodyView.back) return d;
+    return isRightSidePath(d, 2 * width)
+        ? _translatePathData(d, -1 * width)
+        : d;
+  }
+
+  String _translatePathData(String pathData, double offsetX) {
+    final commandRegex = RegExp(
+      r'([MmLlHhVvCcSsQqTtAaZz])\s*([^MmLlHhVvCcSsQqTtAaZz]*)',
+    );
+
+    return pathData.replaceAllMapped(commandRegex, (match) {
+      final cmd = match.group(1)!;
+      final params = match.group(2)!;
+
+      // Don't process close path commands
+      if (cmd.toUpperCase() == 'Z') {
+        return match.group(0)!;
+      }
+
+      // Parse numbers while preserving original text between them
+      final numberRegex = RegExp(r'(-?\d*\.?\d+(?:[eE][-+]?\d+)?)');
+      int paramIndex = 0;
+      final isRelative = cmd == cmd.toLowerCase();
+
+      return cmd +
+          params.replaceAllMapped(numberRegex, (numMatch) {
+            final numStr = numMatch.group(0)!;
+            final numValue = double.tryParse(numStr) ?? 0;
+            double result = numValue;
+
+            final upperCmd = cmd.toUpperCase();
+
+            // Determine if this is an x coordinate
+            bool isXCoord = false;
+            if (upperCmd != 'V') {
+              if (upperCmd == 'H') {
+                isXCoord = true; // H only has x
+              } else if (upperCmd == 'A') {
+                // Arc: rx,ry,rotation,large-arc,sweep,x,y (x is 6th param)
+                isXCoord = paramIndex == 5;
+              } else {
+                // For M,L,C,S,Q,T: x coordinates are at even indices
+                isXCoord = paramIndex % 2 == 0;
+              }
+            }
+
+            if (isXCoord && !isRelative) {
+              result = numValue + offsetX;
+            }
+
+            paramIndex++;
+            return _formatNumber(result, original: numStr);
+          });
+    });
+  }
+
+  String _formatNumber(double value, {required String original}) {
+    // Try to preserve original formatting when possible
+    if (value == value.toInt().toDouble()) {
+      // Integer value
+      final hasDecimal = original.contains('.');
+      return hasDecimal ? value.toStringAsFixed(1) : value.toInt().toString();
+    }
+
+    // Check if original had specific decimal places
+    if (original.contains('.')) {
+      final decimalPlaces = original.split('.')[1].length;
+      return value.toStringAsFixed(decimalPlaces);
+    }
+
+    // Default formatting
+    return value.toString();
+  }
+
   /// Ensures the SVG file is loaded
   void _ensureLoaded() {
     if (_document == null) {
@@ -75,8 +156,12 @@ class SvgPathReader {
     final id = pathId.toLowerCase();
 
     // Check caches first
-    if (_pathCache.containsKey(id)) return [_pathCache[id]!];
-    if (_groupCache.containsKey(id)) return _groupCache[id]!;
+    if (_pathCache.containsKey(id)) {
+      return [_pathCache[id]!].map((p) => _pathByView(p)).toList();
+    }
+    if (_groupCache.containsKey(id)) {
+      return (_groupCache[id]!).map((p) => _pathByView(p)).toList();
+    }
 
     final doc = _document!;
 
@@ -85,7 +170,7 @@ class SvgPathReader {
     if (path != null) {
       final d = path.getAttribute('d') ?? '';
       _pathCache[id] = d;
-      return [d];
+      return [d].map((p) => _pathByView(p)).toList();
     }
 
     // Try group
@@ -93,7 +178,7 @@ class SvgPathReader {
     if (group != null) {
       final ds = _collectPathsFromGroup(group);
       _groupCache[id] = ds;
-      return ds;
+      return ds.map((p) => _pathByView(p)).toList();
     }
 
     return [];

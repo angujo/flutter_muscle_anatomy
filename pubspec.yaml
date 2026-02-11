@@ -25,8 +25,8 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
-    - assets/male_back.svg
-    - assets/male_front.svg
+    - assets/male.svg
+    - assets/female.svg
 
 
   # To add assets to your package, add an assets section, like this:

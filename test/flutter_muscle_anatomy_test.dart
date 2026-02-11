@@ -5,16 +5,29 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Test Canvas drawings', () {
-    testWidgets('Render Outline', (WidgetTester tester) async {
-      final mf = MaleFront(muscles: [MaleFront.muscles.trapezius]);
+    testWidgets('Render Front Male', (WidgetTester tester) async {
+      final mf = Male.front(muscles: [Male.muscles.trapezius]);
       mf.highlight(
-        MaleFront.muscles.biceps,
+        Male.muscles.biceps,
         position: MusclePosition.right,
         color: Colors.green,
       );
       mf.highlights([
-        MaleFront.muscles.brachialis,
-        MaleFront.muscles.extensorDigitorumLongus,
+        Male.muscles.brachialis,
+        Male.muscles.extensorDigitorumLongus,
+      ], color: Colors.blue);
+      print(mf.toString());
+    });
+    testWidgets('Render Back Male', (WidgetTester tester) async {
+      final mf = Male.back(muscles: [Male.muscles.trapezius]);
+      mf.highlight(
+        Male.muscles.biceps,
+        position: MusclePosition.right,
+        color: Colors.green,
+      );
+      mf.highlights([
+        Male.muscles.brachialis,
+        Male.muscles.extensorDigitorumLongus,
       ], color: Colors.blue);
       print(mf.toString());
     });

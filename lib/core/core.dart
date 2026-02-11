@@ -1,7 +1,6 @@
 library;
 
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_muscle_anatomy/core/utils.dart';
 import 'package:xml/xml.dart';
@@ -12,7 +11,7 @@ part 'app_mixins.dart';
 
 part 'extensions.dart';
 
-part 'front_muscles.dart';
+part 'muscles.dart';
 
 part 'muscle.dart';
 

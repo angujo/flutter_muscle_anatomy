@@ -4,6 +4,9 @@ abstract class SvgMuscle {}
 
 abstract class Muscle {
   final String _name;
+  final BodyView _view;
+
+  BodyView get view => _view;
 
   String get name => _name;
 
@@ -15,7 +18,7 @@ abstract class Muscle {
 
   List<String> get svgPaths => getSvgPathReader().getPathDs(svgId);
 
-  const Muscle(this._name);
+  const Muscle(this._name, {required BodyView view}) : _view = view;
 
   SvgPathReader getSvgPathReader();
 
