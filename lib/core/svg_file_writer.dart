@@ -2,7 +2,7 @@ part of 'core.dart';
 
 final class SvgFileWriter {
   final _builder = XmlBuilder();
-  final Size _size;
+  final Dim _size;
   final List<SvgElement> _elements = [];
   XmlDocument? _document;
 

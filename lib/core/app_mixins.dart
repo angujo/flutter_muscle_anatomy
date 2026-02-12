@@ -1,5 +1,13 @@
 part of 'core.dart';
 
+final class Dim {
+  final double width;
+  final double height;
+
+  const Dim(this.width, this.height);
+}
+
+
 mixin HasPaint {
   Paint? strokePaint;
   Paint? fillPaint;

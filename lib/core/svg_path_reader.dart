@@ -69,78 +69,10 @@ class SvgPathReader {
   String _pathByView(String d) {
     if (_view != BodyView.back) return d;
     return isRightSidePath(d, 2 * width)
-        ? _translatePathData(d, -1 * width)
+        ? translatePathData(d, -1 * width)
         : d;
   }
 
-  String _translatePathData(String pathData, double offsetX) {
-    final commandRegex = RegExp(
-      r'([MmLlHhVvCcSsQqTtAaZz])\s*([^MmLlHhVvCcSsQqTtAaZz]*)',
-    );
-
-    return pathData.replaceAllMapped(commandRegex, (match) {
-      final cmd = match.group(1)!;
-      final params = match.group(2)!;
-
-      // Don't process close path commands
-      if (cmd.toUpperCase() == 'Z') {
-        return match.group(0)!;
-      }
-
-      // Parse numbers while preserving original text between them
-      final numberRegex = RegExp(r'(-?\d*\.?\d+(?:[eE][-+]?\d+)?)');
-      int paramIndex = 0;
-      final isRelative = cmd == cmd.toLowerCase();
-
-      return cmd +
-          params.replaceAllMapped(numberRegex, (numMatch) {
-            final numStr = numMatch.group(0)!;
-            final numValue = double.tryParse(numStr) ?? 0;
-            double result = numValue;
-
-            final upperCmd = cmd.toUpperCase();
-
-            // Determine if this is an x coordinate
-            bool isXCoord = false;
-            if (upperCmd != 'V') {
-              if (upperCmd == 'H') {
-                isXCoord = true; // H only has x
-              } else if (upperCmd == 'A') {
-                // Arc: rx,ry,rotation,large-arc,sweep,x,y (x is 6th param)
-                isXCoord = paramIndex == 5;
-              } else {
-                // For M,L,C,S,Q,T: x coordinates are at even indices
-                isXCoord = paramIndex % 2 == 0;
-              }
-            }
-
-            if (isXCoord && !isRelative) {
-              result = numValue + offsetX;
-            }
-
-            paramIndex++;
-            return _formatNumber(result, original: numStr);
-          });
-    });
-  }
-
-  String _formatNumber(double value, {required String original}) {
-    // Try to preserve original formatting when possible
-    if (value == value.toInt().toDouble()) {
-      // Integer value
-      final hasDecimal = original.contains('.');
-      return hasDecimal ? value.toStringAsFixed(1) : value.toInt().toString();
-    }
-
-    // Check if original had specific decimal places
-    if (original.contains('.')) {
-      final decimalPlaces = original.split('.')[1].length;
-      return value.toStringAsFixed(decimalPlaces);
-    }
-
-    // Default formatting
-    return value.toString();
-  }
 
   /// Ensures the SVG file is loaded
   void _ensureLoaded() {

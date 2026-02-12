@@ -140,3 +140,169 @@ bool _isCommandChar(String s) {
   final code = s.codeUnitAt(0);
   return (code >= 65 && code <= 90) || (code >= 97 && code <= 122);
 }
+
+String translatePath(String pathData, double offsetX) {
+  final numberRegex =
+  RegExp(r'[-+]?(?:\d*\.\d+|\d+)(?:[eE][-+]?\d+)?');
+
+  final tokens = <String>[];
+  final buffer = StringBuffer();
+
+  double currentX = 0;
+  double currentY = 0;
+  double startX = 0;
+  double startY = 0;
+
+  int i = 0;
+
+  while (i < pathData.length) {
+    final char = pathData[i];
+
+    if (RegExp(r'[A-Za-z]').hasMatch(char)) {
+      tokens.add(char);
+      i++;
+      continue;
+    }
+
+    final match = numberRegex.matchAsPrefix(pathData.substring(i));
+    if (match != null) {
+      tokens.add(match.group(0)!);
+      i += match.group(0)!.length;
+      continue;
+    }
+
+    tokens.add(char);
+    i++;
+  }
+
+  String? cmd;
+  int paramIndex = 0;
+
+  for (final token in tokens) {
+    if (RegExp(r'[A-Za-z]').hasMatch(token)) {
+      cmd = token;
+      paramIndex = 0;
+      buffer.write(token);
+      continue;
+    }
+
+    if (cmd == null || double.tryParse(token) == null) {
+      buffer.write(token);
+      continue;
+    }
+
+    double value = double.parse(token);
+    final upper = cmd.toUpperCase();
+    final isRelative = cmd == cmd.toLowerCase();
+
+    bool isX = false;
+
+    if (upper == 'H') {
+      isX = true;
+    } else if (upper == 'V') isX = false;
+    else if (upper == 'A') isX = paramIndex % 7 == 5;
+    else isX = paramIndex % 2 == 0;
+
+    if (isRelative) {
+      if (isX) {
+        currentX += value;
+      } else {
+        currentY += value;
+      }
+    } else {
+      if (isX) {
+        currentX = value;
+      } else {
+        currentY = value;
+      }
+    }
+
+    double outputValue = value;
+
+    if (!isRelative && isX) {
+      outputValue = value + offsetX;
+    }
+
+    buffer.write(outputValue.toString());
+    paramIndex++;
+  }
+
+  return buffer.toString();
+}
+
+
+String translatePathData(String pathData, double offsetX) {
+  final commandRegex = RegExp(
+    r'([MmLlHhVvCcSsQqTtAaZz])\s*([^MmLlHhVvCcSsQqTtAaZz]*)',
+  );
+
+  return pathData.replaceAllMapped(commandRegex, (match) {
+    final cmd = match.group(1)!;
+    final params = match.group(2)!;
+
+    // Don't process close path commands
+    if (cmd.toUpperCase() == 'Z') {
+      return match.group(0)!;
+    }
+
+    // Parse numbers while preserving original text between them
+    final numberRegex = RegExp(r'[-+]?(?:\d*\.\d+|\d+)(?:[eE][-+]?\d+)?');
+    int paramIndex = 0;
+    final isRelative = cmd == cmd.toLowerCase();
+    final upperCmd = cmd.toUpperCase();
+
+    return cmd +
+        params.replaceAllMapped(numberRegex, (numMatch) {
+          final numStr = numMatch.group(0)!;
+          final numValue = double.parse(numStr);
+          double result = numValue;
+
+          // Determine if this is an x coordinate
+          bool isXCoord = false;
+          if (upperCmd != 'V') {
+            if (upperCmd == 'H') {
+              isXCoord = true; // H only has x coordinates
+            } else if (upperCmd == 'A') {
+              // Arc: rx, ry, rotation, large-arc, sweep, x, y
+              // x is at index 5. Multiple arcs can be in one command, so we use modulo 7.
+              isXCoord = paramIndex % 7 == 5;
+            } else {
+              // For M, L, C, S, Q, T: x coordinates are at even indices (0, 2, 4...)
+              isXCoord = paramIndex % 2 == 0;
+            }
+          }
+
+          // Only translate absolute coordinates
+          if (isXCoord && !isRelative) {
+            result = numValue + offsetX;
+          }
+
+          paramIndex++;
+          return _formatNumber(result, original: numStr);
+        });
+  });
+}
+
+String _formatNumber(double value, {required String original}) {
+  // Try to preserve original formatting when possible
+  if (value == value.toInt().toDouble()) {
+    // Integer value
+    final hasDecimal = original.contains('.');
+    return hasDecimal ? value.toStringAsFixed(1) : value.toInt().toString();
+  }
+
+  // Check if original had specific decimal places
+  if (original.contains('.')) {
+    final parts = original.split('.');
+    if (parts.length > 1) {
+      final decimalPart = parts[1];
+      // Handle simple decimals (avoid breaking on scientific notation if possible)
+      if (!decimalPart.contains('e') && !decimalPart.contains('E')) {
+        return value.toStringAsFixed(decimalPart.length);
+      }
+    }
+  }
+
+  // Default formatting
+  return value.toString();
+}
