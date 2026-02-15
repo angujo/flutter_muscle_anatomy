@@ -7,7 +7,6 @@ class SvgPathReader {
   XmlDocument? _document;
   double? _width;
   double? _height;
-  BodyView _view = BodyView.both;
 
   // Cache for path IDs: pathId -> path d
   final Map<String, String> _pathCache = {};
@@ -18,28 +17,44 @@ class SvgPathReader {
   SvgPathReader._(this._filePath);
 
   /// Factory method
-  static SvgPathReader _fromFile(String filePath, {required BodyView view}) {
+  static SvgPathReader _fromFile(String filePath) {
     if (_instances.containsKey(filePath)) {
-      return _instances[filePath]!.._view = view;
+      return _instances[filePath]!;
     }
-    final inst = SvgPathReader._(filePath).._view = view;
+    final inst = SvgPathReader._(filePath);
     _instances[filePath] = inst;
     return inst;
   }
 
-  static SvgPathReader male({BodyView view = BodyView.both}) =>
-      _fromFile('assets/male.svg', view: view);
+  static SvgPathReader male(BodyView view) {
+    return switch (view) {
+      BodyView.front => maleFront(),
+      BodyView.back => maleBack(),
+      _ => throw UnimplementedError('Male View $view not implemented!'),
+    };
+  }
 
-  static SvgPathReader female({BodyView view = BodyView.both}) =>
-      _fromFile('assets/female.svg', view: view);
+  static SvgPathReader female(BodyView view) {
+    return switch (view) {
+      BodyView.front => femaleFront(),
+      BodyView.back => femaleBack(),
+      _ => throw UnimplementedError('Female View $view not implemented!'),
+    };
+  }
+
+  static SvgPathReader maleFront() => _fromFile('assets/male_front.svg');
+
+  static SvgPathReader femaleFront() => _fromFile('assets/female_front.svg');
+
+  static SvgPathReader maleBack() => _fromFile('assets/male_back.svg');
+
+  static SvgPathReader femaleBack() => _fromFile('assets/female_back.svg');
 
   /// SVG width (from <svg width="...">)
   double get width {
     _ensureLoaded();
     _loadDimensionsIfNeeded();
-    final w = _width ?? 0.0;
-    if (_view == BodyView.back || _view == BodyView.front) return w / 2;
-    return w;
+    return _width ?? 0.0;
   }
 
   /// SVG height (from <svg height="...">)
@@ -66,14 +81,6 @@ class SvgPathReader {
     return numeric != null ? double.tryParse(numeric) : null;
   }
 
-  String _pathByView(String d) {
-    if (_view != BodyView.back) return d;
-    return isRightSidePath(d, 2 * width)
-        ? translatePathData(d, -1 * width)
-        : d;
-  }
-
-
   /// Ensures the SVG file is loaded
   void _ensureLoaded() {
     if (_document == null) {
@@ -89,10 +96,17 @@ class SvgPathReader {
 
     // Check caches first
     if (_pathCache.containsKey(id)) {
-      return [_pathCache[id]!].map((p) => _pathByView(p)).toList();
+      return [_pathCache[id]!];
     }
     if (_groupCache.containsKey(id)) {
-      return (_groupCache[id]!).map((p) => _pathByView(p)).toList();
+      return _groupCache[id]!;
+    }
+    if (!id.contains('outline') && !id.startsWith('left_') && !id.startsWith('right_')) {
+      final paths = getPathDs('right_$id') + getPathDs('left_$id');
+      if(paths.isNotEmpty) {
+        _groupCache[id] = paths;
+        return paths;
+      }
     }
 
     final doc = _document!;
@@ -102,7 +116,7 @@ class SvgPathReader {
     if (path != null) {
       final d = path.getAttribute('d') ?? '';
       _pathCache[id] = d;
-      return [d].map((p) => _pathByView(p)).toList();
+      return [d];
     }
 
     // Try group
@@ -110,7 +124,7 @@ class SvgPathReader {
     if (group != null) {
       final ds = _collectPathsFromGroup(group);
       _groupCache[id] = ds;
-      return ds.map((p) => _pathByView(p)).toList();
+      return ds;
     }
 
     return [];

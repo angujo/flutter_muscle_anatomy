@@ -32,33 +32,39 @@ abstract class _SkeletalMuscles
        _svgPathReader = svgPathReader,
        dimension = Dim(svgPathReader.width, svgPathReader.height);
 
+  MuscleHelper getMuscleHelper(Muscle muscle) =>
+      MuscleHelper.fromMuscle(muscle, _svgPathReader);
+
   @override
   List<SvgGroup> _getRootBuilds() {
     final build = SvgGroup(id: _view.name);
     final outline = SvgPath(
       id: 'outline_${_view.name}',
-      d: _svgPathReader.getPathDs('outline_${_view.name}').first,
+      d: _svgPathReader.getPathDs('outline').first,
     );
     build.addChild(outline);
     for (var (muscle, position) in _nonHighlightedMuscles) {
-      if (muscle.view != _view) continue;
+      if (!muscle.isForView(_view)) continue;
       build.addChild(
-        muscle.toSvgElement(
+        getMuscleHelper(muscle).toSvgElement(
           position,
           fillColor: _defFillColor,
           fillOpacity: _defFillOpacity,
           strokeColor: _strokeColor,
           strokeWidth: _strokeWidth,
+          idSuffix: _view.name,
         ),
       );
     }
     for (final highlight in _highlights.values) {
-      if (highlight.muscle.view != _view) continue;
+      if (!highlight.muscle.isForView(_view)) continue;
       build.addChild(
-        Muscle.fromHighlight(
+        MuscleHelper.fromHighlight(
           highlight,
+          _svgPathReader,
           strokeColor: _strokeColor,
           strokeWidth: _strokeWidth,
+          idSuffix: _view.name,
         ),
       );
     }
@@ -68,7 +74,7 @@ abstract class _SkeletalMuscles
         build.addChild(
           SvgPath(id: 'hair_outline_${_view.name}', d: hairs.first)
             ..stroke(_strokeColor, width: _strokeWidth)
-            ..fill(_hairColor, opacity: _defFillOpacity),
+            ..fill(_hairColor, opacity: 0.5),
         );
       }
     }
@@ -78,41 +84,51 @@ abstract class _SkeletalMuscles
 
 //region Male
 class _MaleSkeletalMuscles extends _SkeletalMuscles {
-  @override
-  final List<Muscle> _muscles = BodyMuscle.male.all;
-
   _MaleSkeletalMuscles({required super.view})
-    : super(svgPathReader: SvgPathReader.male(view: view));
+    : super(svgPathReader: SvgPathReader.male(view));
 
   @override
   final Color? _hairColor = null;
+
+  static _MaleSkeletalMuscles front() =>
+      _MaleSkeletalMuscles(view: BodyView.front);
+
+  static _MaleSkeletalMuscles back() =>
+      _MaleSkeletalMuscles(view: BodyView.back);
 }
 
-class _MaleFrontSkeletalMuscles extends _MaleSkeletalMuscles {
+//endregion
+
+//region Female
+class _FemaleSkeletalMuscles extends _SkeletalMuscles {
+  _FemaleSkeletalMuscles({required super.view, Color? hairColor})
+    : _hairColor = hairColor??Colors.grey,
+      super(svgPathReader: SvgPathReader.female(view));
+
   @override
-  List<Muscle> get _muscles => BodyMuscle.male.front;
+  final Color _hairColor;
 
-  _MaleFrontSkeletalMuscles() : super(view: BodyView.front);
+  static _FemaleSkeletalMuscles front({Color? hairColor}) =>
+      _FemaleSkeletalMuscles(view: BodyView.front, hairColor: hairColor);
+
+  static _FemaleSkeletalMuscles back({Color? hairColor}) =>
+      _FemaleSkeletalMuscles(view: BodyView.back, hairColor: hairColor);
 }
 
-class _MaleBackSkeletalMuscles extends _MaleSkeletalMuscles {
-  @override
-  List<Muscle> get _muscles => BodyMuscle.male.back;
-
-  _MaleBackSkeletalMuscles() : super(view: BodyView.back);
-}
 //endregion
 
 abstract class _Body with BuildsSvgWriter implements IMuscleHighlights {
-  final List<_SkeletalMuscles> _skeletals;
+  final List<_SkeletalMuscles> _skeletalMuscles;
+  static const double _margin = 0.5;
 
   @override
   late final Dim dimension = Dim(
-    _skeletals.fold(0, (val, sk) => val + sk.dimension.width),
-    _skeletals.map((s) => s.dimension.height).reduce(math.max),
+    (_margin * (_skeletalMuscles.length - 1)) +
+        _skeletalMuscles.fold(0, (val, sk) => val + sk.dimension.width),
+    _skeletalMuscles.map((s) => s.dimension.height).reduce(math.max),
   );
 
-  _Body._(this._skeletals);
+  _Body._(this._skeletalMuscles);
 
   @override
   void highlight(
@@ -121,7 +137,7 @@ abstract class _Body with BuildsSvgWriter implements IMuscleHighlights {
     Color? color,
     double? opacity,
   }) {
-    for (final skeletal in _skeletals) {
+    for (final skeletal in _skeletalMuscles) {
       skeletal.highlight(
         muscle,
         position: position,
@@ -147,33 +163,47 @@ abstract class _Body with BuildsSvgWriter implements IMuscleHighlights {
   List<SvgGroup> _getRootBuilds() {
     List<SvgGroup> groups = [];
     double x = 0;
-    for (final entry in _skeletals.asMap().entries) {
+    for (final entry in _skeletalMuscles.asMap().entries) {
       final group = SvgGroup(id: 'skeletal_${entry.key}');
       if (0 != x) {
         group.addAttribute('transform', 'translate($x,0)');
       }
       group.addChildren(entry.value._getRootBuilds());
       groups.add(group);
-      x += entry.value.dimension.width + 2;
+      x += entry.value.dimension.width + _margin;
     }
     return groups;
   }
 }
 
 class Male extends _Body {
-  static final BodyMuscles muscles = BodyMuscle.male;
-
   Male._(super.skeletalMuscles) : super._();
 
-  static Male front() => Male._([_MaleFrontSkeletalMuscles()]);
+  static Male front() => Male._([_MaleSkeletalMuscles.front()]);
 
-  static Male back() => Male._([_MaleBackSkeletalMuscles()]);
+  static Male back() => Male._([_MaleSkeletalMuscles.back()]);
 
   static Male frontBack() =>
-      Male._([_MaleFrontSkeletalMuscles(), _MaleBackSkeletalMuscles()]);
+      Male._([_MaleSkeletalMuscles.front(), _MaleSkeletalMuscles.back()]);
 
   static Male backFront() =>
-      Male._([_MaleBackSkeletalMuscles(), _MaleFrontSkeletalMuscles()]);
+      Male._([_MaleSkeletalMuscles.back(), _MaleSkeletalMuscles.front()]);
 
   static Male both() => frontBack();
+}
+
+class Female extends _Body {
+  Female._(super.skeletalMuscles) : super._();
+
+  static Female front() => Female._([_FemaleSkeletalMuscles.front()]);
+
+  static Female back() => Female._([_FemaleSkeletalMuscles.back()]);
+
+  static Female frontBack() =>
+      Female._([_FemaleSkeletalMuscles.front(), _FemaleSkeletalMuscles.back()]);
+
+  static Female backFront() =>
+      Female._([_FemaleSkeletalMuscles.back(), _FemaleSkeletalMuscles.front()]);
+
+  static Female both() => frontBack();
 }

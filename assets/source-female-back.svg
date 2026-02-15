@@ -7,301 +7,377 @@
    viewBox="0 0 30.301001 64.68"
    version="1.1"
    id="svg1"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   sodipodi:docname="source-female-back.svg"
+   inkscape:export-filename="female_back.svg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#111111"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     inkscape:zoom="12.614478"
+     inkscape:cx="14.586414"
+     inkscape:cy="33.334712"
+     inkscape:window-width="1920"
+     inkscape:window-height="1129"
+     inkscape:window-x="3832"
+     inkscape:window-y="485"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
   <defs
      id="defs1" />
   <path
      style="display:inline;fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="M 12.409223,10.071706 C 12.045383,9.2188175 11.76898,8.306654 11.72484,7.37399 11.65296,6.2740755 11.71784,5.1070325 12.328039,4.142476 12.579254,3.7101145 12.990754,3.4008574 13.400028,3.1244844 13.826516,3.0966044 14.108642,2.4901085 13.550894,2.4332933 13.195452,2.2604836 13.091047,1.7555892 13.25722,1.4325626 c 0.196331,-0.3891495 0.528384,-0.75798922 1.006694,-0.78578773 0.526903,-0.0600907 1.052222,-0.10349492 1.579814,-0.0348282 0.475873,-3.1119e-4 0.988349,0.16204263 1.216391,0.59893553 0.273075,0.2999491 0.277917,0.7687844 0.02936,1.0843885 -0.2091,0.1659619 -0.765632,0.2950138 -0.408948,0.6378479 0.405512,0.1963469 0.777415,0.4464591 1.096513,0.7616192 0.827825,0.8951261 1.024225,2.1596902 0.964558,3.3211138 -0.01296,0.9982547 -0.231176,1.9947984 -0.650607,2.9073426 l -0.469757,0.3068458 -0.797498,0.2687 -0.601013,0.223917 -0.543224,0.179134 -0.601011,0.02239 -0.566341,-0.02239 -0.496991,-0.167937 -0.681919,-0.246309 -0.566339,-0.212721 z"
-     id="hair_outline" />
+     id="hair_outline"
+     inkscape:label="Hair Outline"
+     sodipodi:nodetypes="cccccccccccccc"
+     sodipodi:insensitive="true" />
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 15.099943,33.461419 c -0.837574,-0.169922 0.003,0.914561 -0.235831,1.435561 -0.03402,3.104766 -0.10006,6.230526 -0.57213,9.302316 -0.149232,2.072824 -0.05663,4.162149 0.40342,6.201441 0.199023,1.792126 -0.08126,3.607048 -0.554782,5.318028 -1.36e-4,1.608323 -0.341989,3.259076 -0.0578,4.836606 -0.256509,1.073123 0.562979,2.244733 0.09245,3.33636 -0.781041,0.319099 -1.831391,0.04791 -2.714663,0.142937 -0.902908,0.386542 -1.430475,-0.577981 -0.549811,-0.982189 0.620251,-0.375504 0.598099,-1.219579 1.102371,-1.738556 -0.05707,-0.605118 0.01953,-1.217058 0.243451,-1.822145 0.02109,-2.456639 -1.077009,-4.737763 -1.665042,-7.086054 -0.30691,-2.028123 0.457089,-4.033714 0.786097,-5.993695 -0.182678,-1.551317 -0.368863,-3.088164 -0.943621,-4.560631 -1.1395563,-3.806243 -1.9720077,-7.83554 -1.2993167,-11.79536 0.207171,-1.63942 0.9642307,-3.148825 1.9660717,-4.454081 0.232463,-1.208255 -0.08441,-2.519629 0.01894,-3.770159 0.103567,-0.719522 0.02677,-1.313445 -0.540908,-1.80312 -0.311767,-1.209234 -0.207109,0.24959 -0.426219,0.772485 -0.1800875,0.935787 -0.5565226,1.825308 -1.0858614,2.617605 0.037134,1.711649 -1.3711164,3.051085 -2.3347036,4.366381 -0.9823075,1.212297 -2.2559237,2.355365 -2.3822538,3.986181 -0.2749963,1.034379 -0.644788,2.104483 -1.4087504,2.899261 -0.4635407,-0.08648 -0.862832,0.415296 -1.3623383,0.27664 -0.79192929,0.05048 0.052083,-1.131232 -0.65573672,-1.006186 C 0.94604524,32.999577 1.3614338,32.017346 1.9008363,31.278244 1.6829856,31.373528 0.24526182,32.263675 0.61791777,31.143877 1.2754145,30.689223 2.0153846,30.344315 2.5712092,29.733198 3.4219823,29.649293 3.6956909,28.640971 4.1662039,28.042621 4.9307264,26.364878 5.0665981,24.377069 6.4668753,22.999153 7.2689301,22.516735 6.801706,21.628886 6.9745458,20.872811 7.0328474,19.823025 7.5077993,18.826753 7.8023231,17.86077 7.7661263,16.287744 7.6661664,14.1432 9.4481807,13.420846 c 1.3112663,-0.571794 3.3936123,-0.03547 4.0567443,-1.600996 0.05165,-0.606614 -0.668769,-1.250193 -1.07055,-1.745515 -1.223193,-1.837929 -1.018408,-5.1315958 0.470771,-6.5809927 0.356656,-0.3172577 0.64125,-0.3758003 0.805764,-0.5154021 0.04094,-0.034736 0.03125,-0.00168 0.158042,-0.2683951 0.08455,-0.1778818 -0.0048,-0.2919191 -0.446618,-0.3711159 -0.395873,-0.070946 -0.248842,-0.652379 -0.200502,-0.9110758 0.04834,-0.258697 0.332524,-0.47044236 0.807921,-0.67143402 1.47698,-0.64490968 4.596015,0.36405782 2.534793,1.95624072 2.565982,1.663316 2.602129,4.2415116 1.803238,6.5121618 -0.409025,0.7974881 -1.026745,1.5114871 -1.63651,2.2148691 0.08954,1.515123 2.028601,1.612161 3.22466,1.735356 1.603717,0.09404 2.591457,1.631399 2.527539,3.088122 0.0012,0.965333 -0.09677,1.918472 0.431288,2.778501 0.380392,1.11763 0.518036,2.299357 0.416089,3.47071 1.491108,1.233309 2.026069,3.133469 2.508004,4.891445 0.386967,0.792435 0.82792,1.776072 1.56513,2.24958 0.799256,0.24428 1.260732,1.126817 2.133482,1.334239 0.744078,0.938595 -0.734628,0.847836 -1.095618,0.215029 0.174546,0.493653 0.690684,1.223741 0.805908,1.898749 0.515488,0.89782 -0.358811,0.790589 -0.169264,1.375501 0.08778,0.80004 -0.790899,0.301923 -1.159106,0.406885 -0.412843,-0.376678 -1.071269,-0.403631 -1.314702,-1.292361 -0.813552,-1.444625 -0.618243,-3.297194 -1.938682,-4.482191 -1.294034,-1.686815 -3.053699,-3.247842 -3.473339,-5.387698 0.06669,-0.743655 -0.757084,-1.28034 -0.817657,-2.047276 -0.201311,-0.730868 -0.455853,-1.475152 -0.407454,-2.240733 -0.05629,0.602097 -0.85468,0.99315 -0.80469,1.61077 0.113215,1.499712 -0.151743,3.05239 0.01017,4.516385 1.02088,1.346485 1.792337,2.89411 2.006859,4.577939 0.729775,4.625381 -0.486108,9.273977 -1.940525,13.657063 -0.02573,1.336211 -0.63835,2.680342 -0.0231,3.974526 0.457862,2.062361 0.952302,4.277203 0.01156,6.292065 -0.619498,1.853157 -1.299893,3.808292 -1.137097,5.760799 0.48547,0.621142 -0.140003,1.329863 0.432016,1.908357 0.413719,0.513947 0.393013,1.280828 1.144225,1.500241 0.708696,0.968075 -0.693981,0.857913 -1.339987,0.801796 -0.722655,-0.176778 -1.881537,0.369041 -2.300757,-0.331587 -0.229572,-1.172415 0.424586,-2.317353 0.219571,-3.44832 0.180167,-1.585352 -0.04899,-3.279288 -0.152381,-4.873624 -0.808479,-2.384042 -0.595049,-4.934045 -0.101276,-7.356638 0.190512,-1.96427 0.0237,-3.930834 -0.278004,-5.873418 -0.11465,-2.790392 -0.435332,-5.598586 -0.208068,-8.38569 0.307534,-0.446231 -0.05976,-0.262599 -0.406186,-0.302294 z"
-     id="outline" />
+     id="outline"
+     inkscape:label="Back Outline"
+     sodipodi:nodetypes="ccccccccccccccccccccccccccccccccccccsssscccccccccccccccccccccccccccccccccccccc"
+     sodipodi:insensitive="true"
+     inkscape:export-filename="outline_back.svg"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 16.268959,10.812224 c -0.07817,0.950902 0.386922,2.029295 1.450501,2.211168 0.171097,0.243146 -0.983173,0.133881 -1.319718,0.352749 -0.833623,0.594011 -0.720414,-0.248902 -0.713396,-0.860655 0.138548,-0.537066 -0.417787,-1.571998 0.367836,-1.645472 0.0716,-0.01927 0.143193,-0.03853 0.214777,-0.05779 z"
-     id="right_levator_scapulae">
+     id="right_levator_scapulae"
+     inkscape:label="levator_scapulae">
     <title
        id="title241">levator_scapulae</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 14.124028,10.812224 c 0.07817,0.950902 -0.386921,2.029295 -1.4505,2.211168 -0.171098,0.243146 0.983172,0.133881 1.319717,0.352749 0.833623,0.594011 0.720413,-0.248902 0.713397,-0.860655 -0.138569,-0.537066 0.417786,-1.571998 -0.367837,-1.645472 -0.0716,-0.01927 -0.143193,-0.03853 -0.214777,-0.05779 z"
-     id="left_levator_scapulae">
+     id="left_levator_scapulae"
+     inkscape:label="levator_scapulae">
     <title
        id="title248">levator_scapulae</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 15.494576,14.439677 c 1.095,-0.909048 2.667017,-0.983188 4.046362,-1.026365 1.06078,0.09771 -0.291839,0.261584 -0.536222,0.625525 -1.39234,1.364108 -1.216446,3.788831 -3.109838,4.748034 -0.723725,0.612255 -0.419014,-0.641405 -0.46061,-1.034031 0.02009,-1.104388 0.0402,-2.208775 0.06031,-3.313163 z"
-     id="right_trapezius">
+     id="right_trapezius"
+     inkscape:label="trapezius">
     <title
        id="title237">trapezius</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 14.898411,14.439677 c -1.095,-0.909048 -2.667017,-0.983188 -4.046361,-1.026365 -1.0607808,0.09771 0.291839,0.261584 0.536221,0.625525 1.39234,1.364108 1.216447,3.788831 3.109838,4.748034 0.723725,0.612255 0.419014,-0.641405 0.460611,-1.034031 -0.02009,-1.104388 -0.0402,-2.208775 -0.06031,-3.313163 z"
-     id="path249">
+     id="path249"
+     inkscape:label="trapezius">
     <title
        id="title249">trapezius</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 19.274022,14.338915 c 0.61071,-0.545705 1.600406,-0.775443 2.196009,-0.07837 0.807732,0.897728 0.557996,2.159347 0.531665,3.246794 -0.831875,-0.957775 -1.597831,-2.016056 -2.580933,-2.862528 -0.01953,-0.148678 -0.506545,-0.212993 -0.146741,-0.305896 z"
-     id="right_posterior_deltoid">
+     id="right_posterior_deltoid"
+     inkscape:label="posterior_deltoid">
     <title
        id="title238">posterior_deltoid</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="M 11.118963,14.338915 C 10.508256,13.79321 9.5185592,13.563472 8.9229559,14.260545 8.1152244,15.158273 8.3649606,16.419892 8.391291,17.507339 c 0.8318754,-0.957775 1.597829,-2.016056 2.580934,-2.862528 0.01953,-0.148678 0.506544,-0.212993 0.14674,-0.305897 z"
-     id="left_posterior_deltoid">
+     id="left_posterior_deltoid"
+     inkscape:label="posterior_deltoid">
     <title
        id="title250">posterior_deltoid</title>
   </path>
   <path
      id="right_latissimus_dorsi"
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
-     d="m 17.852874,17.742504 c -0.719548,0.791059 -1.40356,1.628047 -2.312464,2.22831 -0.333146,0.720988 -0.247663,1.588114 0.07843,2.302587 0.526195,1.076453 1.501365,1.996258 2.487886,2.63477 0.131951,-2.38246 0.809992,-4.708813 1.444644,-7.00886 -0.568629,0.102489 -1.202966,0.21259 -1.69849,-0.156806 z m -2.219596,5.687349 c -0.0068,1.60728 -0.170539,3.216807 0.08049,4.814593 0.74642,-0.887825 1.67015,-1.64772 2.242294,-2.664686 -0.905218,-0.564976 -1.573584,-1.412903 -2.322785,-2.149907 z">
+     d="m 17.852874,17.742504 c -0.719548,0.791059 -1.40356,1.628047 -2.312464,2.22831 -0.333146,0.720988 -0.247663,1.588114 0.07843,2.302587 0.526195,1.076453 1.501365,1.996258 2.487886,2.63477 0.131951,-2.38246 0.809992,-4.708813 1.444644,-7.00886 -0.568629,0.102489 -1.202966,0.21259 -1.69849,-0.156806 z m -2.219596,5.687349 c -0.0068,1.60728 -0.170539,3.216807 0.08049,4.814593 0.74642,-0.887825 1.67015,-1.64772 2.242294,-2.664686 -0.905218,-0.564976 -1.573584,-1.412903 -2.322785,-2.149907 z"
+     inkscape:label="latissimus_dorsi">
     <title
        id="title311">latissimus_dorsi</title>
   </path>
   <path
      id="left_latissimus_dorsi"
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
-     d="m 12.540708,17.742504 c -0.495522,0.369397 -1.130894,0.259296 -1.699521,0.156806 0.63465,2.300048 1.312703,4.626401 1.444642,7.008861 0.986521,-0.638512 1.961691,-1.558317 2.487888,-2.63477 0.326085,-0.714473 0.411568,-1.581599 0.07841,-2.302587 -0.908903,-0.600264 -1.591883,-1.437252 -2.311432,-2.228311 z m 2.218562,5.687349 c -0.7492,0.737004 -1.417564,1.584931 -2.322784,2.149907 0.572145,1.016966 1.495874,1.776861 2.242294,2.664686 0.251026,-1.597786 0.0872,-3.207313 0.08049,-4.814593 z">
+     d="m 12.540708,17.742504 c -0.495522,0.369397 -1.130894,0.259296 -1.699521,0.156806 0.63465,2.300048 1.312703,4.626401 1.444642,7.008861 0.986521,-0.638512 1.961691,-1.558317 2.487888,-2.63477 0.326085,-0.714473 0.411568,-1.581599 0.07841,-2.302587 -0.908903,-0.600264 -1.591883,-1.437252 -2.311432,-2.228311 z m 2.218562,5.687349 c -0.7492,0.737004 -1.417564,1.584931 -2.322784,2.149907 0.572145,1.016966 1.495874,1.776861 2.242294,2.664686 0.251026,-1.597786 0.0872,-3.207313 0.08049,-4.814593 z"
+     inkscape:label="latissimus_dorsi">
     <title
        id="title310">latissimus_dorsi</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 17.008666,28.60242 c 0.572751,-0.503922 1.128193,-1.077111 1.965331,-1.091683 0.600877,0.0084 0.968383,0.759475 1.260373,1.23167 0.35808,0.677215 0.522735,1.458792 0.553738,2.211142 -0.938953,-1.187618 -2.360845,-1.955059 -3.883468,-2.160799 0.03468,-0.06344 0.06934,-0.126893 0.104026,-0.19033 z"
-     id="right_gluteus_medius">
+     id="right_gluteus_medius"
+     inkscape:label="gluteus_medius">
     <title
        id="title234">gluteus_medius</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 13.384319,28.60242 c -0.572749,-0.503922 -1.128191,-1.077111 -1.965328,-1.091683 -0.600878,0.0084 -0.968383,0.759475 -1.260374,1.23167 -0.3580793,0.677215 -0.522735,1.458792 -0.5537375,2.211142 0.9389525,-1.187618 2.3608445,-1.955059 3.8834675,-2.160799 -0.03468,-0.06344 -0.06934,-0.126893 -0.104026,-0.19033 z"
-     id="left_gluteus_medius">
+     id="left_gluteus_medius"
+     inkscape:label="gluteus_medius">
     <title
        id="title252">gluteus_medius</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 15.633272,28.927101 c 1.904877,0.146266 4.053139,0.823962 5.014641,2.541989 0.829591,1.512939 0.01236,3.249227 -1.004036,4.46661 -0.548591,-1.581396 -2.803813,-1.163329 -3.639133,-2.505479 -0.778628,-0.587436 -0.319401,-1.600158 -0.414366,-2.413794 0.01435,-0.696442 0.0286,-1.392883 0.04289,-2.089326 z"
-     id="right_gluteus_maximus">
+     id="right_gluteus_maximus"
+     inkscape:label="gluteus_maximus">
     <title
        id="title233">gluteus_maximus</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 14.759715,28.927101 c -1.904876,0.146266 -4.053138,0.823962 -5.0146406,2.541989 -0.8295911,1.512939 -0.012358,3.249227 1.0040356,4.46661 0.548589,-1.581396 2.803813,-1.163329 3.639133,-2.505479 0.778628,-0.587436 0.319401,-1.600158 0.414366,-2.413794 -0.01435,-0.696442 -0.0286,-1.392883 -0.04289,-2.089326 z"
-     id="left_gluteus_maximus">
+     id="left_gluteus_maximus"
+     inkscape:label="gluteus_maximus">
     <title
        id="title253">gluteus_maximus</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 18.800146,24.549526 c -0.03215,0.974057 0.437872,1.831702 0.612572,2.787765 -0.534137,-0.186703 -1.295952,-0.114118 -1.675901,-0.503804 -0.03205,-0.459433 0.583793,-0.914226 0.611483,-1.452305 0.153338,-0.26416 0.107036,-0.728615 0.451846,-0.831656 z"
-     id="right_external_oblique">
+     id="right_external_oblique"
+     inkscape:label="external_oblique">
     <title
        id="title236">external_oblique</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 11.592841,24.549526 c 0.03215,0.974057 -0.437872,1.831702 -0.612574,2.787765 0.534137,-0.186703 1.295955,-0.114118 1.675904,-0.503804 0.03207,-0.459433 -0.583794,-0.914226 -0.611486,-1.452305 -0.153338,-0.26416 -0.107035,-0.728615 -0.451844,-0.831656 z"
-     id="left_external_oblique">
+     id="left_external_oblique"
+     inkscape:label="external_oblique">
     <title
        id="title254">external_oblique</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 18.950401,14.529245 c -0.8692,0.865357 -0.943404,2.151407 -1.58344,3.157227 0.479758,-0.04339 1.015026,-0.398179 1.497072,-0.591522 0.516114,-0.373449 1.163527,-0.744079 1.242149,-1.423729 -0.356756,-0.397138 -0.733502,-0.850002 -1.155781,-1.141976 z"
-     id="right_infraspinatus">
+     id="right_infraspinatus"
+     inkscape:label="infraspinatus">
     <title
        id="title239">infraspinatus</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 11.442586,14.529245 c 0.869201,0.865357 0.943404,2.151407 1.58344,3.157227 -0.479757,-0.04339 -1.015026,-0.398179 -1.497072,-0.591522 -0.516113,-0.373449 -1.163526,-0.744079 -1.242151,-1.423729 0.356758,-0.397138 0.733504,-0.850002 1.155783,-1.141976 z"
-     id="left_infraspinatus">
+     id="left_infraspinatus"
+     inkscape:label="infraspinatus">
     <title
        id="title255">infraspinatus</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 20.268006,15.827962 c -0.424416,0.584087 -0.287113,0.9112 0.394087,0.440597 -0.02177,-0.148698 -0.188011,-0.487027 -0.394087,-0.440597 z"
-     id="right_teres_minor">
+     id="right_teres_minor"
+     inkscape:label="teres_minor">
     <title
        id="title247">teres_minor</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 10.12498,15.827962 c 0.424418,0.584087 0.287115,0.9112 -0.3940853,0.440597 0.021766,-0.148699 0.1880202,-0.487027 0.3940853,-0.440597 z"
-     id="left_teres_minor">
+     id="left_teres_minor"
+     inkscape:label="teres_minor">
     <title
        id="title256">teres_minor</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 20.510722,16.634063 c -0.197867,0.576391 -0.591834,1.3158 -1.352279,1.164366 -0.394073,0.202645 -1.559936,-0.219694 -0.627385,-0.36841 0.692538,-0.183361 1.093706,-1.021044 1.889395,-0.795956 z"
-     id="right_teres_major">
+     id="right_teres_major"
+     inkscape:label="teres_major">
     <title
        id="title240">teres_major</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 9.8822656,16.634063 c 0.1978664,0.576391 0.5918344,1.3158 1.3522784,1.164366 0.394073,0.202645 1.559936,-0.219694 0.627385,-0.36841 -0.692537,-0.183361 -1.093708,-1.021044 -1.8893945,-0.795956 z"
-     id="left_teres_major">
+     id="left_teres_major"
+     inkscape:label="teres_major">
     <title
        id="title257">teres_major</title>
   </path>
   <path
      id="right_triceps"
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
-     d="m 20.764867,16.712942 c -0.182519,0.205478 1.91e-4,0.515516 -0.150667,0.760308 -0.634278,1.761356 -0.402533,3.856445 0.87917,5.296363 0.0054,-0.689768 0.04421,-1.407468 0.126928,-2.105547 0.04399,-1.336437 0.421994,-3.014251 -0.855435,-3.951124 z m 1.063876,1.030593 c -0.02779,-2.87e-4 -0.04423,0.02318 -0.03508,0.100068 0.344815,1.035688 0.118397,2.149822 -0.03508,3.213512 -0.03853,0.375271 -0.03703,1.302242 0.440616,1.196685 0.336216,-0.308928 0.90929,0.322533 0.63358,-0.586995 0.04403,-1.341586 -0.04511,-2.751324 -0.888454,-3.879941 -0.03767,-0.01321 -0.08407,-0.04301 -0.115567,-0.04333 z">
+     d="m 20.764867,16.712942 c -0.182519,0.205478 1.91e-4,0.515516 -0.150667,0.760308 -0.634278,1.761356 -0.402533,3.856445 0.87917,5.296363 0.0054,-0.689768 0.04421,-1.407468 0.126928,-2.105547 0.04399,-1.336437 0.421994,-3.014251 -0.855435,-3.951124 z m 1.063876,1.030593 c -0.02779,-2.87e-4 -0.04423,0.02318 -0.03508,0.100068 0.344815,1.035688 0.118397,2.149822 -0.03508,3.213512 -0.03853,0.375271 -0.03703,1.302242 0.440616,1.196685 0.336216,-0.308928 0.90929,0.322533 0.63358,-0.586995 0.04403,-1.341586 -0.04511,-2.751324 -0.888454,-3.879941 -0.03767,-0.01321 -0.08407,-0.04301 -0.115567,-0.04333 z"
+     inkscape:label="triceps">
     <title
        id="title309">triceps</title>
   </path>
   <path
      id="left_triceps"
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
-     d="m 9.6276839,16.712942 c -1.2774312,0.936873 -0.8994295,2.614687 -0.8554372,3.951124 0.082719,0.698079 0.1224832,1.415779 0.1279447,2.105547 C 10.181896,21.329695 10.412609,19.234606 9.7783293,17.47325 9.6274826,17.228458 9.8102008,16.91842 9.6276839,16.712942 Z M 8.563806,17.743535 c -0.031493,3.12e-4 -0.076859,0.03011 -0.1145502,0.04333 -0.8433483,1.128617 -0.932493,2.538356 -0.8884568,3.879942 -0.2757099,0.909528 0.2973661,0.278067 0.6335801,0.586995 0.4776446,0.105549 0.478119,-0.821414 0.4395842,-1.196685 -0.1534977,-1.06369 -0.3798993,-2.177825 -0.035081,-3.213513 0.00917,-0.07689 -0.00737,-0.100346 -0.035081,-0.100067 z">
+     d="m 9.6276839,16.712942 c -1.2774312,0.936873 -0.8994295,2.614687 -0.8554372,3.951124 0.082719,0.698079 0.1224832,1.415779 0.1279447,2.105547 C 10.181896,21.329695 10.412609,19.234606 9.7783293,17.47325 9.6274826,17.228458 9.8102008,16.91842 9.6276839,16.712942 Z M 8.563806,17.743535 c -0.031493,3.12e-4 -0.076859,0.03011 -0.1145502,0.04333 -0.8433483,1.128617 -0.932493,2.538356 -0.8884568,3.879942 -0.2757099,0.909528 0.2973661,0.278067 0.6335801,0.586995 0.4776446,0.105549 0.478119,-0.821414 0.4395842,-1.196685 -0.1534977,-1.06369 -0.3798993,-2.177825 -0.035081,-3.213513 0.00917,-0.07689 -0.00737,-0.100346 -0.035081,-0.100067 z"
+     inkscape:label="triceps">
     <title
        id="title308">triceps</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 21.770539,22.668622 c 0.509512,-0.446042 1.065335,0.113202 1.158438,0.637225 0.196073,0.499953 0.126968,1.33536 -0.366648,0.532811 -0.253478,-0.32833 -0.971564,-0.847926 -0.803209,-1.167822 z"
-     id="right_anconeus">
+     id="right_anconeus"
+     inkscape:label="anconeus">
     <title
        id="title246">anconeus</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 8.6224484,22.668622 c -0.5095122,-0.446042 -1.0653349,0.113202 -1.1584381,0.637225 -0.1960728,0.499953 -0.126968,1.33536 0.3666484,0.532811 0.2534775,-0.32833 0.971564,-0.847926 0.8032089,-1.167822 z"
-     id="path261">
+     id="path261"
+     inkscape:label="anconeus">
     <title
        id="title260">anconeus</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 23.850968,23.441135 c 1.019648,1.572208 1.540366,3.39063 2.286681,5.091182 0.47073,0.414762 -0.135758,1.320546 -0.472102,0.773318 -0.297796,-1.89737 -1.016114,-3.718039 -1.722134,-5.506231 -9.88e-4,-0.0623 -0.416979,-0.525542 -0.09244,-0.358269 z"
-     id="right_extensor_digitorum">
+     id="right_extensor_digitorum"
+     inkscape:label="extensor_digitorum">
     <title
        id="title245">extensor_digitorum</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 6.5420196,23.441135 c -1.0196504,1.572208 -1.5403685,3.39063 -2.286681,5.091182 -0.4707302,0.414762 0.135758,1.320546 0.4721015,0.773318 0.2977967,-1.89737 1.0161145,-3.718039 1.7221341,-5.506231 9.886e-4,-0.0623 0.4169791,-0.525542 0.092445,-0.358269 z"
-     id="path262">
+     id="path262"
+     inkscape:label="extensor_digitorum">
     <title
        id="title261">extensor_digitorum</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 23.515786,23.485919 c 0.769629,1.581731 1.58397,3.215339 1.791482,4.970956 -1.139078,-1.306093 -1.750748,-3.015166 -1.868139,-4.715493 0.02543,-0.0852 -0.0421,-0.205763 0.07666,-0.255463 z"
-     id="right_extensor_carpi_ulnaris">
+     id="right_extensor_carpi_ulnaris"
+     inkscape:label="extensor_carpi_ulnaris">
     <title
        id="title244">extensor_carpi_ulnaris</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="M 6.8772011,23.485919 C 6.1075719,25.06765 5.2932309,26.701258 5.085719,28.456875 6.224797,27.150782 6.8364677,25.441709 6.9538582,23.741382 6.9284248,23.656182 6.995955,23.535619 6.8771991,23.485919 Z"
-     id="path263">
+     id="path263"
+     inkscape:label="extensor_carpi_ulnaris">
     <title
        id="title262">extensor_carpi_ulnaris</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 21.58561,23.888971 c 0.349993,0.597457 1.245755,0.08817 1.41594,0.753733 0.73165,1.19729 1.229295,2.524446 1.874422,3.749102 -0.06303,0.303441 -0.779338,-0.589824 -1.033063,-0.895744 -0.841377,-1.066047 -1.552391,-2.221004 -2.234181,-3.383171 -0.0078,-0.07464 -0.01535,-0.149275 -0.0231,-0.22392 z"
-     id="right_flexor_carpi_ulnaris">
+     id="right_flexor_carpi_ulnaris"
+     inkscape:label="flexor_carpi_ulnaris">
     <title
        id="title243">flexor_carpi_ulnaris</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 8.8073772,23.888971 c -0.3499951,0.597457 -1.245757,0.08817 -1.4159399,0.753733 -0.7316504,1.19729 -1.2292951,2.524446 -1.8744219,3.749102 0.063026,0.303441 0.7793381,-0.589824 1.0330628,-0.895744 0.841377,-1.066047 1.5523916,-2.221004 2.2341816,-3.383171 0.00777,-0.07464 0.015348,-0.149275 0.023101,-0.22392 z"
-     id="path264">
+     id="path264"
+     inkscape:label="flexor_carpi_ulnaris">
     <title
        id="title263">flexor_carpi_ulnaris</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 20.961484,34.547415 c 0.02605,1.316203 -0.299824,2.62738 -0.543232,3.896154 -0.255532,-0.323318 -0.295899,-1.044954 -0.496994,-1.522629 -0.165737,-0.789776 0.455838,-1.453432 0.79037,-2.122856 0.08328,-0.08357 0.166573,-0.167111 0.249856,-0.250669 z"
-     id="right_iliotibial_tact">
+     id="right_iliotibial_tact"
+     inkscape:label="iliotibial_tact">
     <title
        id="title232">iliotibial_tact</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 9.4315034,34.547415 c -0.026051,1.316203 0.2998238,2.62738 0.5432316,3.896154 0.255532,-0.323318 0.295897,-1.044954 0.496995,-1.522629 0.165736,-0.789776 -0.455839,-1.453432 -0.7903708,-2.122856 -0.083277,-0.08357 -0.1665732,-0.167111 -0.2498558,-0.250669 z"
-     id="left_iliotibial_tact">
+     id="left_iliotibial_tact"
+     inkscape:label="iliotibial_tact">
     <title
        id="title264">iliotibial_tact</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 18.314714,35.655803 c 1.042499,0.161073 1.506388,1.325804 1.737779,2.214844 0.504884,2.475362 -1.186004,4.721147 -1.113643,7.167275 -0.399953,0.07547 -0.213009,-1.053337 -0.296983,-1.456717 0.142934,-1.865517 0.751973,-3.732677 0.351442,-5.615189 -0.118616,-0.76723 -0.369802,-1.514398 -0.724829,-2.209441 l 0.04313,-0.09403 z"
-     id="right_biceps_femoris">
+     id="right_biceps_femoris"
+     inkscape:label="biceps_femoris">
     <title
        id="title230">biceps_femoris</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 12.078273,35.655803 c -1.042498,0.161073 -1.506388,1.325804 -1.737779,2.214844 -0.5048836,2.475362 1.186005,4.721147 1.113643,7.167275 0.399951,0.07547 0.213009,-1.053337 0.296983,-1.456717 -0.142953,-1.865517 -0.751973,-3.732677 -0.351442,-5.615189 0.118617,-0.76723 0.369802,-1.514398 0.72483,-2.209441 l -0.04313,-0.09403 z"
-     id="left_biceps_femoris">
+     id="left_biceps_femoris"
+     inkscape:label="biceps_femoris">
     <title
        id="title265">biceps_femoris</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 17.898628,35.196775 c 0.745045,2.491486 1.402896,5.17879 0.576357,7.732389 -0.187263,0.78693 -0.725023,1.432197 -1.119571,2.119954 -0.02755,-3.234044 -0.544012,-6.565185 0.439206,-9.717992 l 0.06372,-0.08231 z"
-     id="right_semitendinosus">
+     id="right_semitendinosus"
+     inkscape:label="semitendinosus">
     <title
        id="title229">semitendinosus</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 12.494359,35.196775 c -0.745044,2.491486 -1.402896,5.17879 -0.576356,7.732389 0.187262,0.78693 0.725022,1.432197 1.11957,2.119954 0.02755,-3.234044 0.544013,-6.565185 -0.439206,-9.717992 l -0.06372,-0.08231 z"
-     id="left_semitendinosus">
+     id="left_semitendinosus"
+     inkscape:label="semitendinosus">
     <title
        id="title266">semitendinosus</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 16.060915,33.987621 c 0.588861,0.40392 1.625918,0.766682 1.321444,1.634782 -0.170161,2.073926 -0.934363,4.079026 -0.893797,6.17992 -0.09932,0.768969 -0.07313,-0.835195 -0.192724,-1.134348 -0.211046,-1.626899 -0.837584,-3.19733 -0.579981,-4.852673 0.05017,-0.617646 0.156647,-1.234834 0.345062,-1.827681 z"
-     id="right_adductor_magnus">
+     id="right_adductor_magnus"
+     inkscape:label="adductor_magnus">
     <title
        id="title231">adductor_magnus</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 14.332072,33.987621 c -0.58886,0.40392 -1.625917,0.766682 -1.321443,1.634782 0.170161,2.073926 0.934362,4.079026 0.893796,6.17992 0.09932,0.768969 0.07313,-0.835195 0.192724,-1.134348 0.211046,-1.626899 0.837586,-3.19733 0.579983,-4.852673 -0.05017,-0.617646 -0.156647,-1.234834 -0.345062,-1.827681 z"
-     id="left_adductor_magnus">
+     id="left_adductor_magnus"
+     inkscape:label="adductor_magnus">
     <title
        id="title267">adductor_magnus</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 16.973992,39.540763 c 0.0822,2.067146 0.240946,4.154313 0.0294,6.214269 -0.06665,0.977505 -0.325004,-0.292148 -0.436732,-0.616233 -0.225066,-1.209001 -0.117241,-2.455679 0.147618,-3.653499 0.0309,-0.655319 0.184592,-1.293985 0.25973,-1.944537 z"
-     id="right_semimebranosus">
+     id="right_semimebranosus"
+     inkscape:label="semimebranosus">
     <title
        id="title228">semimebranosus</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 13.418995,39.540763 c -0.0822,2.067146 -0.240946,4.154313 -0.0294,6.214269 0.06665,0.977505 0.325002,-0.292148 0.436732,-0.616233 0.225066,-1.209001 0.117241,-2.455679 -0.147618,-3.653499 -0.03089,-0.655319 -0.184592,-1.293985 -0.25973,-1.944537 z"
-     id="left_semimebranosus">
+     id="left_semimebranosus"
+     inkscape:label="semimebranosus">
     <title
        id="title268">semimebranosus</title>
   </path>
   <path
      id="right_gastrocnemius"
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
+     inkscape:label="gastrocnemius"
      d="m 18.442083,44.489446 c -0.19691,0.09582 -0.402941,0.202067 -0.532454,0.38067 -0.0653,0.820624 0.03632,1.761795 0.02478,2.629613 0.135998,1.75118 -0.157504,3.488829 -0.144468,5.235497 0.103109,0.525459 -0.140542,1.340446 0.294087,1.684645 0.640291,-0.717682 1.293421,-1.597734 1.344551,-2.595568 -0.211847,-2.457584 -0.862256,-4.864171 -0.986485,-7.334857 z m -0.809001,0.537478 c -0.91466,1.797035 -1.270968,3.836899 -1.638639,5.800826 -0.06918,0.829935 -0.202995,1.727641 0.05469,2.539863 0.05322,0.896259 0.862454,0.250045 1.168098,-0.145468 0.359219,-0.678873 0.149152,-1.523175 0.332269,-2.26545 0.105581,-1.971328 0.190352,-3.95486 0.08358,-5.929778 z">
     <title
        id="title227">gastrocnemius</title>
@@ -309,6 +385,7 @@
   <path
      id="left_gastrocnemius"
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
+     inkscape:label="gastrocnemius"
      d="m 11.951499,44.489446 c -0.124238,2.470686 -0.774639,4.877273 -0.986488,7.334857 0.05113,0.997834 0.704264,1.877886 1.344553,2.595568 0.434633,-0.344199 0.19099,-1.159186 0.294087,-1.684645 0.01296,-1.746668 -0.280465,-3.484317 -0.144468,-5.235497 -0.01156,-0.867818 0.09005,-1.808989 0.02476,-2.629613 -0.129519,-0.178611 -0.335554,-0.284857 -0.532456,-0.38067 z m 0.809001,0.537478 c -0.106777,1.974919 -0.02199,3.958451 0.08357,5.929779 0.183117,0.742275 -0.02695,1.586577 0.33227,2.26545 0.305644,0.395505 1.113856,1.041719 1.167068,0.145468 0.257684,-0.812222 0.123879,-1.709928 0.05469,-2.539863 -0.367673,-1.963927 -0.722952,-4.003791 -1.637609,-5.800826 z">
     <title
        id="title269">gastrocnemius</title>
@@ -316,6 +393,7 @@
   <path
      id="right_soleus"
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
+     inkscape:label="soleus"
      d="m 16.477364,53.916437 c -0.204618,0.301799 -0.06801,0.74666 -0.128981,1.099711 0.05155,1.346084 0.296065,2.67799 0.294087,4.032622 0.100359,0.460987 -0.09322,1.532922 0.331235,1.595924 0.380517,-0.826915 -0.112557,-1.790366 -0.04333,-2.673972 -0.296346,-1.326311 0.2898,-2.8369 -0.453001,-4.054285 z m 2.229916,0.178472 c -0.222823,0.05054 -0.295257,0.339493 -0.415853,0.508591 -0.730879,1.55026 -0.84794,3.314713 -0.946244,4.998223 0.10014,0.371321 -0.379042,1.650571 0.287899,1.278185 -0.04664,-1.222668 0.200302,-2.441057 0.432362,-3.639575 0.09536,-1.07895 0.908375,-2.046538 0.641836,-3.145424 z">
     <title
        id="title225">soleus</title>
@@ -323,6 +401,7 @@
   <path
      id="left_soleus"
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
+     inkscape:label="soleus"
      d="m 13.916217,53.916437 c -0.7428,1.217385 -0.157683,2.727974 -0.454033,4.054285 0.06922,0.883606 -0.423856,1.847057 -0.04333,2.673972 0.424455,-0.063 0.230874,-1.134937 0.331236,-1.595924 -0.002,-1.354632 0.243576,-2.686538 0.29512,-4.032622 -0.06097,-0.353051 0.07564,-0.797912 -0.128981,-1.099711 z m -2.230945,0.178472 c -0.266539,1.098886 0.547505,2.066474 0.642865,3.145424 0.23206,1.198518 0.479006,2.416907 0.432363,3.639575 0.666938,0.372386 0.186724,-0.906864 0.286866,-1.278185 C 12.94906,57.918213 12.832,56.15376 12.101121,54.6035 11.980532,54.434396 11.908098,54.145449 11.685272,54.094909 Z">
     <title
        id="title271">soleus</title>

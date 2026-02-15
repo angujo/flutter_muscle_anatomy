@@ -70,7 +70,6 @@ mixin StrokesFill {
 }
 
 mixin MusclesHighlights {
-  Iterable<Muscle> get _muscles;
 
   BodyView get _view;
 
@@ -86,7 +85,7 @@ mixin MusclesHighlights {
     final Set<(Muscle, MusclePosition)> highlighted = Set.from(
       _highlightedMuscles,
     );
-    return _muscles
+    return Muscle.forView(_view)
         .map((m) {
           final both = (m, MusclePosition.both);
           if (highlighted.contains(both)) {
@@ -114,7 +113,7 @@ mixin MusclesHighlights {
     Color? color,
     double? opacity,
   }) {
-    if (muscle.view != _view) return;
+    if (!muscle.isForView(_view)) return;
     final key = (muscle, position ?? MusclePosition.both);
     final left = (muscle, MusclePosition.left);
     final right = (muscle, MusclePosition.right);

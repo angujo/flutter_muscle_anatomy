@@ -26,12 +26,6 @@ class MuscleHighlight<T extends Muscle> {
     );
   }
 
-  List<SvgElement> toSvgElements() {
-    return muscle
-        .getSvgPath(position)
-        .map((p) => SvgPath(id: 'path', d: p)..fill(color, opacity: opacity))
-        .toList();
-  }
 }
 
 class PathPainter extends CustomPainter {
