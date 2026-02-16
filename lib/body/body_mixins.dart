@@ -28,7 +28,7 @@ mixin BuildsSvgWriter {
   List<SvgGroup> _getRootBuilds();
 
   /// The dimensions of the SVG view box.
-  Dim get dimension;
+  Size get dimension;
 
   /// Rebuilds the SVG content.
   void rebuild() {
@@ -54,11 +54,11 @@ mixin BuildsSvgWriter {
   }
 
   /// Scales the given [size] to fit or fill the [dimension].
-  Dim scaledSize(Dim size, {bool fill = false}) {
+  Size scaledSize(Size size, {bool fill = false}) {
     final mW = size.width / dimension.width;
     final mH = size.height / dimension.height;
     final scale = fill ? math.max(mW, mH) : math.min(mW, mH);
-    return Dim(dimension.width * scale, dimension.height * scale);
+    return Size(dimension.width * scale, dimension.height * scale);
   }
 }
 

@@ -17,13 +17,13 @@ abstract class _SkeletalMuscles
   final BodyView _view;
   final SvgPathReader _svgPathReader;
   @override
-  late Dim dimension;
+  late Size dimension;
 
   /// The color used for hair, if any.
   Color? get _hairColor;
 
   /// The intrinsic dimensions of the underlying SVG.
-  late final Dim svgDimension = Dim(
+  late final Size svgDimension = Size(
     _svgPathReader.width,
     _svgPathReader.height,
   );
@@ -37,7 +37,7 @@ abstract class _SkeletalMuscles
     required SvgPathReader svgPathReader,
   }) : _view = view,
        _svgPathReader = svgPathReader,
-       dimension = Dim(svgPathReader.width, svgPathReader.height);
+       dimension = Size(svgPathReader.width, svgPathReader.height);
 
   /// Returns a [MuscleHelper] for the specified [muscle].
   MuscleHelper getMuscleHelper(Muscle muscle) =>
@@ -142,7 +142,7 @@ abstract class _Body with BuildsSvgWriter implements IMuscleHighlights {
   static const double _margin = 0.5;
 
   @override
-  late final Dim dimension = Dim(
+  late final Size dimension = Size(
     (_margin * (_skeletalMuscles.length - 1)) +
         _skeletalMuscles.fold(0, (val, sk) => val + sk.dimension.width),
     _skeletalMuscles.map((s) => s.dimension.height).reduce(math.max),

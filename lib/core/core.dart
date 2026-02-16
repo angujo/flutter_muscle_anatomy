@@ -7,7 +7,6 @@ import 'package:xml/xml.dart';
 
 part 'app_enums.dart';
 
-part 'app_mixins.dart';
 
 part 'extensions.dart';
 

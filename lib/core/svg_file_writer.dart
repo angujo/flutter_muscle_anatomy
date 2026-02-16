@@ -3,7 +3,7 @@ part of 'core.dart';
 /// A class responsible for generating SVG file content by building an XML structure.
 final class SvgFileWriter {
   final _builder = XmlBuilder();
-  final Dim _size;
+  final Size _size;
   final List<SvgElement> _elements = [];
   XmlDocument? _document;
 
