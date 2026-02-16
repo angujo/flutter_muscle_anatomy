@@ -1,7 +1,9 @@
 name: flutter_muscle_anatomy
 description: "A Flutter project for interactions with muscles."
 version: 0.0.1
-homepage:
+repository: "https://github.com/angujo/flutter_muscle_anatomy.git"
+homepage: "https://github.com/angujo/flutter_muscle_anatomy.git"
+
 
 environment:
   sdk: ^3.10.7
