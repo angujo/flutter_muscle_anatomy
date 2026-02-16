@@ -163,3 +163,31 @@ class MuscleHelper {
     return getInstance(muscle, svgPathReader);
   }
 }
+
+class MuscleHighlight<T extends Muscle> {
+  final T muscle;
+  final MusclePosition position;
+  final Color color;
+  final double opacity;
+
+  MuscleHighlight({
+    required this.position,
+    required this.color,
+    required this.opacity,
+    required this.muscle,
+  });
+
+  MuscleHighlight<T> copyWith({
+    T? muscle,
+    MusclePosition? position,
+    Color? color,
+    double? opacity,
+  }) {
+    return MuscleHighlight(
+      muscle: muscle ?? this.muscle,
+      position: position ?? this.position,
+      color: color ?? this.color,
+      opacity: opacity ?? this.opacity,
+    );
+  }
+}

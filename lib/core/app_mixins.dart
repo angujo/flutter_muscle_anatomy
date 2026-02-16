@@ -1,22 +1,13 @@
 part of 'core.dart';
 
+/// A simple class to hold width and height dimensions.
 final class Dim {
+  /// The width.
   final double width;
+
+  /// The height.
   final double height;
 
+  /// Creates a [Dim] with the given [width] and [height].
   const Dim(this.width, this.height);
-}
-
-
-mixin HasPaint {
-  Paint? strokePaint;
-  Paint? fillPaint;
-}
-
-mixin RequiresViewBox {
-  late Size _size;
-
-  Size get size => _size;
-
-  void setSize(Size s) => _size = s;
 }

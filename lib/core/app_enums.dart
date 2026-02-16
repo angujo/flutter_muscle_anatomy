@@ -1,5 +1,28 @@
 part of 'core.dart';
 
-enum MusclePosition { left, right, both }
+/// Represents the lateral position of a muscle on the body.
+enum MusclePosition {
+  /// Positioned on the left side of the body.
+  left,
 
-enum BodyView { front, back, both, any }
+  /// Positioned on the right side of the body.
+  right,
+
+  /// Positioned on both sides of the body.
+  both,
+}
+
+/// Represents the perspective or view of the human body.
+enum BodyView {
+  /// View from the front.
+  front,
+
+  /// View from the back.
+  back,
+
+  /// Both front and back views.
+  both,
+
+  /// Any view.
+  any,
+}

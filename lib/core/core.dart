@@ -13,8 +13,6 @@ part 'extensions.dart';
 
 part 'muscle.dart';
 
-part 'muscle_painter.dart';
-
 part 'svg_file_writer.dart';
 
 part 'svg_path_reader.dart';

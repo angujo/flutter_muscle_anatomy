@@ -7,6 +7,10 @@ import 'package:path_drawing/path_drawing.dart';
 
 part 'body_mixins.dart';
 
+/// An abstract class representing the skeletal muscles for a specific [BodyView].
+///
+/// It handles SVG path reading and provides mechanisms for building SVG elements
+/// for both highlighted and non-highlighted muscles.
 abstract class _SkeletalMuscles
     with StrokesFill, MusclesHighlights, BuildsSvgWriter {
   @override
@@ -15,13 +19,16 @@ abstract class _SkeletalMuscles
   @override
   late Dim dimension;
 
+  /// The color used for hair, if any.
   Color? get _hairColor;
 
+  /// The intrinsic dimensions of the underlying SVG.
   late final Dim svgDimension = Dim(
     _svgPathReader.width,
     _svgPathReader.height,
   );
 
+  /// Returns the [Path] object for the body outline.
   Path get outlinePath =>
       parseSvgPathData(_svgPathReader.getPathDs('outline').first);
 
@@ -32,6 +39,7 @@ abstract class _SkeletalMuscles
        _svgPathReader = svgPathReader,
        dimension = Dim(svgPathReader.width, svgPathReader.height);
 
+  /// Returns a [MuscleHelper] for the specified [muscle].
   MuscleHelper getMuscleHelper(Muscle muscle) =>
       MuscleHelper.fromMuscle(muscle, _svgPathReader);
 
@@ -83,6 +91,8 @@ abstract class _SkeletalMuscles
 }
 
 //region Male
+
+/// Internal implementation of male skeletal muscles.
 class _MaleSkeletalMuscles extends _SkeletalMuscles {
   _MaleSkeletalMuscles({required super.view})
     : super(svgPathReader: SvgPathReader.male(view));
@@ -90,9 +100,11 @@ class _MaleSkeletalMuscles extends _SkeletalMuscles {
   @override
   final Color? _hairColor = null;
 
+  /// Creates a male front view instance.
   static _MaleSkeletalMuscles front() =>
       _MaleSkeletalMuscles(view: BodyView.front);
 
+  /// Creates a male back view instance.
   static _MaleSkeletalMuscles back() =>
       _MaleSkeletalMuscles(view: BodyView.back);
 }
@@ -100,6 +112,8 @@ class _MaleSkeletalMuscles extends _SkeletalMuscles {
 //endregion
 
 //region Female
+
+/// Internal implementation of female skeletal muscles.
 class _FemaleSkeletalMuscles extends _SkeletalMuscles {
   _FemaleSkeletalMuscles({required super.view, Color? hairColor})
     : _hairColor = hairColor ?? Colors.grey,
@@ -108,15 +122,21 @@ class _FemaleSkeletalMuscles extends _SkeletalMuscles {
   @override
   final Color _hairColor;
 
+  /// Creates a female front view instance.
   static _FemaleSkeletalMuscles front({Color? hairColor}) =>
       _FemaleSkeletalMuscles(view: BodyView.front, hairColor: hairColor);
 
+  /// Creates a female back view instance.
   static _FemaleSkeletalMuscles back({Color? hairColor}) =>
       _FemaleSkeletalMuscles(view: BodyView.back, hairColor: hairColor);
 }
 
 //endregion
 
+/// Base class for body anatomy visualization.
+///
+/// It aggregates one or more [_SkeletalMuscles] views (e.g., front and back)
+/// and coordinates highlighting across them.
 abstract class _Body with BuildsSvgWriter implements IMuscleHighlights {
   final List<_SkeletalMuscles> _skeletalMuscles;
   static const double _margin = 0.5;
@@ -175,33 +195,41 @@ abstract class _Body with BuildsSvgWriter implements IMuscleHighlights {
     return groups;
   }
 
+  /// Internal factory helper to create a body instance based on a set of muscles.
   static T _byMuscles<T extends _Body>(
     Iterable<Muscle> muscles, {
     required T Function(int fCount, int bCount) bodyFnc,
   }) {
     final fCounts = muscles.where((m) => m.isForView(BodyView.front)).length;
     final bCounts = muscles.where((m) => m.isForView(BodyView.back)).length;
-    T b= bodyFnc.call(fCounts, bCounts);
+    T b = bodyFnc.call(fCounts, bCounts);
     b.highlights(muscles);
     return b;
   }
 }
 
+/// Represents the male body anatomy.
 class Male extends _Body {
   Male._(super.skeletalMuscles) : super._();
 
+  /// Returns a male front view.
   static Male front() => Male._([_MaleSkeletalMuscles.front()]);
 
+  /// Returns a male back view.
   static Male back() => Male._([_MaleSkeletalMuscles.back()]);
 
+  /// Returns both front and back views for the male body.
   static Male frontBack() =>
       Male._([_MaleSkeletalMuscles.front(), _MaleSkeletalMuscles.back()]);
 
+  /// Returns both back and front views for the male body.
   static Male backFront() =>
       Male._([_MaleSkeletalMuscles.back(), _MaleSkeletalMuscles.front()]);
 
+  /// Alias for [frontBack].
   static Male both() => frontBack();
 
+  /// Creates a [Male] instance showing the views that best represent the provided [muscles].
   static Male byMuscles(Iterable<Muscle> muscles) {
     return _Body._byMuscles(
       muscles,
@@ -215,21 +243,28 @@ class Male extends _Body {
   }
 }
 
+/// Represents the female body anatomy.
 class Female extends _Body {
   Female._(super.skeletalMuscles) : super._();
 
+  /// Returns a female front view.
   static Female front() => Female._([_FemaleSkeletalMuscles.front()]);
 
+  /// Returns a female back view.
   static Female back() => Female._([_FemaleSkeletalMuscles.back()]);
 
+  /// Returns both front and back views for the female body.
   static Female frontBack() =>
       Female._([_FemaleSkeletalMuscles.front(), _FemaleSkeletalMuscles.back()]);
 
+  /// Returns both back and front views for the female body.
   static Female backFront() =>
       Female._([_FemaleSkeletalMuscles.back(), _FemaleSkeletalMuscles.front()]);
 
+  /// Alias for [frontBack].
   static Female both() => frontBack();
 
+  /// Creates a [Female] instance showing the views that best represent the provided [muscles].
   static Female byMuscles(Iterable<Muscle> muscles) {
     return _Body._byMuscles(
       muscles,
