@@ -102,7 +102,7 @@ class _MaleSkeletalMuscles extends _SkeletalMuscles {
 //region Female
 class _FemaleSkeletalMuscles extends _SkeletalMuscles {
   _FemaleSkeletalMuscles({required super.view, Color? hairColor})
-    : _hairColor = hairColor??Colors.grey,
+    : _hairColor = hairColor ?? Colors.grey,
       super(svgPathReader: SvgPathReader.female(view));
 
   @override
@@ -174,6 +174,17 @@ abstract class _Body with BuildsSvgWriter implements IMuscleHighlights {
     }
     return groups;
   }
+
+  static T _byMuscles<T extends _Body>(
+    Iterable<Muscle> muscles, {
+    required T Function(int fCount, int bCount) bodyFnc,
+  }) {
+    final fCounts = muscles.where((m) => m.isForView(BodyView.front)).length;
+    final bCounts = muscles.where((m) => m.isForView(BodyView.back)).length;
+    T b= bodyFnc.call(fCounts, bCounts);
+    b.highlights(muscles);
+    return b;
+  }
 }
 
 class Male extends _Body {
@@ -190,6 +201,18 @@ class Male extends _Body {
       Male._([_MaleSkeletalMuscles.back(), _MaleSkeletalMuscles.front()]);
 
   static Male both() => frontBack();
+
+  static Male byMuscles(Iterable<Muscle> muscles) {
+    return _Body._byMuscles(
+      muscles,
+      bodyFnc: (f, b) {
+        if (0 == b) return front();
+        if (0 == f) return back();
+        if (f > b) return frontBack();
+        return backFront();
+      },
+    );
+  }
 }
 
 class Female extends _Body {
@@ -206,4 +229,16 @@ class Female extends _Body {
       Female._([_FemaleSkeletalMuscles.back(), _FemaleSkeletalMuscles.front()]);
 
   static Female both() => frontBack();
+
+  static Female byMuscles(Iterable<Muscle> muscles) {
+    return _Body._byMuscles(
+      muscles,
+      bodyFnc: (f, b) {
+        if (0 == b) return front();
+        if (0 == f) return back();
+        if (f > b) return frontBack();
+        return backFront();
+      },
+    );
+  }
 }

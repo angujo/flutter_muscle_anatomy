@@ -1,32 +1,9 @@
-import 'dart:ui';
-
-import 'package:path_drawing/path_drawing.dart';
-
-List<String> flattenSvgPath<T>(T svgPaths) {
-  if (svgPaths is List) {
-    return svgPaths.map((ep) => flattenSvgPath(ep)).expand((ls) => ls).toList();
-  }
-  if (svgPaths is String) {
-    return [svgPaths];
-  }
-  throw UnimplementedError('Svg Path can only be a String or List<String>!');
-}
-
-List<Path> getMusclePaths<T>(
-  T svgPath, {
-  required Size size,
-  required Size svgSize,
-}) {
-  final svgPaths = flattenSvgPath(svgPath);
-  return svgPaths
-      .map(
-        (ep) => parseSvgPathData(
-          ep,
-        ), // svgPathToFlutterPath(svgPath: ep, size: size, svgSize: svgSize),
-      )
-      .toList();
-}
-
+/// Converts a camelCase string to snake_case.
+///
+/// Example:
+/// ```dart
+/// camelToSnake('camelCase'); // 'camel_case'
+/// ```
 String camelToSnake(String input) {
   return input
       .replaceAllMapped(

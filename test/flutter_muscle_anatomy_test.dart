@@ -92,5 +92,9 @@ void main() {
       ], color: Colors.blue);
       print(mf.toString());
     });
+    testWidgets('Render ByMuscles Female', (WidgetTester tester) async {
+      final mf = Female.byMuscles(Muscle.values);
+      print(mf.toString());
+    });
   });
 }

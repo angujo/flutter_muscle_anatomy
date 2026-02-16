@@ -42,6 +42,7 @@ enum Muscle {
   vastusLateralis(view: BodyView.front),
   sartorius(view: BodyView.front),
   tibialisAnterior(view: BodyView.front),
+  anteriorDeltoid(view: BodyView.front),
   extensorDigitorumLongus(view: BodyView.front),
   peroneusLongus(view: BodyView.front),
   brachialis(view: BodyView.front),

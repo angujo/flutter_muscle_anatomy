@@ -26,9 +26,9 @@
      inkscape:pagecheckerboard="1"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="px"
-     inkscape:zoom="12.614478"
-     inkscape:cx="14.586414"
-     inkscape:cy="33.334712"
+     inkscape:zoom="71.358263"
+     inkscape:cx="6.5864832"
+     inkscape:cy="26.745326"
      inkscape:window-width="1920"
      inkscape:window-height="1129"
      inkscape:window-x="3832"
@@ -81,7 +81,7 @@
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 14.898411,14.439677 c -1.095,-0.909048 -2.667017,-0.983188 -4.046361,-1.026365 -1.0607808,0.09771 0.291839,0.261584 0.536221,0.625525 1.39234,1.364108 1.216447,3.788831 3.109838,4.748034 0.723725,0.612255 0.419014,-0.641405 0.460611,-1.034031 -0.02009,-1.104388 -0.0402,-2.208775 -0.06031,-3.313163 z"
-     id="path249"
+     id="left_trapezius"
      inkscape:label="trapezius">
     <title
        id="title249">trapezius</title>
@@ -241,7 +241,7 @@
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 8.6224484,22.668622 c -0.5095122,-0.446042 -1.0653349,0.113202 -1.1584381,0.637225 -0.1960728,0.499953 -0.126968,1.33536 0.3666484,0.532811 0.2534775,-0.32833 0.971564,-0.847926 0.8032089,-1.167822 z"
-     id="path261"
+     id="left_anconeus"
      inkscape:label="anconeus">
     <title
        id="title260">anconeus</title>
@@ -257,7 +257,7 @@
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 6.5420196,23.441135 c -1.0196504,1.572208 -1.5403685,3.39063 -2.286681,5.091182 -0.4707302,0.414762 0.135758,1.320546 0.4721015,0.773318 0.2977967,-1.89737 1.0161145,-3.718039 1.7221341,-5.506231 9.886e-4,-0.0623 0.4169791,-0.525542 0.092445,-0.358269 z"
-     id="path262"
+     id="left_extensor_digitorum"
      inkscape:label="extensor_digitorum">
     <title
        id="title261">extensor_digitorum</title>
@@ -273,7 +273,7 @@
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="M 6.8772011,23.485919 C 6.1075719,25.06765 5.2932309,26.701258 5.085719,28.456875 6.224797,27.150782 6.8364677,25.441709 6.9538582,23.741382 6.9284248,23.656182 6.995955,23.535619 6.8771991,23.485919 Z"
-     id="path263"
+     id="left_extensor_carpi_ulnaris"
      inkscape:label="extensor_carpi_ulnaris">
     <title
        id="title262">extensor_carpi_ulnaris</title>
@@ -289,7 +289,7 @@
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 8.8073772,23.888971 c -0.3499951,0.597457 -1.245757,0.08817 -1.4159399,0.753733 -0.7316504,1.19729 -1.2292951,2.524446 -1.8744219,3.749102 0.063026,0.303441 0.7793381,-0.589824 1.0330628,-0.895744 0.841377,-1.066047 1.5523916,-2.221004 2.2341816,-3.383171 0.00777,-0.07464 0.015348,-0.149275 0.023101,-0.22392 z"
-     id="path264"
+     id="left_flexor_carpi_ulnaris"
      inkscape:label="flexor_carpi_ulnaris">
     <title
        id="title263">flexor_carpi_ulnaris</title>

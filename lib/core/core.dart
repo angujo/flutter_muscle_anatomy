@@ -11,8 +11,6 @@ part 'app_mixins.dart';
 
 part 'extensions.dart';
 
-part 'muscles.dart';
-
 part 'muscle.dart';
 
 part 'muscle_painter.dart';
