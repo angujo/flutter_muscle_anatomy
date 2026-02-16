@@ -16,7 +16,7 @@ void main() {
         Muscle.brachialis,
         Muscle.extensorDigitorumLongus,
       ], color: Colors.blue);
-      print(mf.toString());
+      debugPrint(mf.toString());
     });
 
     testWidgets('Render Back Male', (WidgetTester tester) async {
@@ -30,7 +30,7 @@ void main() {
         Muscle.trapezius,
         Muscle.extensorDigitorumLongus,
       ], color: Colors.blue);
-      print(mf.toString());
+      debugPrint(mf.toString());
     });
 
     testWidgets('Render Both Male', (WidgetTester tester) async {
@@ -46,7 +46,7 @@ void main() {
         // Muscle.biceps
         Muscle.soleus,
       ], color: Colors.blue);
-      print(mf.toString());
+      debugPrint(mf.toString());
     });
 
     testWidgets('Render Front Female', (WidgetTester tester) async {
@@ -60,7 +60,7 @@ void main() {
         Muscle.brachialis,
         Muscle.extensorDigitorumLongus,
       ], color: Colors.blue);
-      print(mf.toString());
+      debugPrint(mf.toString());
     });
 
     testWidgets('Render Back Female', (WidgetTester tester) async {
@@ -74,7 +74,7 @@ void main() {
         Muscle.trapezius,
         Muscle.extensorDigitorumLongus,
       ], color: Colors.blue);
-      print(mf.toString());
+      debugPrint(mf.toString());
     });
 
     testWidgets('Render Both Female', (WidgetTester tester) async {
@@ -90,11 +90,11 @@ void main() {
         // Muscle.biceps
         Muscle.soleus,
       ], color: Colors.blue);
-      print(mf.toString());
+      debugPrint(mf.toString());
     });
     testWidgets('Render ByMuscles Female', (WidgetTester tester) async {
       final mf = Female.byMuscles(Muscle.values);
-      print(mf.toString());
+      debugPrint(mf.toString());
     });
   });
 }

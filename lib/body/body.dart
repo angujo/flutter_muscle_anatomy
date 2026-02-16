@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_muscle_anatomy/core/core.dart';
 import 'dart:math' as math;
 import 'package:path_drawing/path_drawing.dart';
+import 'package:collection/collection.dart';
 
 part 'body_mixins.dart';
 
@@ -31,6 +32,40 @@ abstract class _SkeletalMuscles
   /// Returns the [Path] object for the body outline.
   Path get outlinePath =>
       parseSvgPathData(_svgPathReader.getPathDs('outline').first);
+
+  /// Returns the [Path] for the hair outline if available.
+  Path? get hairOutlinePath {
+    final hairSvgPath = _svgPathReader.getPathDs('hair_outline').firstOrNull;
+    if (null == _hairColor || null == hairSvgPath) return null;
+    return parseSvgPathData(hairSvgPath);
+  }
+
+  /// Returns the [Path] for a specific [muscle] at a given [position].
+  ///
+  /// Throws [UnimplementedError] if [position] is [MusclePosition.both].
+  Path? getMusclePath(Muscle muscle, {required MusclePosition position}) {
+    if (MusclePosition.both == position) {
+      throw UnimplementedError('MusclePosition.both is not supported');
+    }
+    final name = '${position.name}_${muscle.name}';
+    final svgPath = _svgPathReader.getPathDs(name).firstOrNull;
+    return svgPath == null ? null : parseSvgPathData(svgPath);
+  }
+
+  /// Returns a list of [Path] objects for all muscles defined in [Muscle.values]
+  /// for both left and right positions.
+  List<Path> getMusclePaths() {
+    final positions = {MusclePosition.left, MusclePosition.right};
+    return Muscle.values
+        .map(
+          (m) => positions
+              .map((p) => _svgPathReader.getPathDs('${p.name}_${m.name}'))
+              .expand((l) => l),
+        )
+        .expand((l) => l)
+        .map((s) => parseSvgPathData(s))
+        .toList();
+  }
 
   _SkeletalMuscles({
     required BodyView view,
@@ -148,7 +183,32 @@ abstract class _Body with BuildsSvgWriter implements IMuscleHighlights {
     _skeletalMuscles.map((s) => s.dimension.height).reduce(math.max),
   );
 
+  /// Returns a list of [Path] objects for the outlines of all skeletal muscle views.
+  List<Path> get outlinePaths =>
+      _skeletalMuscles.map((s) => s.outlinePath).toList();
+
   _Body._(this._skeletalMuscles);
+
+  /// Returns a list of [Path] objects for all muscles in all skeletal muscle views.
+  List<Path> getAllMusclePaths() =>
+      _skeletalMuscles.map((s) => s.getMusclePaths()).expand((l) => l).toList();
+
+  /// Returns a list of [Path] objects for a [muscle] at a given [position]
+  /// across all skeletal muscle views where it is available.
+  List<Path> getMusclePaths(Muscle muscle, {required MusclePosition position}) {
+    return _skeletalMuscles
+        .map(
+          (s) => MusclePosition.both == position
+              ? [
+                  s.getMusclePath(muscle, position: MusclePosition.left),
+                  s.getMusclePath(muscle, position: MusclePosition.right),
+                ]
+              : [s.getMusclePath(muscle, position: position)],
+        )
+        .expand((l) => l)
+        .nonNulls
+        .toList();
+  }
 
   @override
   void highlight(
@@ -246,6 +306,10 @@ class Male extends _Body {
 /// Represents the female body anatomy.
 class Female extends _Body {
   Female._(super.skeletalMuscles) : super._();
+
+  /// Returns a list of [Path] objects for the hair outlines of all skeletal muscle views.
+  List<Path> get hairOutlinePaths =>
+      _skeletalMuscles.map((s) => s.hairOutlinePath).nonNulls.toList();
 
   /// Returns a female front view.
   static Female front() => Female._([_FemaleSkeletalMuscles.front()]);

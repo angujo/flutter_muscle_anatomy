@@ -22,7 +22,4 @@ enum BodyView {
 
   /// Both front and back views.
   both,
-
-  /// Any view.
-  any,
 }
