@@ -1,7 +1,7 @@
 part of 'body.dart';
 
 /// Interface for classes that support highlighting muscles.
-abstract class IMuscleHighlights {
+abstract class _IMuscleHighlights {
   /// Highlights a specific [muscle] with optional [position], [color], and [opacity].
   void highlight(
     Muscle muscle, {
@@ -20,7 +20,7 @@ abstract class IMuscleHighlights {
 }
 
 /// A mixin that provides functionality for building an [SvgFileWriter].
-mixin BuildsSvgWriter {
+mixin _BuildsSvgWriter {
   late SvgFileWriter _svgFileWriter;
   bool _built = false;
 
@@ -63,7 +63,7 @@ mixin BuildsSvgWriter {
 }
 
 /// A mixin that manages default stroke and fill colors/opacity.
-mixin StrokesFill {
+mixin _StrokesFill {
   Color _strokeColor = Colors.black;
   double _strokeWidth = 0.2;
   Color _defFillColor = Colors.transparent;
@@ -82,8 +82,8 @@ mixin StrokesFill {
   }
 }
 
-/// A mixin that implements [IMuscleHighlights] logic for tracking highlighted muscles.
-mixin MusclesHighlights {
+/// A mixin that implements [_IMuscleHighlights] logic for tracking highlighted muscles.
+mixin _MusclesHighlights {
 
   /// The view being highlighted.
   BodyView get _view;

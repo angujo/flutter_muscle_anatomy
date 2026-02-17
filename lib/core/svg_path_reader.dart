@@ -6,10 +6,10 @@ part of 'core.dart';
 /// with support for group elements and automatic caching.
 class SvgPathReader {
   /// Internal cache to store instances of [SvgPathReader] per file path.
-  static final Map<String, SvgPathReader> _instances = {};
+  static final Map<SvgAssetType, SvgPathReader> _instances = {};
 
   /// Path to the SVG file.
-  final String _filePath;
+  final SvgAssetType _assetType;
 
   /// The parsed XML document of the SVG.
   XmlDocument? _document;
@@ -27,17 +27,17 @@ class SvgPathReader {
   final Map<String, List<String>> _groupCache = {};
 
   /// Private constructor for [SvgPathReader].
-  SvgPathReader._(this._filePath);
+  SvgPathReader._(this._assetType);
 
   /// Internal factory method to manage [SvgPathReader] instances.
   ///
-  /// Ensures that only one instance of [SvgPathReader] exists for a specific [filePath].
-  static SvgPathReader _fromFile(String filePath) {
-    if (_instances.containsKey(filePath)) {
-      return _instances[filePath]!;
+  /// Ensures that only one instance of [SvgPathReader] exists for a specific [assetType].
+  static SvgPathReader _fromString(SvgAssetType assetType) {
+    if (_instances.containsKey(assetType)) {
+      return _instances[assetType]!;
     }
-    final inst = SvgPathReader._(filePath);
-    _instances[filePath] = inst;
+    final inst = SvgPathReader._(assetType);
+    _instances[assetType] = inst;
     return inst;
   }
 
@@ -60,16 +60,16 @@ class SvgPathReader {
   }
 
   /// Returns an [SvgPathReader] for the male front view.
-  static SvgPathReader maleFront() => _fromFile('assets/male_front.svg');
+  static SvgPathReader maleFront() => _fromString(SvgAssetType.maleFront);
 
   /// Returns an [SvgPathReader] for the female front view.
-  static SvgPathReader femaleFront() => _fromFile('assets/female_front.svg');
+  static SvgPathReader femaleFront() => _fromString(SvgAssetType.femaleFront);
 
   /// Returns an [SvgPathReader] for the male back view.
-  static SvgPathReader maleBack() => _fromFile('assets/male_back.svg');
+  static SvgPathReader maleBack() => _fromString(SvgAssetType.maleBack);
 
   /// Returns an [SvgPathReader] for the female back view.
-  static SvgPathReader femaleBack() => _fromFile('assets/female_back.svg');
+  static SvgPathReader femaleBack() => _fromString(SvgAssetType.femaleBack);
 
   /// The intrinsic width of the SVG defined in the 'width' attribute.
   double get width {
@@ -107,7 +107,7 @@ class SvgPathReader {
   /// Reads the file from disk and parses the XML if not already done.
   void _ensureLoaded() {
     if (_document == null) {
-      final content = File(_filePath).readAsStringSync();
+      final content = getSvgAssetString(_assetType);
       _document = XmlDocument.parse(content);
     }
   }
