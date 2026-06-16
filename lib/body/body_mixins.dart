@@ -1,5 +1,29 @@
 part of 'body.dart';
 
+enum _GenderType {
+  male,
+  female;
+
+  static _GenderType fromName(String gender) {
+    String g = gender.trim().toLowerCase();
+    if (g.isEmpty) {
+      throw ArgumentError(
+        'Invalid gender: $gender. Expected ${names().join(', ')}.',
+      );
+    }
+    return switch (g.substring(0, 1)) {
+      'm' => male,
+      'f' => female,
+      _ => throw ArgumentError(
+        'Invalid gender: $gender. Expected ${names().join(', ')}.',
+      ),
+    };
+  }
+
+  static List<String> names() =>
+      values.expand((e) => [e.name.substring(0, 1), e.name]).toList();
+}
+
 /// Interface for classes that support highlighting muscles.
 abstract class _IMuscleHighlights {
   /// Highlights a specific [muscle] with optional [position], [color], and [opacity].
@@ -84,7 +108,6 @@ mixin _StrokesFill {
 
 /// A mixin that implements [_IMuscleHighlights] logic for tracking highlighted muscles.
 mixin _MusclesHighlights {
-
   /// The view being highlighted.
   BodyView get _view;
 
