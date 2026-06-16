@@ -43,149 +43,119 @@ Use this library in your flutter app to:
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Add the package to your `pubspec.yaml`:
 
-This library works well with any library that displays image from SVG string.
-It also provides Paths for canvas drawing.
+```yaml
+dependencies:
+  flutter_muscle_anatomy: ^1.0.0
+  flutter_svg: ^2.0.0 # Recommended for rendering SVG strings
+```
 
 ## Usage
 
-It can be used in either of the following methods:
+### 1. Simple Views (Male & Female)
 
-1. SVG strings
-2. Path drawing in canvas
-
-### SVG strings (Recommended)
-
-Generate SVG strings for usage with library like flutter_svg to render the image.
+You can easily display the front or back view of a male or female body.
 
 ```dart
-// Show the male front view
-final Male male = Male.front();
-// Single views
-//  final Male male = Male.back(); 
-//  final Male male = Male.both();
-// Front and back views
-//  final Male male = Male.frontBack(); // Starts with front view, then back
-//  final Male male = Male.backFront(); // Starts with back view, then front
-// Muscle-based views
-//  final Male male = Male.byMuscles([Muscle.biceps, Muscle.triceps,...]);
+// Male Front View
+final maleFront = Male.front();
 
+// Female Back View with custom hair color
+final femaleBack = Female.back(hairColor: Colors.brown);
 
-// Highlight a single muscle
-male.highlight
-(
-Muscle.biceps,
-position: MusclePosition.right,
-color: Colors.green,
-);
-// Highlight multiple muscles
-
-male.highlights([
-Muscle.brachialis,
-Muscle.extensorDigitorumLongus,
-],
-color: Colors.blue,
-);
-// Render the image using SVGPicture
-SvgPicture.string(male.toString());
+// Render using SvgPicture
+SvgPicture.string(maleFront.toString());
 ```
 
-Female muscle anatomy has same syntax as Male with exception of default hair color.
+### 2. Multi-View Displays
+
+Display both front and back views simultaneously. The library handles the layout and alignment.
 
 ```dart
+// Front then Back
+final maleBoth = Male.frontBack();
 
-final Female female = Female.front(hairColor: Colors.grey);
+// Back then Front
+final femaleBoth = Female.backFront();
+
+// Shortcut for frontBack
+final anatomy = Male.both();
 ```
 
-### Path drawing in canvas
+### 3. Smart View (By Muscles)
 
-Draw on a canvas using provided paths.
+If you only want to show the views that contain specific muscles, use `byMuscles`. It automatically decides whether to show the front, back, or both based on the muscles provided.
+
+```dart
+final anatomy = Male.byMuscles([
+  Muscle.biceps,
+  Muscle.trapezius,
+]);
+// This will likely show both views since biceps are front and trapezius is back.
+```
+
+### 4. Highlighting Muscles
+
+Highlight specific muscles with custom colors and opacity.
+
+```dart
+final anatomy = Male.front();
+
+// Highlight a single muscle (Specific side)
+anatomy.highlight(
+  Muscle.biceps,
+  position: MusclePosition.right,
+  color: Colors.green,
+  opacity: 0.7,
+);
+
+// Highlight multiple muscles (Both sides by default)
+anatomy.highlights(
+  [Muscle.abs, Muscle.quadriceps],
+  color: Colors.red,
+);
+```
+
+### 5. Dynamic Gender Selection
+
+Use `BodyAnatomy` for scenarios where the gender is determined at runtime.
+
+```dart
+final gender = 'female'; // or 'm', 'male', 'f'
+final factory = BodyAnatomy(gender);
+
+final anatomy = factory.front();
+// anatomy will be an instance of Female
+```
+
+### 6. Path Drawing (Canvas)
+
+For high-performance custom rendering or animations, use the raw `Path` objects.
 
 ```dart
 class MyCustomPainter extends CustomPainter {
-  MyCustomPainter();
-
   @override
   void paint(Canvas canvas, Size size) {
-    Female female = Female.front();
-    // If more than 1 view e.g. frontBack, 2 outlines are available.
-    final outlinePath = female.outlinePaths.first;
-    // Hair Outline is only applicable for Female
-    final hairOutlinePaths = female.hairOutlinePaths;
-    // Get paths for specific muscle
-    final highlightedMusclePaths = female.getMusclePaths(
-        Muscle.biceps, position: MusclePosition.right);
-    // Get paths for all muscles
-    final musclesPath = female.getAllMusclePaths();
+    final anatomy = Male.front();
+    final muscles = anatomy.getAllMusclePaths();
+    final outline = anatomy.outlinePaths.first;
 
-    final bounds = outlinePath.getBounds();
+    // ... scaling and transformation logic ...
 
-    final scaleX = size.width / bounds.width;
-    final scaleY = size.height / bounds.height;
-    final scale = math.min(scaleX, scaleY);
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..color = Colors.black;
 
-    final dx = (size.width - bounds.width * scale) / 2 - bounds.left * scale;
-    final dy = (size.height - bounds.height * scale) / 2 - bounds.top * scale;
-
-    final matrix = Matrix4.identity()
-      ..translate(dx, dy)
-      ..scale(scale);
-
-    final transformedPath = outlinePath.transform(matrix.storage);
-
-    canvas.save();
-
-    // All muscles
-    for (final path in musclesPath) {
-      canvas.drawPath(
-        path.transform(matrix.storage),
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 0.5
-          ..color = Colors.grey,
-      );
+    for (final path in muscles) {
+      canvas.drawPath(path, paint);
     }
-    // Highlight the specific muscle
-    for (final path in highlightedMusclePaths) {
-      canvas.drawPath(
-        path.transform(matrix.storage),
-        Paint()
-          ..style = PaintingStyle.fill
-          ..color = Colors.red,
-      );
-    }
-
-    // Hair outline
-    for (final path in hairOutlinePaths) {
-      canvas.drawPath(
-        path.transform(matrix.storage),
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 0.3
-          ..color = Colors.grey,
-      );
-
-      canvas.drawPath(
-        path.transform(matrix.storage),
-        Paint()
-          ..style = PaintingStyle.fill
-          ..color = Colors.grey,
-      );
-    }
-    // Outline
-    canvas.drawPath(
-      transformedPath,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 0.5
-        ..color = Colors.black26,
-    );
-    canvas.restore();
+    canvas.drawPath(outline, paint..strokeWidth = 2);
   }
-}
 
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
 ```
 
 ## Contributing
