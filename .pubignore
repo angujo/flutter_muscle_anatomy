@@ -1,0 +1,7 @@
+# Exclude IDE and local files
+.idea/
+.vscode/
+.dart_tool/
+.packages
+build/
+pubspec.lock

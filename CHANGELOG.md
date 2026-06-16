@@ -1,3 +1,11 @@
+## 1.1.0
+
+* Added localization support using `easy_localization`.
+* Integrated translations for 10 languages: English, Spanish, Portuguese (Brazil), Hindi, Arabic, French, Indonesian, German, Japanese, and Korean.
+* Added `MuscleLocalization`, `BodyViewLocalization`, and `MusclePositionLocalization` extensions for easy access to translated names.
+* Updated example app with a language picker and localized UI strings.
+* Improved error handling for gender parsing with localized error messages.
+
 ## 1.0.0
 
 * Major refactoring of the internal engine for better performance and smaller codebase.
