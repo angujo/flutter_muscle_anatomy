@@ -54,9 +54,9 @@ abstract class _SkeletalMuscles
     return Muscle.values
         .map(
           (m) => positions
-          .map((p) => _svgPathReader.getPathDs('${p.name}_${m.name}'))
-          .expand((l) => l),
-    )
+              .map((p) => _svgPathReader.getPathDs('${p.name}_${m.name}'))
+              .expand((l) => l),
+        )
         .expand((l) => l)
         .map((s) => parseSvgPathData(s))
         .toList();
@@ -66,8 +66,8 @@ abstract class _SkeletalMuscles
     required BodyView view,
     required SvgPathReader svgPathReader,
   }) : _view = view,
-        _svgPathReader = svgPathReader,
-        dimension = Size(svgPathReader.width, svgPathReader.height);
+       _svgPathReader = svgPathReader,
+       dimension = Size(svgPathReader.width, svgPathReader.height);
 
   /// Returns a [MuscleHelper] for the specified [muscle].
   MuscleHelper getMuscleHelper(Muscle muscle) =>
@@ -125,7 +125,7 @@ abstract class _SkeletalMuscles
 /// Internal implementation of male skeletal muscles.
 class _MaleSkeletalMuscles extends _SkeletalMuscles {
   _MaleSkeletalMuscles({required super.view})
-      : super(svgPathReader: SvgPathReader.male(view));
+    : super(svgPathReader: SvgPathReader.male(view));
 
   @override
   final Color? _hairColor = null;
@@ -146,8 +146,8 @@ class _MaleSkeletalMuscles extends _SkeletalMuscles {
 /// Internal implementation of female skeletal muscles.
 class _FemaleSkeletalMuscles extends _SkeletalMuscles {
   _FemaleSkeletalMuscles({required super.view, Color? hairColor})
-      : _hairColor = hairColor ?? Colors.grey,
-        super(svgPathReader: SvgPathReader.female(view));
+    : _hairColor = hairColor ?? Colors.grey,
+      super(svgPathReader: SvgPathReader.female(view));
 
   @override
   final Color _hairColor;
@@ -197,12 +197,12 @@ abstract class _Body with _BuildsSvgWriter implements _IMuscleHighlights {
     return _skeletalMuscles
         .map(
           (s) => MusclePosition.both == position
-          ? [
-        s.getMusclePath(muscle, position: MusclePosition.left),
-        s.getMusclePath(muscle, position: MusclePosition.right),
-      ]
-          : [s.getMusclePath(muscle, position: position)],
-    )
+              ? [
+                  s.getMusclePath(muscle, position: MusclePosition.left),
+                  s.getMusclePath(muscle, position: MusclePosition.right),
+                ]
+              : [s.getMusclePath(muscle, position: position)],
+        )
         .expand((l) => l)
         .nonNulls
         .toList();
@@ -210,11 +210,11 @@ abstract class _Body with _BuildsSvgWriter implements _IMuscleHighlights {
 
   @override
   void highlight(
-      Muscle muscle, {
-        MusclePosition? position,
-        Color? color,
-        double? opacity,
-      }) {
+    Muscle muscle, {
+    MusclePosition? position,
+    Color? color,
+    double? opacity,
+  }) {
     for (final skeletal in _skeletalMuscles) {
       skeletal.highlight(
         muscle,
@@ -227,11 +227,11 @@ abstract class _Body with _BuildsSvgWriter implements _IMuscleHighlights {
 
   @override
   void highlights(
-      Iterable<Muscle> muscles, {
-        MusclePosition? position,
-        Color? color,
-        double? opacity,
-      }) {
+    Iterable<Muscle> muscles, {
+    MusclePosition? position,
+    Color? color,
+    double? opacity,
+  }) {
     for (final muscle in muscles) {
       highlight(muscle, position: position, color: color, opacity: opacity);
     }
@@ -255,9 +255,9 @@ abstract class _Body with _BuildsSvgWriter implements _IMuscleHighlights {
 
   /// Internal factory helper to create a body instance based on a set of muscles.
   static T _byMuscles<T extends _Body>(
-      Iterable<Muscle> muscles, {
-        required T Function(int fCount, int bCount) bodyFnc,
-      }) {
+    Iterable<Muscle> muscles, {
+    required T Function(int fCount, int bCount) bodyFnc,
+  }) {
     final fCounts = muscles.where((m) => m.isForView(BodyView.front)).length;
     final bCounts = muscles.where((m) => m.isForView(BodyView.back)).length;
     T b = bodyFnc.call(fCounts, bCounts);
@@ -276,18 +276,84 @@ abstract class BodyMuscleAnatomy {
   List<Path> getMusclePaths(Muscle muscle, {required MusclePosition position});
 
   void highlight(
-      Muscle muscle, {
-        MusclePosition? position,
-        Color? color,
-        double? opacity,
-      });
+    Muscle muscle, {
+    MusclePosition? position,
+    Color? color,
+    double? opacity,
+  });
 
   void highlights(
-      Iterable<Muscle> muscles, {
-        MusclePosition? position,
-        Color? color,
-        double? opacity,
-      });
+    Iterable<Muscle> muscles, {
+    MusclePosition? position,
+    Color? color,
+    double? opacity,
+  });
+
+  /// Returns a [BodyMuscleAnatomy] instance for the specified [gender].
+  ///
+  /// The [gender] string can be 'm', 'male', 'f', or 'female' (case-insensitive).
+  static BodyMuscleAnatomy forGender(String gender) {
+    return switch (_GenderType.fromName(gender)) {
+      _GenderType.male => Male.both(),
+      _GenderType.female => Female.both(),
+    };
+  }
+}
+
+class BodyAnatomy {
+  late final _GenderType _genderType;
+
+  BodyAnatomy._(dynamic gender) {
+    if (gender is String) {
+      _genderType = _GenderType.fromName(gender);
+    } else if (gender is _GenderType) {
+      _genderType = gender;
+    } else {
+      throw ArgumentError('Invalid gender type: $gender');
+    }
+  }
+
+  BodyMuscleAnatomy front() {
+    return switch (_genderType) {
+      _GenderType.male => Male.front(),
+      _GenderType.female => Female.front(),
+    };
+  }
+
+  BodyMuscleAnatomy back() {
+    return switch (_genderType) {
+      _GenderType.male => Male.back(),
+      _GenderType.female => Female.back(),
+    };
+  }
+
+  BodyMuscleAnatomy frontBack() {
+    return switch (_genderType) {
+      _GenderType.male => Male.frontBack(),
+      _GenderType.female => Female.frontBack(),
+    };
+  }
+
+  BodyMuscleAnatomy backFront() {
+    return switch (_genderType) {
+      _GenderType.male => Male.backFront(),
+      _GenderType.female => Female.backFront(),
+    };
+  }
+
+  BodyMuscleAnatomy both() {
+    return switch (_genderType) {
+      _GenderType.male => Male.both(),
+      _GenderType.female => Female.both(),
+    };
+  }
+
+  BodyMuscleAnatomy byMuscles(Iterable<Muscle> muscles) {
+    return switch (_genderType) {
+      _GenderType.male => Male.byMuscles(muscles),
+      _GenderType.female => Female.byMuscles(muscles),
+    };
+  }
 }
 
 /// Represents the male body anatomy.
