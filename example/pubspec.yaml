@@ -16,6 +16,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   flutter_svg: 2.2.3
+  easy_localization: ^3.0.3
   flutter_muscle_anatomy:
     path: ../
 

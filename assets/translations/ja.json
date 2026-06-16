@@ -1,0 +1,77 @@
+{
+  "muscles": {
+    "triceps": "上腕三頭筋",
+    "levatorScapulae": "肩甲挙筋",
+    "trapezius": "僧帽筋",
+    "posteriorDeltoid": "三角筋後部",
+    "infraspinatus": "棘下筋",
+    "teresMinor": "小円筋",
+    "teresMajor": "大円筋",
+    "anconeus": "肘筋",
+    "flexorCarpiUlnaris": "尺側手根屈筋",
+    "extensorCarpiUlnaris": "尺側手根伸筋",
+    "extensorDigitorum": "指伸筋",
+    "externalOblique": "外腹斜筋",
+    "latissimusDorsi": "広背筋",
+    "gluteusMedius": "中殿筋",
+    "gluteusMaximus": "大殿筋",
+    "iliotibialTact": "腸脛靭帯",
+    "bicepsFemoris": "大腿二頭筋",
+    "semitendinosus": "半腱様筋",
+    "adductorMagnus": "大内転筋",
+    "semimebranosus": "半膜様筋",
+    "gastrocnemius": "腓腹筋",
+    "soleus": "ヒラメ筋",
+    "digastric": "顎二腹筋",
+    "sternocleidomastoid": "胸鎖乳突筋",
+    "scalene": "斜角筋",
+    "upperTrapezius": "僧帽筋上部",
+    "deltoid": "三角筋",
+    "biceps": "上腕二頭筋",
+    "pectolarisMajor": "大胸筋",
+    "rectusAbdominis": "腹直筋",
+    "externalAbdominalOblique": "外腹斜筋",
+    "adductorLongus": "長内転筋",
+    "tensorFasciaeLatae": "大腿筋膜張筋",
+    "pectineus": "恥骨筋",
+    "iliopsoas": "腸腰筋",
+    "gracilis": "薄筋",
+    "rectusFemoris": "大腿直筋",
+    "vastusMedialis": "内側広筋",
+    "vastusLateralis": "外側広筋",
+    "sartorius": "縫工筋",
+    "tibialisAnterior": "前脛骨筋",
+    "anteriorDeltoid": "三角筋前部",
+    "extensorDigitorumLongus": "長指伸筋",
+    "peroneusLongus": "長腓骨筋",
+    "brachialis": "上腕筋",
+    "brachioradialis": "腕橈骨筋",
+    "pronatorTeres": "円回内筋",
+    "flexorFasciaeLatae": "大腿筋膜屈筋"
+  },
+  "views": {
+    "front": "正面",
+    "back": "背面",
+    "both": "両面"
+  },
+  "positions": {
+    "left": "左",
+    "right": "右",
+    "both": "両側"
+  },
+  "genders": {
+    "male": "男性",
+    "female": "女性"
+  },
+  "ui": {
+    "app_title": "Flutter 筋肉解剖学",
+    "random_muscles": "ランダムな筋肉",
+    "clear": "クリア",
+    "switch_language": "言語を切り替える",
+    "to_spanish": "スペイン語に切り替える",
+    "to_english": "英語に切り替える"
+  },
+  "errors": {
+    "invalid_gender": "無効な性別: {gender}。 {expected} を期待していました。"
+  }
+}

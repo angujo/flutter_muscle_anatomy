@@ -1,0 +1,77 @@
+{
+  "muscles": {
+    "triceps": "ट्राइसेप्स",
+    "levatorScapulae": "लेवेटर स्कैपुले",
+    "trapezius": "ट्रेपेज़ियस",
+    "posteriorDeltoid": "पोस्टीरियर डेल्टॉइड",
+    "infraspinatus": "इन्फ्रास्पिनैटस",
+    "teresMinor": "टेरेस माइनर",
+    "teresMajor": "टेरेस मेजर",
+    "anconeus": "एनकोनियस",
+    "flexorCarpiUlnaris": "फ्लेक्सर कार्पी अल्नारिस",
+    "extensorCarpiUlnaris": "एक्सटेंसर कार्पी अल्नारिस",
+    "extensorDigitorum": "एक्सटेंसर डिजिटोरम",
+    "externalOblique": "एक्सटर्नल ऑब्लिक",
+    "latissimusDorsi": "लैटिसिमस डोर्सी",
+    "gluteusMedius": "ग्लूटियस मेडियस",
+    "gluteusMaximus": "ग्लूटियस मैक्सिमस",
+    "iliotibialTact": "इलियोटिबियल ट्रैक्ट",
+    "bicepsFemoris": "बाइसेप्स फेमोरिस",
+    "semitendinosus": "सेमिटेंडिनोसस",
+    "adductorMagnus": "एडक्टर मैग्नस",
+    "semimebranosus": "सेमीमेम्ब्रेनोसस",
+    "gastrocnemius": "गैस्ट्रोकनेमियस",
+    "soleus": "सोलियस",
+    "digastric": "डिगास्ट्रिक",
+    "sternocleidomastoid": "स्टर्नोक्लीडोमैस्टॉइड",
+    "scalene": "स्केलीन",
+    "upperTrapezius": "अपर ट्रेपेज़ियस",
+    "deltoid": "डेल्टॉइड",
+    "biceps": "बाइसेप्स",
+    "pectolarisMajor": "पेक्टोरलिस मेजर",
+    "rectusAbdominis": "रेक्टस एब्डोमिनिस",
+    "externalAbdominalOblique": "एक्सटर्नल एब्डोमिनल ऑब्लिक",
+    "adductorLongus": "एडक्टर लॉन्गस",
+    "tensorFasciaeLatae": "टेन्सर फेशिया लेटा",
+    "pectineus": "पेक्टिनियस",
+    "iliopsoas": "इलियोसोआस",
+    "gracilis": "ग्रैसिलिस",
+    "rectusFemoris": "रेक्टस फेमोरिस",
+    "vastusMedialis": "वास्टस मेडियालिस",
+    "vastusLateralis": "वास्टस लेटरलिस",
+    "sartorius": "सारटोरियस",
+    "tibialisAnterior": "टिबियालिस एंटीरियर",
+    "anteriorDeltoid": "एंटीरियर डेल्टॉइड",
+    "extensorDigitorumLongus": "एक्सटेंसर डिजिटोरम लॉन्गस",
+    "peroneusLongus": "पेरोनियस लॉन्गस",
+    "brachialis": "ब्रेकियलिस",
+    "brachioradialis": "ब्रेकियोरेडियलिस",
+    "pronatorTeres": "प्रोनेटर टेरेस",
+    "flexorFasciaeLatae": "फ्लेक्सर फेशिया लेटा"
+  },
+  "views": {
+    "front": "सामने",
+    "back": "पीछे",
+    "both": "दोनों"
+  },
+  "positions": {
+    "left": "बायां",
+    "right": "दायां",
+    "both": "दोनों"
+  },
+  "genders": {
+    "male": "पुरुष",
+    "female": "महिला"
+  },
+  "ui": {
+    "app_title": "फ्लटर मांसपेशी शरीर रचना",
+    "random_muscles": "यादृच्छिक मांसपेशियां",
+    "clear": "साफ़ करें",
+    "switch_language": "भाषा बदलें",
+    "to_spanish": "स्पेनिश में बदलें",
+    "to_english": "अंग्रेजी में बदलें"
+  },
+  "errors": {
+    "invalid_gender": "अमान्य लिंग: {gender}। अपेक्षित {expected}।"
+  }
+}

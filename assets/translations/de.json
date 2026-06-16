@@ -1,0 +1,77 @@
+{
+  "muscles": {
+    "triceps": "Trizeps",
+    "levatorScapulae": "Schulterblattheber",
+    "trapezius": "Trapezmuskel",
+    "posteriorDeltoid": "Hinterer Deltamuskel",
+    "infraspinatus": "Untergrätenmuskel",
+    "teresMinor": "Kleiner Rundmuskel",
+    "teresMajor": "Großer Rundmuskel",
+    "anconeus": "Kuckucksmuskel",
+    "flexorCarpiUlnaris": "Ellenbogenseitiger Handbeuger",
+    "extensorCarpiUlnaris": "Ellenbogenseitiger Handstrecker",
+    "extensorDigitorum": "Fingerstrecker",
+    "externalOblique": "Äußerer schräger Bauchmuskel",
+    "latissimusDorsi": "Breitester Rückenmuskel",
+    "gluteusMedius": "Mittlerer Gesäßmuskel",
+    "gluteusMaximus": "Großer Gesäßmuskel",
+    "iliotibialTact": "Iliotibialband",
+    "bicepsFemoris": "Zweiköpfiger Oberschenkelmuskel",
+    "semitendinosus": "Halbsehnenmuskel",
+    "adductorMagnus": "Großer Adduktor",
+    "semimebranosus": "Plattsehnenmuskel",
+    "gastrocnemius": "Zwillingswadenmuskel",
+    "soleus": "Schollenmuskel",
+    "digastric": "Zweibäuchiger Muskel",
+    "sternocleidomastoid": "Kopfnicker",
+    "scalene": "Treppenmuskeln",
+    "upperTrapezius": "Oberer Trapezmuskel",
+    "deltoid": "Deltamuskel",
+    "biceps": "Bizeps",
+    "pectolarisMajor": "Großer Brustmuskel",
+    "rectusAbdominis": "Gerader Bauchmuskel",
+    "externalAbdominalOblique": "Äußerer schräger Bauchmuskel",
+    "adductorLongus": "Langer Adduktor",
+    "tensorFasciaeLatae": "Oberschenkelbindenspanner",
+    "pectineus": "Kamm-Muskel",
+    "iliopsoas": "Lendendarmbeinmuskel",
+    "gracilis": "Schlankmuskel",
+    "rectusFemoris": "Gerader Oberschenkelmuskel",
+    "vastusMedialis": "Innerer Schenkelmuskel",
+    "vastusLateralis": "Äußerer Schenkelmuskel",
+    "sartorius": " Schneidermuskel",
+    "tibialisAnterior": "Vorderer Schienbeinmuskel",
+    "anteriorDeltoid": "Vorderer Deltamuskel",
+    "extensorDigitorumLongus": "Langer Zehenstrecker",
+    "peroneusLongus": "Langer Wadenbeinmuskel",
+    "brachialis": "Armbeuger",
+    "brachioradialis": "Oberarm-Speichen-Muskel",
+    "pronatorTeres": "Runder Einwärtsdreher",
+    "flexorFasciaeLatae": "Beuger der Oberschenkelbinde"
+  },
+  "views": {
+    "front": "Vorderseite",
+    "back": "Rückseite",
+    "both": "Beide"
+  },
+  "positions": {
+    "left": "Links",
+    "right": "Rechts",
+    "both": "Beide"
+  },
+  "genders": {
+    "male": "Männlich",
+    "female": "Weiblich"
+  },
+  "ui": {
+    "app_title": "Flutter Muskelanatomie",
+    "random_muscles": "Zufällige Muskeln",
+    "clear": "Löschen",
+    "switch_language": "Sprache wechseln",
+    "to_spanish": "Zu Spanisch wechseln",
+    "to_english": "Zu Englisch wechseln"
+  },
+  "errors": {
+    "invalid_gender": "Ungültiges Geschlecht: {gender}. Erwartet wurde {expected}."
+  }
+}

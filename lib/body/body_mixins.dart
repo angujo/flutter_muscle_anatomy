@@ -1,32 +1,68 @@
 part of 'body.dart';
 
+/// Represents the gender types supported by the body anatomy model.
 enum _GenderType {
+  /// Male body type.
   male,
+
+  /// Female body type.
   female;
 
+  /// Converts a [gender] string into a [_GenderType].
+  ///
+  /// Matches the first character of the string (case-insensitive):
+  /// - 'm' -> [male]
+  /// - 'f' -> [female]
+  ///
+  /// It also supports matching against localized names.
+  ///
+  /// Throws an [ArgumentError] if [gender] is empty or does not start with 'm' or 'f'.
   static _GenderType fromName(String gender) {
     String g = gender.trim().toLowerCase();
     if (g.isEmpty) {
       throw ArgumentError(
-        'Invalid gender: $gender. Expected ${names().join(', ')}.',
+        'errors.invalid_gender'.tr(
+          namedArgs: {'gender': gender, 'expected': names().join(', ')},
+        ),
       );
     }
+
+    for (final type in values) {
+      if (type.name.toLowerCase() == g ||
+          type.name.substring(0, 1).toLowerCase() == g ||
+          type.name.localizedGender.toLowerCase() == g) {
+        return type;
+      }
+    }
+
     return switch (g.substring(0, 1)) {
       'm' => male,
       'f' => female,
       _ => throw ArgumentError(
-        'Invalid gender: $gender. Expected ${names().join(', ')}.',
+        'errors.invalid_gender'.tr(
+          namedArgs: {'gender': gender, 'expected': names().join(', ')},
+        ),
       ),
     };
   }
 
-  static List<String> names() =>
-      values.expand((e) => [e.name.substring(0, 1), e.name]).toList();
+  /// Returns a list of short and full names for all available genders, including localized ones.
+  static List<String> names() => values
+      .expand((e) => [
+            e.name.substring(0, 1),
+            e.name,
+            e.name.localizedGender,
+          ])
+      .toSet()
+      .toList();
 }
 
-/// Interface for classes that support highlighting muscles.
+/// Interface for classes that support highlighting muscles on the body.
 abstract class _IMuscleHighlights {
-  /// Highlights a specific [muscle] with optional [position], [color], and [opacity].
+  /// Highlights a specific [muscle] in the view.
+  ///
+  /// [position] specifies which side to highlight (defaults to [MusclePosition.both]).
+  /// [color] and [opacity] can override the default highlight styling.
   void highlight(
     Muscle muscle, {
     MusclePosition? position,
@@ -34,7 +70,10 @@ abstract class _IMuscleHighlights {
     double? opacity,
   });
 
-  /// Highlights multiple [muscles] with optional [position], [color], and [opacity].
+  /// Highlights a collection of [muscles] in the view.
+  ///
+  /// [position] specifies which side to highlight (defaults to [MusclePosition.both]).
+  /// [color] and [opacity] can override the default highlight styling.
   void highlights(
     Iterable<Muscle> muscles, {
     MusclePosition? position,
@@ -43,24 +82,32 @@ abstract class _IMuscleHighlights {
   });
 }
 
-/// A mixin that provides functionality for building an [SvgFileWriter].
+/// A mixin that provides functionality for building an [SvgFileWriter] and
+/// managing the SVG generation process.
 mixin _BuildsSvgWriter {
+  /// The writer used to generate SVG content.
   late SvgFileWriter _svgFileWriter;
+
+  /// Tracks whether the SVG has already been built.
   bool _built = false;
 
-  /// Returns the root SVG groups to be built into the SVG.
+  /// Returns the root [SvgGroup]s that compose the body's SVG structure.
+  ///
+  /// This must be implemented by the class using the mixin.
   List<SvgGroup> _getRootBuilds();
 
-  /// The dimensions of the SVG view box.
+  /// The physical dimensions (width and height) of the SVG view box.
   Size get dimension;
 
-  /// Rebuilds the SVG content.
+  /// Forces a rebuild of the SVG content by resetting the [_built] flag and calling [build].
   void rebuild() {
     _built = false;
     build();
   }
 
-  /// Returns the SVG string representation.
+  /// Returns the string representation of the generated SVG.
+  ///
+  /// Automatically calls [build] if it hasn't been called yet.
   @override
   String toString() {
     build();
@@ -68,6 +115,9 @@ mixin _BuildsSvgWriter {
   }
 
   /// Builds the SVG document if it hasn't been built yet.
+  ///
+  /// Initializes the [_svgFileWriter] with the current [dimension],
+  /// adds the root elements from [_getRootBuilds], and finalizes the build.
   void build() {
     if (_built) return;
     _svgFileWriter = SvgFileWriter(dimension);
@@ -77,7 +127,10 @@ mixin _BuildsSvgWriter {
     _built = true;
   }
 
-  /// Scales the given [size] to fit or fill the [dimension].
+  /// Scales the given [size] to either [fill] or fit the current [dimension].
+  ///
+  /// If [fill] is true, the size is scaled using the maximum multiplier between
+  /// width and height ratios. Otherwise, it uses the minimum multiplier.
   Size scaledSize(Size size, {bool fill = false}) {
     final mW = size.width / dimension.width;
     final mH = size.height / dimension.height;
@@ -86,42 +139,54 @@ mixin _BuildsSvgWriter {
   }
 }
 
-/// A mixin that manages default stroke and fill colors/opacity.
+/// A mixin that manages styling properties for strokes and default fills
+/// of the body parts.
 mixin _StrokesFill {
+  /// The color of the strokes for body part outlines.
   Color _strokeColor = Colors.black;
+
+  /// The thickness of the strokes for body part outlines.
   double _strokeWidth = 0.2;
+
+  /// The default fill color for body parts when not highlighted.
   Color _defFillColor = Colors.transparent;
+
+  /// The default fill opacity for body parts when not highlighted.
   double _defFillOpacity = 0;
 
-  /// Sets the default stroke color and width.
+  /// Sets the default stroke [color] and [width].
   void setStroke({required Color color, required double width}) {
     _strokeColor = color;
     _strokeWidth = width;
   }
 
-  /// Sets the default fill color and opacity.
+  /// Sets the default fill [color] and [opacity].
   void setFill({required Color color, required double opacity}) {
     _defFillColor = color;
     _defFillOpacity = opacity;
   }
 }
 
-/// A mixin that implements [_IMuscleHighlights] logic for tracking highlighted muscles.
+/// A mixin that implements the [_IMuscleHighlights] interface to track
+/// and manage muscle highlighting state.
 mixin _MusclesHighlights {
-  /// The view being highlighted.
+  /// The specific [BodyView] (e.g., front, back) this highlighting logic is applied to.
   BodyView get _view;
 
+  /// The default color used for highlighting muscles.
   Color _defHighlightColor = Colors.red;
+
+  /// The default opacity used for highlighting muscles.
   double _defHighlightOpacity = 0.5;
 
-  /// Map of highlighted muscles and their positions.
+  /// Internal storage for tracked highlights, keyed by muscle and its position.
   final Map<(Muscle, MusclePosition), MuscleHighlight<Muscle>> _highlights = {};
 
-  /// List of currently highlighted muscles and their positions.
+  /// Returns a list of keys representing currently highlighted muscles and their positions.
   List<(Muscle, MusclePosition)> get _highlightedMuscles =>
       _highlights.keys.toList();
 
-  /// List of muscles and positions that are not currently highlighted.
+  /// Returns a list of muscles and positions that are currently NOT highlighted for the current [_view].
   List<(Muscle, MusclePosition)> get _nonHighlightedMuscles {
     final Set<(Muscle, MusclePosition)> highlighted = Set.from(
       _highlightedMuscles,
@@ -143,13 +208,16 @@ mixin _MusclesHighlights {
         .toList();
   }
 
-  /// Sets the default highlight color and opacity.
+  /// Sets the default highlight [color] and [opacity] to be used when not explicitly specified in [highlight].
   void setDefaultHighlight({required Color color, required double opacity}) {
     _defHighlightColor = color;
     _defHighlightOpacity = opacity;
   }
 
   /// Highlights a [muscle] at a specific [position].
+  ///
+  /// If [position] is [MusclePosition.both], it removes any individual left/right highlights for that muscle.
+  /// If [position] is left or right and a "both" highlight exists, it replaces the "both" highlight with the other side's highlight.
   void highlight(
     Muscle muscle, {
     MusclePosition? position,
@@ -178,7 +246,7 @@ mixin _MusclesHighlights {
     });
   }
 
-  /// Highlights multiple [muscles].
+  /// Highlights multiple [muscles] with an optional [position], [color], and [opacity].
   void highlights(
     Iterable<Muscle> muscles, {
     MusclePosition? position,

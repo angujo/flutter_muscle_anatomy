@@ -1,0 +1,77 @@
+{
+  "muscles": {
+    "triceps": "Tríceps",
+    "levatorScapulae": "Elevador de la escápula",
+    "trapezius": "Trapecio",
+    "posteriorDeltoid": "Deltoides posterior",
+    "infraspinatus": "Infraespinoso",
+    "teresMinor": "Redondo menor",
+    "teresMajor": "Redondo mayor",
+    "anconeus": "Ancóneo",
+    "flexorCarpiUlnaris": "Flexor cubital del carpo",
+    "extensorCarpiUlnaris": "Extensor cubital del carpo",
+    "extensorDigitorum": "Extensor de los dedos",
+    "externalOblique": "Oblicuo externo",
+    "latissimusDorsi": "Dorsal ancho",
+    "gluteusMedius": "Glúteo medio",
+    "gluteusMaximus": "Glúteo mayor",
+    "iliotibialTact": "Tracto iliotibial",
+    "bicepsFemoris": "Bíceps femoral",
+    "semitendinosus": "Semitendinoso",
+    "adductorMagnus": "Aductor mayor",
+    "semimebranosus": "Semimembranoso",
+    "gastrocnemius": "Gastrocnemio",
+    "soleus": "Sólio",
+    "digastric": "Digástrico",
+    "sternocleidomastoid": "Esternocleidomastoideo",
+    "scalene": "Escaleno",
+    "upperTrapezius": "Trapecio superior",
+    "deltoid": "Deltoides",
+    "biceps": "Bíceps",
+    "pectolarisMajor": "Pectoral mayor",
+    "rectusAbdominis": "Recto abdominal",
+    "externalAbdominalOblique": "Oblicuo abdominal externo",
+    "adductorLongus": "Aductor largo",
+    "tensorFasciaeLatae": "Tensor de la fascia lata",
+    "pectineus": "Pectíneo",
+    "iliopsoas": "Iliopsoas",
+    "gracilis": "Grácil",
+    "rectusFemoris": "Recto femoral",
+    "vastusMedialis": "Vasto medial",
+    "vastusLateralis": "Vasto lateral",
+    "sartorius": "Sartorio",
+    "tibialisAnterior": "Tibial anterior",
+    "anteriorDeltoid": "Deltoides anterior",
+    "extensorDigitorumLongus": "Extensor largo de los dedos",
+    "peroneusLongus": "Peroneo largo",
+    "brachialis": "Braquial",
+    "brachioradialis": "Braquiorradial",
+    "pronatorTeres": "Pronador redondo",
+    "flexorFasciaeLatae": "Flexor de la fascia lata"
+  },
+  "views": {
+    "front": "Frente",
+    "back": "Espalda",
+    "both": "Ambos"
+  },
+  "positions": {
+    "left": "Izquierda",
+    "right": "Derecha",
+    "both": "Ambos"
+  },
+  "genders": {
+    "male": "Hombre",
+    "female": "Mujer"
+  },
+  "ui": {
+    "app_title": "Anatomía Muscular Flutter",
+    "random_muscles": "Músculos Aleatorios",
+    "clear": "Limpiar",
+    "switch_language": "Cambiar Idioma",
+    "to_spanish": "Cambiar a Español",
+    "to_english": "Switch to English"
+  },
+  "errors": {
+    "invalid_gender": "Género inválido: {gender}. Se esperaba {expected}."
+  }
+}

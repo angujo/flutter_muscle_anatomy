@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_muscle_anatomy/core/assets/svg_assets.dart';
 import 'package:flutter_muscle_anatomy/core/utils.dart';
 import 'package:xml/xml.dart';
+import 'package:easy_localization/easy_localization.dart';
+
+part 'localization.dart';
 
 part 'app_enums.dart';
 

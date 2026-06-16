@@ -1,24 +1,50 @@
 import 'dart:math';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_muscle_anatomy/body/body.dart';
 import 'package:flutter_muscle_anatomy/core/core.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [
+        Locale('en'),
+        Locale('es'),
+        Locale('pt'),
+        Locale('hi'),
+        Locale('ar'),
+        Locale('fr'),
+        Locale('id'),
+        Locale('de'),
+        Locale('ja'),
+        Locale('ko'),
+      ],
+      path: 'packages/flutter_muscle_anatomy/assets/translations',
+      fallbackLocale: const Locale('en'),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: const MyHomePage(title: 'Flutter Muscle Anatomy'),
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
+      title: 'ui.app_title'.tr(),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      ),
+      home: MyHomePage(title: 'ui.app_title'.tr()),
     );
   }
 }
@@ -50,6 +76,29 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _showLanguagePicker() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: ListView(
+            shrinkWrap: true,
+            children: context.supportedLocales.map((locale) {
+              return ListTile(
+                title: Text(locale.languageCode.toUpperCase()),
+                selected: context.locale == locale,
+                onTap: () {
+                  context.setLocale(locale);
+                  Navigator.pop(context);
+                },
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final anatomyFactory = BodyAnatomy(_selectedGender.name);
@@ -58,6 +107,13 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Center(child: Text(widget.title)),
+        actions: [
+          IconButton(
+            onPressed: _showLanguagePicker,
+            icon: const Icon(Icons.language),
+            tooltip: 'ui.switch_language'.tr(),
+          ),
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -70,16 +126,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SegmentedButton<Gender>(
-                      segments: const [
+                      segments: [
                         ButtonSegment(
                           value: Gender.male,
-                          label: Text('Male'),
-                          icon: Icon(Icons.male),
+                          label: Text('male'.localizedGender),
+                          icon: const Icon(Icons.male),
                         ),
                         ButtonSegment(
                           value: Gender.female,
-                          label: Text('Female'),
-                          icon: Icon(Icons.female),
+                          label: Text('female'.localizedGender),
+                          icon: const Icon(Icons.female),
                         ),
                       ],
                       selected: {_selectedGender},
@@ -89,20 +145,21 @@ class _MyHomePageState extends State<MyHomePage> {
                         });
                       },
                     ),
-                    const SizedBox(width: 8),
-                    Row(mainAxisAlignment: MainAxisAlignment.center,
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton.icon(
                           onPressed: _selectRandomMuscle,
                           icon: const Icon(Icons.shuffle),
-                          label: const Text('Random Muscles'),
+                          label: Text('ui.random_muscles'.tr()),
                         ),
                         const SizedBox(width: 8),
                         ElevatedButton.icon(
                           onPressed: () =>
                               setState(() => _selectedMuscles.clear()),
                           icon: const Icon(Icons.clear_all),
-                          label: const Text('Clear'),
+                          label: Text('ui.clear'.tr()),
                         ),
                       ],
                     ),
@@ -114,11 +171,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   _anatomyView(
                     anatomyFactory.front()..highlights(_selectedMuscles),
-                    '${_selectedGender.name.toUpperCase()} Front',
+                    '${_selectedGender.name.localizedGender.toUpperCase()} ${BodyView.front.localizedName}',
                   ),
                   _anatomyView(
                     anatomyFactory.back()..highlights(_selectedMuscles),
-                    '${_selectedGender.name.toUpperCase()} Back',
+                    '${_selectedGender.name.localizedGender.toUpperCase()} ${BodyView.back.localizedName}',
                   ),
                 ],
               ),
@@ -128,7 +185,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Wrap(
                     spacing: 8,
                     children: _selectedMuscles
-                        .map((m) => Chip(label: Text(m.name)))
+                        .map((m) => Chip(label: Text(m.localizedName)))
                         .toList(),
                   ),
                 ),

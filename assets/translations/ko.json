@@ -1,0 +1,77 @@
+{
+  "muscles": {
+    "triceps": "삼두근",
+    "levatorScapulae": "견갑거근",
+    "trapezius": "승모근",
+    "posteriorDeltoid": "삼각근 후부",
+    "infraspinatus": "가시아래근(극하근)",
+    "teresMinor": "소원근",
+    "teresMajor": "대원근",
+    "anconeus": "팔꿈치근(주근)",
+    "flexorCarpiUlnaris": "척측수근굴근",
+    "extensorCarpiUlnaris": "척측수근신근",
+    "extensorDigitorum": "손가락폄근(지신근)",
+    "externalOblique": "외복사근",
+    "latissimusDorsi": "광배근",
+    "gluteusMedius": "중둔근",
+    "gluteusMaximus": "대둔근",
+    "iliotibialTact": "장경인대",
+    "bicepsFemoris": "대퇴이두근",
+    "semitendinosus": "반건양근",
+    "adductorMagnus": "대내전근",
+    "semimebranosus": "반막양근",
+    "gastrocnemius": "비복근",
+    "soleus": "가자미근",
+    "digastric": "악이복근",
+    "sternocleidomastoid": "흉쇄유돌근",
+    "scalene": "사각근",
+    "upperTrapezius": "상부 승모근",
+    "deltoid": "삼각근",
+    "biceps": "이두근",
+    "pectolarisMajor": "대흉근",
+    "rectusAbdominis": "복직근",
+    "externalAbdominalOblique": "외복사근",
+    "adductorLongus": "장내전근",
+    "tensorFasciaeLatae": "대퇴근막장근",
+    "pectineus": "치골근",
+    "iliopsoas": "장요근",
+    "gracilis": "박근",
+    "rectusFemoris": "대퇴직근",
+    "vastusMedialis": "내측광근",
+    "vastusLateralis": "외측광근",
+    "sartorius": "봉공근",
+    "tibialisAnterior": "전경골근",
+    "anteriorDeltoid": "삼각근 전부",
+    "extensorDigitorumLongus": "장지신근",
+    "peroneusLongus": "장비골근",
+    "brachialis": "상완근",
+    "brachioradialis": "완요골근",
+    "pronatorTeres": "원회내근",
+    "flexorFasciaeLatae": "대퇴근막굴근"
+  },
+  "views": {
+    "front": "정면",
+    "back": "후면",
+    "both": "양면"
+  },
+  "positions": {
+    "left": "왼쪽",
+    "right": "오른쪽",
+    "both": "양측"
+  },
+  "genders": {
+    "male": "남성",
+    "female": "여성"
+  },
+  "ui": {
+    "app_title": "Flutter 근육 해부학",
+    "random_muscles": "무작위 근육",
+    "clear": "지우기",
+    "switch_language": "언어 전환",
+    "to_spanish": "스페인어로 전환",
+    "to_english": "영어어로 전환"
+  },
+  "errors": {
+    "invalid_gender": "유효하지 않은 성별: {gender}. {expected}를 기대했습니다."
+  }
+}

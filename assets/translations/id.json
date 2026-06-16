@@ -1,0 +1,77 @@
+{
+  "muscles": {
+    "triceps": "Trisep",
+    "levatorScapulae": "Levator skapula",
+    "trapezius": "Trapesius",
+    "posteriorDeltoid": "Deltoid posterior",
+    "infraspinatus": "Infraspinatus",
+    "teresMinor": "Teres minor",
+    "teresMajor": "Teres mayor",
+    "anconeus": "Anconeus",
+    "flexorCarpiUlnaris": "Flexor carpi ulnaris",
+    "extensorCarpiUlnaris": "Extensor carpi ulnaris",
+    "extensorDigitorum": "Extensor digitorum",
+    "externalOblique": "Oblique eksternal",
+    "latissimusDorsi": "Latissimus dorsi",
+    "gluteusMedius": "Gluteus medius",
+    "gluteusMaximus": "Gluteus maximus",
+    "iliotibialTact": "Traktus iliotibial",
+    "bicepsFemoris": "Bisep femoris",
+    "semitendinosus": "Semitendinosus",
+    "adductorMagnus": "Adductor magnus",
+    "semimebranosus": "Semimembranosus",
+    "gastrocnemius": "Gastroknemius",
+    "soleus": "Soleus",
+    "digastric": "Digastrik",
+    "sternocleidomastoid": "Sternokleidomastoid",
+    "scalene": "Skalena",
+    "upperTrapezius": "Trapesius atas",
+    "deltoid": "Deltoid",
+    "biceps": "Bisep",
+    "pectolarisMajor": "Pektoralis mayor",
+    "rectusAbdominis": "Rektus abdominis",
+    "externalAbdominalOblique": "Oblique abdominal eksternal",
+    "adductorLongus": "Adductor longus",
+    "tensorFasciaeLatae": "Tensor fasciae latae",
+    "pectineus": "Pektineus",
+    "iliopsoas": "Iliopsoas",
+    "gracilis": "Grasilis",
+    "rectusFemoris": "Rektus femoris",
+    "vastusMedialis": "Vastus medialis",
+    "vastusLateralis": "Vastus lateralis",
+    "sartorius": "Sartorius",
+    "tibialisAnterior": "Tibialis anterior",
+    "anteriorDeltoid": "Deltoid anterior",
+    "extensorDigitorumLongus": "Extensor digitorum longus",
+    "peroneusLongus": "Peroneus longus",
+    "brachialis": "Brakialis",
+    "brachioradialis": "Brakioradialis",
+    "pronatorTeres": "Pronator teres",
+    "flexorFasciaeLatae": "Flexor fasciae latae"
+  },
+  "views": {
+    "front": "Depan",
+    "back": "Belakang",
+    "both": "Keduanya"
+  },
+  "positions": {
+    "left": "Kiri",
+    "right": "Kanan",
+    "both": "Keduanya"
+  },
+  "genders": {
+    "male": "Pria",
+    "female": "Wanita"
+  },
+  "ui": {
+    "app_title": "Anatomi Otot Flutter",
+    "random_muscles": "Otot Acak",
+    "clear": "Bersihkan",
+    "switch_language": "Ganti Bahasa",
+    "to_spanish": "Ganti ke Spanyol",
+    "to_english": "Ganti ke Inggris"
+  },
+  "errors": {
+    "invalid_gender": "Jenis kelamin tidak valid: {gender}. Diharapkan {expected}."
+  }
+}

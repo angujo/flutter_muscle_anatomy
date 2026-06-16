@@ -1,0 +1,77 @@
+{
+  "muscles": {
+    "triceps": "عضلة ثلاثية الرؤوس",
+    "levatorScapulae": "العضلة الرافعة للكتف",
+    "trapezius": "العضلة شبه المنحرفة",
+    "posteriorDeltoid": "الدالية الخلفية",
+    "infraspinatus": "العضلة تحت الشوك",
+    "teresMinor": "العضلة المدورة الصغيرة",
+    "teresMajor": "العضلة المدورة الكبيرة",
+    "anconeus": "العضلة المرفقية",
+    "flexorCarpiUlnaris": "العضلة المثنية الزندية للرسغ",
+    "extensorCarpiUlnaris": "العضلة الباسطة الزندية للرسغ",
+    "extensorDigitorum": "العضلة الباسطة للأصابع",
+    "externalOblique": "العضلة المائلة الخارجية",
+    "latissimusDorsi": "العضلة الظهرية العريضة",
+    "gluteusMedius": "العضلة الألوية المتوسطة",
+    "gluteusMaximus": "العضلة الألوية الكبرى",
+    "iliotibialTact": "السبيل الحرقفي الظنبوبي",
+    "bicepsFemoris": "العضلة ذات الرأسين الفخذية",
+    "semitendinosus": "العضلة نصف الوترية",
+    "adductorMagnus": "العضلة المقربة الكبيرة",
+    "semimebranosus": "العضلة نصف الغشائية",
+    "gastrocnemius": "عضلة الساق (التوأمية)",
+    "soleus": "العضلة النعلية",
+    "digastric": "العضلة ذات البطنين",
+    "sternocleidomastoid": "العضلة القصية الترقوية الخشائية",
+    "scalene": "العضلات الأخمعية",
+    "upperTrapezius": "شبه المنحرفة العلوية",
+    "deltoid": "العضلة الدالية",
+    "biceps": "عضلة ذات رأسين",
+    "pectolarisMajor": "العضلة الصدرية الكبرى",
+    "rectusAbdominis": "العضلة المستقيمة البطنية",
+    "externalAbdominalOblique": "المائلة البطنية الخارجية",
+    "adductorLongus": "العضلة المقربة الطويلة",
+    "tensorFasciaeLatae": "العضلة الموترة للفافة العريضة",
+    "pectineus": "العضلة العانية",
+    "iliopsoas": "العضلة الحرقفية الخصرية",
+    "gracilis": "العضلة الرشيقة",
+    "rectusFemoris": "العضلة المستقيمة الفخذية",
+    "vastusMedialis": "العضلة المتسعة الإنسية",
+    "vastusLateralis": "العضلة المتسعة الوحشية",
+    "sartorius": "العضلة الخياطية",
+    "tibialisAnterior": "العضلة الظنبوبية الأمامية",
+    "anteriorDeltoid": "الدالية الأمامية",
+    "extensorDigitorumLongus": "العضلة الباسطة الطويلة للأصابع",
+    "peroneusLongus": "العضلة الشظوية الطويلة",
+    "brachialis": "العضلة العضدية",
+    "brachioradialis": "العضلة العضدية الكعبرية",
+    "pronatorTeres": "العضلة الكابة المدورة",
+    "flexorFasciaeLatae": "مثنية اللفافة العريضة"
+  },
+  "views": {
+    "front": "أمامي",
+    "back": "خلفي",
+    "both": "كلاهما"
+  },
+  "positions": {
+    "left": "يسار",
+    "right": "يمين",
+    "both": "كلاهما"
+  },
+  "genders": {
+    "male": "ذكر",
+    "female": "أنثى"
+  },
+  "ui": {
+    "app_title": "تشريح العضلات فلاتر",
+    "random_muscles": "عضلات عشوائية",
+    "clear": "مسح",
+    "switch_language": "تغيير اللغة",
+    "to_spanish": "التغيير إلى الإسبانية",
+    "to_english": "التغيير إلى الإنجليزية"
+  },
+  "errors": {
+    "invalid_gender": "جنس غير صالح: {gender}. المتوقع {expected}."
+  }
+}
