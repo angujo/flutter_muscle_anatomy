@@ -50,8 +50,12 @@ class SvgPathReader {
       BodyView.front => SvgPathReader.maleFront(),
       BodyView.back => SvgPathReader.maleBack(),
       _ => throw UnimplementedError(
-        'errors.view_not_implemented'.tr(
-          namedArgs: {'gender': 'male'.localizedGender, 'view': view.localizedName},
+        MuscleAnatomyLocalization.translator(
+          'errors.view_not_implemented',
+          namedArgs: {
+            'gender': 'male'.localizedGender,
+            'view': view.localizedName,
+          },
         ),
       ),
     };
@@ -63,8 +67,12 @@ class SvgPathReader {
       BodyView.front => SvgPathReader.femaleFront(),
       BodyView.back => SvgPathReader.femaleBack(),
       _ => throw UnimplementedError(
-        'errors.view_not_implemented'.tr(
-          namedArgs: {'gender': 'female'.localizedGender, 'view': view.localizedName},
+        MuscleAnatomyLocalization.translator(
+          'errors.view_not_implemented',
+          namedArgs: {
+            'gender': 'female'.localizedGender,
+            'view': view.localizedName,
+          },
         ),
       ),
     };

@@ -1,25 +1,40 @@
 part of 'core.dart';
 
-/// Extension to provide localized names using easy_localization.
+/// A callback type for translating keys.
+typedef MuscleAnatomyTranslator = String Function(String key, {Map<String, String>? namedArgs});
+
+/// Global configuration for muscle anatomy localization.
+class MuscleAnatomyLocalization {
+  /// The translator function used by the localization extensions.
+  /// Defaults to returning the key itself.
+  ///
+  /// To use with `easy_localization`, set this to:
+  /// ```dart
+  /// MuscleAnatomyLocalization.translator = (key, {namedArgs}) => key.tr(namedArgs: namedArgs);
+  /// ```
+  static MuscleAnatomyTranslator translator = (key, {namedArgs}) => key;
+}
+
+/// Extension to provide localized names for [Muscle].
 extension MuscleLocalization on Muscle {
   /// Returns the localized name of this muscle.
-  String get localizedName => 'muscles.$name'.tr();
+  String get localizedName => MuscleAnatomyLocalization.translator('muscles.$name');
 }
 
 /// Extension to provide localized names for [BodyView].
 extension BodyViewLocalization on BodyView {
   /// Returns the localized name of this view.
-  String get localizedName => 'views.$name'.tr();
+  String get localizedName => MuscleAnatomyLocalization.translator('views.$name');
 }
 
 /// Extension to provide localized names for [MusclePosition].
 extension MusclePositionLocalization on MusclePosition {
   /// Returns the localized name of this position.
-  String get localizedName => 'positions.$name'.tr();
+  String get localizedName => MuscleAnatomyLocalization.translator('positions.$name');
 }
 
 /// Extension to provide localized names for genders.
 extension GenderLocalization on String {
   /// Returns the localized name of the gender.
-  String get localizedGender => 'genders.$this'.tr();
+  String get localizedGender => MuscleAnatomyLocalization.translator('genders.$this');
 }

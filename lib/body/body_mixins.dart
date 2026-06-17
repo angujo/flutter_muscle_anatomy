@@ -21,7 +21,8 @@ enum _GenderType {
     String g = gender.trim().toLowerCase();
     if (g.isEmpty) {
       throw ArgumentError(
-        'errors.invalid_gender'.tr(
+        MuscleAnatomyLocalization.translator(
+          'errors.invalid_gender',
           namedArgs: {'gender': gender, 'expected': names().join(', ')},
         ),
       );
@@ -39,7 +40,8 @@ enum _GenderType {
       'm' => male,
       'f' => female,
       _ => throw ArgumentError(
-        'errors.invalid_gender'.tr(
+        MuscleAnatomyLocalization.translator(
+          'errors.invalid_gender',
           namedArgs: {'gender': gender, 'expected': names().join(', ')},
         ),
       ),

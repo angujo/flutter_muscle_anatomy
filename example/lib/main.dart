@@ -10,6 +10,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
 
+  // Initialize the library's translator to use easy_localization
+  MuscleAnatomyLocalization.translator =
+      (key, {namedArgs}) => key.tr(namedArgs: namedArgs);
+
   runApp(
     EasyLocalization(
       supportedLocales: const [

@@ -128,10 +128,26 @@ final anatomy = factory.both();
 
 ### 7. Localization
 
-The library supports localization via the `easy_localization` package.
+The library is localization-ready. To use localized muscle names, you can provide a translator function. This allows the library to work with any localization package (like `easy_localization`, `slang`, or Flutter's built-in `intl`) without being tied to a specific one, ensuring compatibility with all platforms including **WebAssembly (WASM)**.
 
-#### Usage:
-To use localized muscle names, ensure `easy_localization` is initialized in your app, then use the extensions:
+#### Usage with easy_localization:
+
+1. Initialize your localization package as usual.
+2. Set the `MuscleAnatomyLocalization.translator` in your `main()` function:
+
+```dart
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+
+  // Link the library to easy_localization
+  MuscleAnatomyLocalization.translator = (key, {namedArgs}) => key.tr(namedArgs: namedArgs);
+
+  runApp(EasyLocalization(...));
+}
+```
+
+3. Use the extensions:
 
 ```dart
 import 'package:flutter_muscle_anatomy/flutter_muscle_anatomy.dart';

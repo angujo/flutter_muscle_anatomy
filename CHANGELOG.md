@@ -1,3 +1,9 @@
+## 1.1.2
+
+* Fixed Wasm compatibility by removing hard dependency on `easy_localization`.
+* Decoupled localization using a customizable translator.
+* Exported localization extensions and configuration.
+
 ## 1.1.1
 
 * Improved translation coverage and fixed minor issues.

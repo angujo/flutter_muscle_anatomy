@@ -37,7 +37,11 @@ class _SkeletalMuscles with _StrokesFill, _MusclesHighlights, _BuildsSvgWriter {
   /// Throws [UnimplementedError] if [position] is [MusclePosition.both].
   Path? getMusclePath(Muscle muscle, {required MusclePosition position}) {
     if (MusclePosition.both == position) {
-      throw UnimplementedError('errors.muscle_position_both_not_supported'.tr());
+      throw UnimplementedError(
+        MuscleAnatomyLocalization.translator(
+          'errors.muscle_position_both_not_supported',
+        ),
+      );
     }
     final name = '${position.name}_${muscle.name}';
     return _svgPathReader.getPaths(name).firstOrNull;
