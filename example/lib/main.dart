@@ -81,18 +81,32 @@ class _MyHomePageState extends State<MyHomePage> {
       context: context,
       builder: (context) {
         return SafeArea(
-          child: ListView(
-            shrinkWrap: true,
-            children: context.supportedLocales.map((locale) {
-              return ListTile(
-                title: Text(locale.languageCode.toUpperCase()),
-                selected: context.locale == locale,
-                onTap: () {
-                  context.setLocale(locale);
-                  Navigator.pop(context);
-                },
-              );
-            }).toList(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'ui.choose_language'.tr(),
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
+              Expanded(
+                child: ListView(
+                  children: context.supportedLocales.map((locale) {
+                    return ListTile(
+                      title: Text('languages.${locale.languageCode}'.tr()),
+                      subtitle: Text(locale.languageCode.toUpperCase()),
+                      selected: context.locale == locale,
+                      onTap: () {
+                        context.setLocale(locale);
+                        Navigator.pop(context);
+                      },
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
           ),
         );
       },
@@ -101,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final anatomyFactory = BodyAnatomy(_selectedGender.name);
+    final anatomyFactory = Anatomy(_selectedGender.name);
 
     return Scaffold(
       appBar: AppBar(
@@ -196,7 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _anatomyView(BodyMuscleAnatomy anatomy, String name) {
+  Widget _anatomyView(MuscleAnatomy anatomy, String name) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,

@@ -68,10 +68,23 @@
     "random_muscles": "عضلات عشوائية",
     "clear": "مسح",
     "switch_language": "تغيير اللغة",
-    "to_spanish": "التغيير إلى الإسبانية",
-    "to_english": "التغيير إلى الإنجليزية"
+    "choose_language": "اختر اللغة"
+  },
+  "languages": {
+    "en": "English",
+    "es": "Español",
+    "pt": "Português",
+    "hi": "हिन्दी",
+    "ar": "العربية",
+    "fr": "Français",
+    "id": "Bahasa Indonesia",
+    "de": "Deutsch",
+    "ja": "日本語",
+    "ko": "한국어"
   },
   "errors": {
-    "invalid_gender": "جنس غير صالح: {gender}. المتوقع {expected}."
+    "invalid_gender": "جنس غير صالح: {gender}. المتوقع {expected}.",
+    "muscle_position_both_not_supported": "MusclePosition.both غير مدعوم",
+    "view_not_implemented": "العرض {view} لـ {gender} غير منفذ!"
   }
 }

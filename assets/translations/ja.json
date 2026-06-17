@@ -68,10 +68,23 @@
     "random_muscles": "ランダムな筋肉",
     "clear": "クリア",
     "switch_language": "言語を切り替える",
-    "to_spanish": "スペイン語に切り替える",
-    "to_english": "英語に切り替える"
+    "choose_language": "言語を選択"
+  },
+  "languages": {
+    "en": "English",
+    "es": "Español",
+    "pt": "Português",
+    "hi": "हिन्दी",
+    "ar": "العربية",
+    "fr": "Français",
+    "id": "Bahasa Indonesia",
+    "de": "Deutsch",
+    "ja": "日本語",
+    "ko": "한국어"
   },
   "errors": {
-    "invalid_gender": "無効な性別: {gender}。 {expected} を期待していました。"
+    "invalid_gender": "無効な性別: {gender}。 {expected} を期待していました。",
+    "muscle_position_both_not_supported": "MusclePosition.both はサポートされていません",
+    "view_not_implemented": "{gender} の {view} ビューは実装されていません！"
   }
 }

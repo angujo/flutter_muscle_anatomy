@@ -23,8 +23,17 @@ class SvgPathReader {
   /// Cache for individual path IDs: pathId -> path d string.
   final Map<String, String> _pathCache = {};
 
+  /// Cache for individual path IDs: pathId -> Path object.
+  final Map<String, Path> _pathObjectCache = {};
+
   /// Cache for group IDs: groupId -> list of path d strings.
   final Map<String, List<String>> _groupCache = {};
+
+  /// Cache for group IDs: groupId -> list of Path objects.
+  final Map<String, List<Path>> _groupObjectCache = {};
+
+  /// Map of element ID to XML element for fast lookup.
+  final Map<String, XmlElement> _elementIndex = {};
 
   /// Private constructor for [SvgPathReader].
   SvgPathReader._(this._assetType);
@@ -32,65 +41,66 @@ class SvgPathReader {
   /// Internal factory method to manage [SvgPathReader] instances.
   ///
   /// Ensures that only one instance of [SvgPathReader] exists for a specific [assetType].
-  static SvgPathReader _fromString(SvgAssetType assetType) {
-    if (_instances.containsKey(assetType)) {
-      return _instances[assetType]!;
-    }
-    final inst = SvgPathReader._(assetType);
-    _instances[assetType] = inst;
-    return inst;
-  }
+  factory SvgPathReader._fromString(SvgAssetType assetType) =>
+      _instances.putIfAbsent(assetType, () => SvgPathReader._(assetType));
 
   /// Returns an [SvgPathReader] for the male body based on the specified [view].
-  static SvgPathReader male(BodyView view) {
+  factory SvgPathReader.male(BodyView view) {
     return switch (view) {
-      BodyView.front => maleFront(),
-      BodyView.back => maleBack(),
-      _ => throw UnimplementedError('Male View $view not implemented!'),
+      BodyView.front => SvgPathReader.maleFront(),
+      BodyView.back => SvgPathReader.maleBack(),
+      _ => throw UnimplementedError(
+        'errors.view_not_implemented'.tr(
+          namedArgs: {'gender': 'male'.localizedGender, 'view': view.localizedName},
+        ),
+      ),
     };
   }
 
   /// Returns an [SvgPathReader] for the female body based on the specified [view].
-  static SvgPathReader female(BodyView view) {
+  factory SvgPathReader.female(BodyView view) {
     return switch (view) {
-      BodyView.front => femaleFront(),
-      BodyView.back => femaleBack(),
-      _ => throw UnimplementedError('Female View $view not implemented!'),
+      BodyView.front => SvgPathReader.femaleFront(),
+      BodyView.back => SvgPathReader.femaleBack(),
+      _ => throw UnimplementedError(
+        'errors.view_not_implemented'.tr(
+          namedArgs: {'gender': 'female'.localizedGender, 'view': view.localizedName},
+        ),
+      ),
     };
   }
 
   /// Returns an [SvgPathReader] for the male front view.
-  static SvgPathReader maleFront() => _fromString(SvgAssetType.maleFront);
+  factory SvgPathReader.maleFront() =>
+      SvgPathReader._fromString(SvgAssetType.maleFront);
 
   /// Returns an [SvgPathReader] for the female front view.
-  static SvgPathReader femaleFront() => _fromString(SvgAssetType.femaleFront);
+  factory SvgPathReader.femaleFront() =>
+      SvgPathReader._fromString(SvgAssetType.femaleFront);
 
   /// Returns an [SvgPathReader] for the male back view.
-  static SvgPathReader maleBack() => _fromString(SvgAssetType.maleBack);
+  factory SvgPathReader.maleBack() =>
+      SvgPathReader._fromString(SvgAssetType.maleBack);
 
   /// Returns an [SvgPathReader] for the female back view.
-  static SvgPathReader femaleBack() => _fromString(SvgAssetType.femaleBack);
+  factory SvgPathReader.femaleBack() =>
+      SvgPathReader._fromString(SvgAssetType.femaleBack);
 
   /// The intrinsic width of the SVG defined in the 'width' attribute.
   double get width {
     _ensureLoaded();
-    _loadDimensionsIfNeeded();
     return _width ?? 0.0;
   }
 
   /// The intrinsic height of the SVG defined in the 'height' attribute.
   double get height {
     _ensureLoaded();
-    _loadDimensionsIfNeeded();
     return _height ?? 0.0;
   }
 
   /// Extracts and caches SVG dimensions from the root element.
-  void _loadDimensionsIfNeeded() {
-    if (_width != null || _height != null) return;
-
+  void _loadDimensions() {
     final svg = _document!.rootElement;
-
     _width = _parseSvgLength(svg.getAttribute('width')) ?? 0;
     _height = _parseSvgLength(svg.getAttribute('height')) ?? 0;
   }
@@ -104,19 +114,31 @@ class SvgPathReader {
     return numeric != null ? double.tryParse(numeric) : null;
   }
 
-  /// Reads the file from disk and parses the XML if not already done.
+  /// Reads the file from disk, parses the XML, and indexes elements by ID.
   void _ensureLoaded() {
     if (_document == null) {
       final content = getSvgAssetString(_assetType);
       _document = XmlDocument.parse(content);
+      _indexElements(_document!.rootElement);
+      _loadDimensions();
+    }
+  }
+
+  /// Recursively indexes all elements that have an 'id' attribute.
+  void _indexElements(XmlElement element) {
+    final id = element.getAttribute('id')?.toLowerCase();
+    if (id != null) {
+      _elementIndex[id] = element;
+    }
+    for (var child in element.children.whereType<XmlElement>()) {
+      _indexElements(child);
     }
   }
 
   /// Returns a list of path 'd' attributes associated with the given [pathId].
   ///
-  /// This method searches for a `<path>` or `<g>` element with the matching 'id' attribute.
-  /// It automatically handles cases where an ID represents a pair of symmetric muscles
-  /// by checking for 'left_' and 'right_' prefixes if the original ID is not found.
+  /// This method uses a flat index for O(1) element lookup and automatically handles 
+  /// symmetric muscles by checking for 'left_' and 'right_' prefixes.
   List<String> getPathDs(String pathId) {
     _ensureLoaded();
     final id = pathId.toLowerCase();
@@ -128,28 +150,31 @@ class SvgPathReader {
     if (_groupCache.containsKey(id)) {
       return _groupCache[id]!;
     }
-    if (!id.contains('outline') && !id.startsWith('left_') && !id.startsWith('right_')) {
+
+    // Handle symmetric muscles (left/right) if the base ID wasn't found/cached
+    if (!id.contains('outline') &&
+        !id.startsWith('left_') &&
+        !id.startsWith('right_')) {
       final paths = getPathDs('right_$id') + getPathDs('left_$id');
-      if(paths.isNotEmpty) {
+      if (paths.isNotEmpty) {
         _groupCache[id] = paths;
         return paths;
       }
     }
 
-    final doc = _document!;
+    final element = _elementIndex[id];
+    if (element == null) return [];
 
     // Try path
-    final path = _findPathById(doc.rootElement, id);
-    if (path != null) {
-      final d = path.getAttribute('d') ?? '';
+    if (element.name.local == 'path') {
+      final d = element.getAttribute('d') ?? '';
       _pathCache[id] = d;
       return [d];
     }
 
     // Try group
-    final group = _findGroupById(doc.rootElement, id);
-    if (group != null) {
-      final ds = _collectPathsFromGroup(group);
+    if (element.name.local == 'g') {
+      final ds = _collectPathsFromGroup(element);
       _groupCache[id] = ds;
       return ds;
     }
@@ -157,30 +182,44 @@ class SvgPathReader {
     return [];
   }
 
-  /// Recursively finds a `<path>` element with the specified [id].
-  XmlElement? _findPathById(XmlElement element, String id) {
-    if (element.name.local == 'path' &&
-        element.getAttribute('id')?.toLowerCase() == id) {
-      return element;
-    }
-    for (var child in element.children.whereType<XmlElement>()) {
-      final found = _findPathById(child, id);
-      if (found != null) return found;
-    }
-    return null;
-  }
+  /// Returns a list of [Path] objects associated with the given [pathId].
+  ///
+  /// This method parses the SVG path data and caches the resulting [Path] objects
+  /// for subsequent calls.
+  List<Path> getPaths(String pathId) {
+    _ensureLoaded();
+    final id = pathId.toLowerCase();
 
-  /// Recursively finds a `<g>` (group) element with the specified [id].
-  XmlElement? _findGroupById(XmlElement element, String id) {
-    if (element.name.local == 'g' &&
-        element.getAttribute('id')?.toLowerCase() == id) {
-      return element;
+    if (_pathObjectCache.containsKey(id)) {
+      return [_pathObjectCache[id]!];
     }
-    for (var child in element.children.whereType<XmlElement>()) {
-      final found = _findGroupById(child, id);
-      if (found != null) return found;
+    if (_groupObjectCache.containsKey(id)) {
+      return _groupObjectCache[id]!;
     }
-    return null;
+
+    // Handle symmetric muscles (left/right) if the base ID wasn't found/cached
+    if (!id.contains('outline') &&
+        !id.startsWith('left_') &&
+        !id.startsWith('right_')) {
+      final paths = getPaths('right_$id') + getPaths('left_$id');
+      if (paths.isNotEmpty) {
+        _groupObjectCache[id] = paths;
+        return paths;
+      }
+    }
+
+    final ds = getPathDs(pathId);
+    if (ds.isEmpty) return [];
+
+    if (ds.length == 1) {
+      final path = parseSvgPathData(ds.first);
+      _pathObjectCache[id] = path;
+      return [path];
+    } else {
+      final paths = ds.map((d) => parseSvgPathData(d)).toList();
+      _groupObjectCache[id] = paths;
+      return paths;
+    }
   }
 
   /// Traverses a group element and collects all 'd' attributes from its descendant `<path>` elements.

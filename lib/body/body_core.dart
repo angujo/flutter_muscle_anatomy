@@ -4,8 +4,7 @@ part of 'body.dart';
 ///
 /// It handles SVG path reading and provides mechanisms for building SVG elements
 /// for both highlighted and non-highlighted muscles.
-class _SkeletalMuscles
-    with _StrokesFill, _MusclesHighlights, _BuildsSvgWriter {
+class _SkeletalMuscles with _StrokesFill, _MusclesHighlights, _BuildsSvgWriter {
   @override
   final BodyView _view;
 
@@ -25,14 +24,12 @@ class _SkeletalMuscles
   );
 
   /// Returns the [Path] object for the body outline.
-  Path get outlinePath =>
-      parseSvgPathData(_svgPathReader.getPathDs('outline').first);
+  Path get outlinePath => _svgPathReader.getPaths('outline').first;
 
   /// Returns the [Path] for the hair outline if available.
   Path? get hairOutlinePath {
-    final hairSvgPath = _svgPathReader.getPathDs('hair_outline').firstOrNull;
-    if (null == _hairColor || null == hairSvgPath) return null;
-    return parseSvgPathData(hairSvgPath);
+    if (null == _hairColor) return null;
+    return _svgPathReader.getPaths('hair_outline').firstOrNull;
   }
 
   /// Returns the [Path] for a specific [muscle] at a given [position].
@@ -40,11 +37,10 @@ class _SkeletalMuscles
   /// Throws [UnimplementedError] if [position] is [MusclePosition.both].
   Path? getMusclePath(Muscle muscle, {required MusclePosition position}) {
     if (MusclePosition.both == position) {
-      throw UnimplementedError('MusclePosition.both is not supported');
+      throw UnimplementedError('errors.muscle_position_both_not_supported'.tr());
     }
     final name = '${position.name}_${muscle.name}';
-    final svgPath = _svgPathReader.getPathDs(name).firstOrNull;
-    return svgPath == null ? null : parseSvgPathData(svgPath);
+    return _svgPathReader.getPaths(name).firstOrNull;
   }
 
   /// Returns a list of [Path] objects for all muscles defined in [Muscle.values]
@@ -53,12 +49,11 @@ class _SkeletalMuscles
     final positions = {MusclePosition.left, MusclePosition.right};
     return Muscle.values
         .map(
-          (m) => positions
-              .map((p) => _svgPathReader.getPathDs('${p.name}_${m.name}'))
-              .expand((l) => l),
+          (Muscle m) => positions
+              .map((MusclePosition p) => getMusclePath(m, position: p))
+              .whereType<Path>(),
         )
         .expand((l) => l)
-        .map((s) => parseSvgPathData(s))
         .toList();
   }
 
@@ -73,8 +68,12 @@ class _SkeletalMuscles
        dimension = Size(svgPathReader.width, svgPathReader.height);
 
   /// Returns an [_SkeletalMuscles] for the male body for a specific [view].
-  factory _SkeletalMuscles.male(BodyView view) =>
-      _SkeletalMuscles(view: view, svgPathReader: SvgPathReader.male(view));
+  factory _SkeletalMuscles.male(BodyView view, {Color? hairColor}) =>
+      _SkeletalMuscles(
+        view: view,
+        svgPathReader: SvgPathReader.male(view),
+        hairColor: hairColor,
+      );
 
   /// Returns an [_SkeletalMuscles] for the female body for a specific [view].
   factory _SkeletalMuscles.female(BodyView view, {Color? hairColor}) =>
@@ -139,7 +138,7 @@ class _SkeletalMuscles
 ///
 /// It aggregates one or more [_SkeletalMuscles] views (e.g., front and back)
 /// and coordinates highlighting across them.
-abstract class _Body with _BuildsSvgWriter implements BodyMuscleAnatomy {
+class _Body with _BuildsSvgWriter implements MuscleAnatomy {
   /// The list of skeletal muscle views (e.g., front, back) being visualized.
   final List<_SkeletalMuscles> _skeletalMuscles;
 
@@ -159,6 +158,7 @@ abstract class _Body with _BuildsSvgWriter implements BodyMuscleAnatomy {
       _skeletalMuscles.map((s) => s.outlinePath).toList();
 
   /// Returns a list of [Path] objects for the hair outlines of all skeletal muscle views.
+  @override
   List<Path> get hairOutlinePaths =>
       _skeletalMuscles.map((s) => s.hairOutlinePath).nonNulls.toList();
 
@@ -251,7 +251,9 @@ abstract class _Body with _BuildsSvgWriter implements BodyMuscleAnatomy {
       views = [BodyView.back, BodyView.front];
     }
 
-    final b = constructor(_createSkeletals(gender, views, hairColor: hairColor));
+    final b = constructor(
+      _createSkeletals(gender, views, hairColor: hairColor),
+    );
     b.highlights(muscles);
     return b;
   }
@@ -265,20 +267,42 @@ abstract class _Body with _BuildsSvgWriter implements BodyMuscleAnatomy {
     return views
         .map(
           (v) => gender == _GenderType.male
-              ? _SkeletalMuscles.male(v)
+              ? _SkeletalMuscles.male(v, hairColor: hairColor)
               : _SkeletalMuscles.female(v, hairColor: hairColor),
         )
         .toList();
   }
+
+  /// Internal factory to create a [MuscleAnatomy] instance from specific views.
+  static MuscleAnatomy _fromViews(
+    _GenderType gender,
+    List<BodyView> views, {
+    Color? hairColor,
+  }) {
+    final skeletals = _createSkeletals(gender, views, hairColor: hairColor);
+    return _Body._(skeletals);
+  }
 }
 
 /// Interface for body anatomy visualization.
-abstract class BodyMuscleAnatomy implements _IMuscleHighlights {
-  /// The physical dimensions (width and height) of the SVG view box for this anatomy representation.
+abstract class MuscleAnatomy implements _IMuscleHighlights {
+  /// The physical dimensions (width and height) of the SVG view box.
   Size get dimension;
+
+  /// Forces a rebuild of the SVG content.
+  void rebuild();
+
+  /// Builds the SVG document if it hasn't been built yet.
+  void build();
+
+  /// Scales the given [size] to either fill or fit the current [dimension].
+  Size scaledSize(Size size, {bool fill = false});
 
   /// Returns a list of [Path] objects for the outlines of the body views.
   List<Path> get outlinePaths;
+
+  /// Returns a list of [Path] objects for the hair outlines of the body views.
+  List<Path> get hairOutlinePaths;
 
   /// Returns a list of [Path] objects for all available muscles in the body views.
   List<Path> getAllMusclePaths();
@@ -286,55 +310,61 @@ abstract class BodyMuscleAnatomy implements _IMuscleHighlights {
   /// Returns a list of [Path] objects for a specific [muscle] at a given [position].
   List<Path> getMusclePaths(Muscle muscle, {required MusclePosition position});
 
-  /// Returns a [BodyMuscleAnatomy] instance for the specified [gender].
+  /// Returns a [MuscleAnatomy] instance for the specified [gender].
   ///
   /// The [gender] string can be 'm', 'male', 'f', or 'female' (case-insensitive).
-  static BodyMuscleAnatomy forGender(String gender) {
-    return switch (_GenderType.fromName(gender)) {
-      _GenderType.male => Male.both(),
-      _GenderType.female => Female.both(),
-    };
+  static MuscleAnatomy forGender(String gender) {
+    final g = _GenderType.fromName(gender);
+    return _Body._fromViews(g, [BodyView.front, BodyView.back]);
   }
 }
 
-/// A factory for creating [BodyMuscleAnatomy] instances for a specific gender.
-class BodyAnatomy {
+/// A factory for creating [MuscleAnatomy] instances for a specific gender.
+class Anatomy {
   /// The gender type this factory produces.
   final _GenderType _genderType;
 
-  /// Creates a [BodyAnatomy] factory for the given [gender].
+  /// The optional hair color to apply to produced instances.
+  final Color? _hairColor;
+
+  /// Creates a [Anatomy] factory for the given [gender].
   ///
   /// [gender] can be a [String] or any object whose `toString()` returns a valid gender string.
-  BodyAnatomy(dynamic gender)
+  /// [hairColor] can optionally be specified for the resulting anatomy views.
+  Anatomy(dynamic gender, {Color? hairColor})
     : _genderType = _GenderType.fromName(
         gender is String ? gender : gender.toString(),
-      );
+      ),
+      _hairColor = hairColor;
 
-  /// Returns a [BodyMuscleAnatomy] with only the front view.
-  BodyMuscleAnatomy front() =>
-      _genderType == _GenderType.male ? Male.front() : Female.front();
+  /// Returns a [MuscleAnatomy] with only the front view.
+  MuscleAnatomy front() => _fromViews([BodyView.front]);
 
-  /// Returns a [BodyMuscleAnatomy] with only the back view.
-  BodyMuscleAnatomy back() =>
-      _genderType == _GenderType.male ? Male.back() : Female.back();
+  /// Returns a [MuscleAnatomy] with only the back view.
+  MuscleAnatomy back() => _fromViews([BodyView.back]);
 
-  /// Returns a [BodyMuscleAnatomy] with both front and back views.
-  BodyMuscleAnatomy frontBack() =>
-      _genderType == _GenderType.male ? Male.frontBack() : Female.frontBack();
+  /// Returns a [MuscleAnatomy] with both front and back views.
+  MuscleAnatomy frontBack() => _fromViews([BodyView.front, BodyView.back]);
 
-  /// Returns a [BodyMuscleAnatomy] with both back and front views.
-  BodyMuscleAnatomy backFront() =>
-      _genderType == _GenderType.male ? Male.backFront() : Female.backFront();
+  /// Returns a [MuscleAnatomy] with both back and front views.
+  MuscleAnatomy backFront() => _fromViews([BodyView.back, BodyView.front]);
 
-  /// Returns a [BodyMuscleAnatomy] with both front and back views (alias for [frontBack]).
-  BodyMuscleAnatomy both() =>
-      _genderType == _GenderType.male ? Male.both() : Female.both();
+  /// Returns a [MuscleAnatomy] with both front and back views (alias for [frontBack]).
+  MuscleAnatomy both() => frontBack();
 
-  /// Returns a [BodyMuscleAnatomy] with views that best represent the provided [muscles].
-  BodyMuscleAnatomy byMuscles(Iterable<Muscle> muscles) =>
-      _genderType == _GenderType.male
-          ? Male.byMuscles(muscles)
-          : Female.byMuscles(muscles);
+  /// Returns a [MuscleAnatomy] with views that best represent the provided [muscles].
+  MuscleAnatomy byMuscles(Iterable<Muscle> muscles) => _Body._byMuscles(
+    _genderType,
+    muscles,
+    constructor: (skeletals) => _genderType == _GenderType.male
+        ? Male._(skeletals)
+        : Female._(skeletals),
+    hairColor: _hairColor,
+  );
+
+  /// Internal helper to create the anatomy instance from requested views.
+  MuscleAnatomy _fromViews(List<BodyView> views) =>
+      _Body._fromViews(_genderType, views, hairColor: _hairColor);
 }
 
 /// Represents the male body anatomy.
@@ -343,29 +373,23 @@ class Male extends _Body {
   Male._(super.skeletalMuscles) : super._();
 
   /// Returns a [Male] instance with only the front view.
-  static Male front() =>
-      Male._(_Body._createSkeletals(_GenderType.male, [BodyView.front]));
+  static MuscleAnatomy front() => Anatomy(_GenderType.male).front();
 
   /// Returns a [Male] instance with only the back view.
-  static Male back() =>
-      Male._(_Body._createSkeletals(_GenderType.male, [BodyView.back]));
+  static MuscleAnatomy back() => Anatomy(_GenderType.male).back();
 
   /// Returns a [Male] instance with both front and back views.
-  static Male frontBack() => Male._(
-    _Body._createSkeletals(_GenderType.male, [BodyView.front, BodyView.back]),
-  );
+  static MuscleAnatomy frontBack() => Anatomy(_GenderType.male).frontBack();
 
   /// Returns a [Male] instance with both back and front views.
-  static Male backFront() => Male._(
-    _Body._createSkeletals(_GenderType.male, [BodyView.back, BodyView.front]),
-  );
+  static MuscleAnatomy backFront() => Anatomy(_GenderType.male).backFront();
 
   /// Returns a [Male] instance with both front and back views (alias for [frontBack]).
-  static Male both() => frontBack();
+  static MuscleAnatomy both() => Anatomy(_GenderType.male).both();
 
   /// Creates a [Male] instance showing the views that best represent the provided [muscles].
-  static Male byMuscles(Iterable<Muscle> muscles) =>
-      _Body._byMuscles(_GenderType.male, muscles, constructor: Male._);
+  static MuscleAnatomy byMuscles(Iterable<Muscle> muscles) =>
+      Anatomy(_GenderType.male).byMuscles(muscles);
 }
 
 /// Represents the female body anatomy.
@@ -376,56 +400,34 @@ class Female extends _Body {
   /// Returns a [Female] instance with only the front view.
   ///
   /// [hairColor] can optionally be specified.
-  static Female front({Color? hairColor}) => Female._(
-    _Body._createSkeletals(
-      _GenderType.female,
-      [BodyView.front],
-      hairColor: hairColor,
-    ),
-  );
+  static MuscleAnatomy front({Color? hairColor}) =>
+      Anatomy(_GenderType.female, hairColor: hairColor).front();
 
   /// Returns a [Female] instance with only the back view.
   ///
   /// [hairColor] can optionally be specified.
-  static Female back({Color? hairColor}) => Female._(
-    _Body._createSkeletals(
-      _GenderType.female,
-      [BodyView.back],
-      hairColor: hairColor,
-    ),
-  );
+  static MuscleAnatomy back({Color? hairColor}) =>
+      Anatomy(_GenderType.female, hairColor: hairColor).back();
 
   /// Returns a [Female] instance with both front and back views.
   ///
   /// [hairColor] can optionally be specified.
-  static Female frontBack({Color? hairColor}) => Female._(
-    _Body._createSkeletals(
-      _GenderType.female,
-      [BodyView.front, BodyView.back],
-      hairColor: hairColor,
-    ),
-  );
+  static MuscleAnatomy frontBack({Color? hairColor}) =>
+      Anatomy(_GenderType.female, hairColor: hairColor).frontBack();
 
   /// Returns a [Female] instance with both back and front views.
   ///
   /// [hairColor] can optionally be specified.
-  static Female backFront({Color? hairColor}) => Female._(
-    _Body._createSkeletals(
-      _GenderType.female,
-      [BodyView.back, BodyView.front],
-      hairColor: hairColor,
-    ),
-  );
+  static MuscleAnatomy backFront({Color? hairColor}) =>
+      Anatomy(_GenderType.female, hairColor: hairColor).backFront();
 
   /// Returns a [Female] instance with both front and back views (alias for [frontBack]).
-  static Female both({Color? hairColor}) => frontBack(hairColor: hairColor);
+  static MuscleAnatomy both({Color? hairColor}) =>
+      frontBack(hairColor: hairColor);
 
   /// Creates a [Female] instance showing the views that best represent the provided [muscles].
-  static Female byMuscles(Iterable<Muscle> muscles, {Color? hairColor}) =>
-      _Body._byMuscles(
-        _GenderType.female,
-        muscles,
-        constructor: Female._,
-        hairColor: hairColor,
-      );
+  static MuscleAnatomy byMuscles(
+    Iterable<Muscle> muscles, {
+    Color? hairColor,
+  }) => Anatomy(_GenderType.female, hairColor: hairColor).byMuscles(muscles);
 }

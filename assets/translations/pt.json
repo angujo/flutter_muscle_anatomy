@@ -68,10 +68,23 @@
     "random_muscles": "Músculos Aleatórios",
     "clear": "Limpar",
     "switch_language": "Mudar Idioma",
-    "to_spanish": "Mudar para Espanhol",
-    "to_english": "Mudar para Inglês"
+    "choose_language": "Escolher Idioma"
+  },
+  "languages": {
+    "en": "English",
+    "es": "Español",
+    "pt": "Português",
+    "hi": "हिन्दी",
+    "ar": "العربية",
+    "fr": "Français",
+    "id": "Bahasa Indonesia",
+    "de": "Deutsch",
+    "ja": "日本語",
+    "ko": "한국어"
   },
   "errors": {
-    "invalid_gender": "Gênero inválido: {gender}. Esperado {expected}."
+    "invalid_gender": "Gênero inválido: {gender}. Esperado {expected}.",
+    "muscle_position_both_not_supported": "MusclePosition.both não é suportado",
+    "view_not_implemented": "Vista {view} para {gender} não implementada!"
   }
 }

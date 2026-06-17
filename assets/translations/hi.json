@@ -68,10 +68,23 @@
     "random_muscles": "यादृच्छिक मांसपेशियां",
     "clear": "साफ़ करें",
     "switch_language": "भाषा बदलें",
-    "to_spanish": "स्पेनिश में बदलें",
-    "to_english": "अंग्रेजी में बदलें"
+    "choose_language": "भाषा चुनें"
+  },
+  "languages": {
+    "en": "English",
+    "es": "Español",
+    "pt": "Português",
+    "hi": "हिन्दी",
+    "ar": "العربية",
+    "fr": "Français",
+    "id": "Bahasa Indonesia",
+    "de": "Deutsch",
+    "ja": "日本語",
+    "ko": "한국어"
   },
   "errors": {
-    "invalid_gender": "अमान्य लिंग: {gender}। अपेक्षित {expected}।"
+    "invalid_gender": "अमान्य लिंग: {gender}। अपेक्षित {expected}।",
+    "muscle_position_both_not_supported": "MusclePosition.both समर्थित नहीं है",
+    "view_not_implemented": "{gender} दृश्य {view} लागू नहीं किया गया है!"
   }
 }

@@ -68,10 +68,23 @@
     "random_muscles": "Otot Acak",
     "clear": "Bersihkan",
     "switch_language": "Ganti Bahasa",
-    "to_spanish": "Ganti ke Spanyol",
-    "to_english": "Ganti ke Inggris"
+    "choose_language": "Pilih Bahasa"
+  },
+  "languages": {
+    "en": "English",
+    "es": "Español",
+    "pt": "Português",
+    "hi": "हिन्दी",
+    "ar": "العربية",
+    "fr": "Français",
+    "id": "Bahasa Indonesia",
+    "de": "Deutsch",
+    "ja": "日本語",
+    "ko": "한국어"
   },
   "errors": {
-    "invalid_gender": "Jenis kelamin tidak valid: {gender}. Diharapkan {expected}."
+    "invalid_gender": "Jenis kelamin tidak valid: {gender}. Diharapkan {expected}.",
+    "muscle_position_both_not_supported": "MusclePosition.both tidak didukung",
+    "view_not_implemented": "Tampilan {view} untuk {gender} belum diimplementasikan!"
   }
 }

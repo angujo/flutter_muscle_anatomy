@@ -52,10 +52,12 @@ final class SvgFileWriter {
     return _document!;
   }
 
-  /// Returns the SVG content as a formatted XML string.
+  /// Returns the SVG content as an XML string.
+  ///
+  /// Pretty printing is disabled for performance.
   @override
   String toString() {
-    return build().toXmlString(pretty: true);
+    return build().toXmlString(pretty: false);
   }
 }
 
@@ -141,7 +143,15 @@ class SvgElement {
 
   /// Converts the internal style map to a standard SVG 'style' attribute string.
   String _stylesToString() {
-    return _styles.entries.map((st) => '${st.key}:${st.value}').join(';');
+    if (_styles.isEmpty) return '';
+    final buffer = StringBuffer();
+    for (final entry in _styles.entries) {
+      if (buffer.isNotEmpty) buffer.write(';');
+      buffer.write(entry.key);
+      buffer.write(':');
+      buffer.write(entry.value);
+    }
+    return buffer.toString();
   }
 
   /// Returns the XML string representation of this element.

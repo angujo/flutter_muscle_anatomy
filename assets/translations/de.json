@@ -68,10 +68,23 @@
     "random_muscles": "Zufällige Muskeln",
     "clear": "Löschen",
     "switch_language": "Sprache wechseln",
-    "to_spanish": "Zu Spanisch wechseln",
-    "to_english": "Zu Englisch wechseln"
+    "choose_language": "Sprache wählen"
+  },
+  "languages": {
+    "en": "English",
+    "es": "Español",
+    "pt": "Português",
+    "hi": "हिन्दी",
+    "ar": "العربية",
+    "fr": "Français",
+    "id": "Bahasa Indonesia",
+    "de": "Deutsch",
+    "ja": "日本語",
+    "ko": "한국어"
   },
   "errors": {
-    "invalid_gender": "Ungültiges Geschlecht: {gender}. Erwartet wurde {expected}."
+    "invalid_gender": "Ungültiges Geschlecht: {gender}. Erwartet wurde {expected}.",
+    "muscle_position_both_not_supported": "MusclePosition.both wird nicht unterstützt",
+    "view_not_implemented": "{gender} Ansicht {view} nicht implementiert!"
   }
 }

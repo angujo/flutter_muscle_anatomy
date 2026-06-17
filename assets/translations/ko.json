@@ -68,10 +68,23 @@
     "random_muscles": "무작위 근육",
     "clear": "지우기",
     "switch_language": "언어 전환",
-    "to_spanish": "스페인어로 전환",
-    "to_english": "영어어로 전환"
+    "choose_language": "언어 선택"
+  },
+  "languages": {
+    "en": "English",
+    "es": "Español",
+    "pt": "Português",
+    "hi": "हिन्दी",
+    "ar": "العربية",
+    "fr": "Français",
+    "id": "Bahasa Indonesia",
+    "de": "Deutsch",
+    "ja": "日本語",
+    "ko": "한국어"
   },
   "errors": {
-    "invalid_gender": "유효하지 않은 성별: {gender}. {expected}를 기대했습니다."
+    "invalid_gender": "유효하지 않은 성별: {gender}. {expected}를 기대했습니다.",
+    "muscle_position_both_not_supported": "MusclePosition.both는 지원되지 않습니다",
+    "view_not_implemented": "{gender}의 {view} 뷰가 구현되지 않았습니다!"
   }
 }
