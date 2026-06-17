@@ -28,7 +28,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_muscle_anatomy: ^1.1.1
+  flutter_muscle_anatomy: ^1.2.0
   flutter_svg: ^2.0.0
 ```
 
@@ -134,18 +134,18 @@ The library is localization-ready. To use localized muscle names, you can provid
 
 1. Initialize your localization package as usual.
 2. Set the `MuscleAnatomyLocalization.translator` in your `main()` function:
-
-```dart
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await EasyLocalization.ensureInitialized();
-
-  // Link the library to easy_localization
-  MuscleAnatomyLocalization.translator = (key, {namedArgs}) => key.tr(namedArgs: namedArgs);
-
-  runApp(EasyLocalization(...));
-}
-```
+    
+    ```dart
+    void main() async {
+      WidgetsFlutterBinding.ensureInitialized();
+      await EasyLocalization.ensureInitialized();
+    
+      // Link the library to easy_localization
+      MuscleAnatomyLocalization.translator = (key, {namedArgs}) => key.tr(namedArgs: namedArgs);
+    
+      runApp(EasyLocalization(...));
+    }
+    ```
 
 3. Use the extensions:
 

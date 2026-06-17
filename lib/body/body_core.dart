@@ -34,7 +34,7 @@ class _SkeletalMuscles with _StrokesFill, _MusclesHighlights, _BuildsSvgWriter {
 
   /// Returns the [Path] for a specific [muscle] at a given [position].
   ///
-  /// Throws [UnimplementedError] if [position] is [MusclePosition.both].
+  /// Throws [UnimplementedError] if [position] is MusclePosition.both.
   Path? getMusclePath(Muscle muscle, {required MusclePosition position}) {
     if (MusclePosition.both == position) {
       throw UnimplementedError(
@@ -47,7 +47,7 @@ class _SkeletalMuscles with _StrokesFill, _MusclesHighlights, _BuildsSvgWriter {
     return _svgPathReader.getPaths(name).firstOrNull;
   }
 
-  /// Returns a list of [Path] objects for all muscles defined in [Muscle.values]
+  /// Returns a list of [Path] objects for all muscles defined in Muscle.values
   /// for both left and right positions.
   List<Path> getMusclePaths() {
     final positions = {MusclePosition.left, MusclePosition.right};

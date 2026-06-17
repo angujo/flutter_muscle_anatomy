@@ -63,7 +63,7 @@ enum _GenderType {
 abstract class _IMuscleHighlights {
   /// Highlights a specific [muscle] in the view.
   ///
-  /// [position] specifies which side to highlight (defaults to [MusclePosition.both]).
+  /// [position] specifies which side to highlight (defaults to MusclePosition.both).
   /// [color] and [opacity] can override the default highlight styling.
   void highlight(
     Muscle muscle, {
@@ -74,7 +74,7 @@ abstract class _IMuscleHighlights {
 
   /// Highlights a collection of [muscles] in the view.
   ///
-  /// [position] specifies which side to highlight (defaults to [MusclePosition.both]).
+  /// [position] specifies which side to highlight (defaults to MusclePosition.both).
   /// [color] and [opacity] can override the default highlight styling.
   void highlights(
     Iterable<Muscle> muscles, {
@@ -218,7 +218,7 @@ mixin _MusclesHighlights {
 
   /// Highlights a [muscle] at a specific [position].
   ///
-  /// If [position] is [MusclePosition.both], it removes any individual left/right highlights for that muscle.
+  /// If [position] is MusclePosition.both, it removes any individual left/right highlights for that muscle.
   /// If [position] is left or right and a "both" highlight exists, it replaces the "both" highlight with the other side's highlight.
   void highlight(
     Muscle muscle, {
