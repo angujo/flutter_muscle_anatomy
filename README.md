@@ -1,45 +1,26 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
-
 # flutter_muscle_anatomy
 
 [![Pub](https://img.shields.io/pub/v/flutter_muscle_anatomy.svg)](https://pub.dartlang.org/packages/flutter_muscle_anatomy)
 
-<img src="images/app-screenshot1.png" alt="Mobile App View" width="200"/>
-<img src="images/screenshot1.png" alt="Female Back View" width="200"/>
-<img src="images/screenshot2.png" alt="Female Front View" width="200"/>
-<img src="images/screenshot3.png" alt="Male Back View" width="200"/>
-<img src="images/screenshot4.png" alt="Male Front View" width="200"/>
+A Flutter library for displaying and interacting with muscle anatomy models. It supports both male and female body types, front and back views, and allows for precise muscle highlighting.
 
-<!--
-![Mobile App View](images/app-screenshot1.png)
-![Female Back View](images/screenshot1.png)
-![Female Front View](images/screenshot2.png)
-![Male Back View](images/screenshot3.png)
-![Male Front View](images/screenshot4.png)
--->
-
-A flutter library for showing muscle anatomy.
+<div align="center">
+  <img src="images/app-screenshot1.png" alt="Mobile App View" width="200"/>
+  <img src="images/screenshot1.png" alt="Female Back View" width="200"/>
+  <img src="images/screenshot2.png" alt="Female Front View" width="200"/>
+  <img src="images/screenshot3.png" alt="Male Back View" width="200"/>
+  <img src="images/screenshot4.png" alt="Male Front View" width="200"/>
+</div>
 
 ## Features
 
-Use this library in your flutter app to:
-
-* Show the muscle anatomy of the body.
-* Highlight certain muscles.
-* Create silhouette or outline of the body
-* Show the Front and Back views of body muscles
-* Show either male or female muscle anatomy
+* **Anatomical Models**: High-quality SVG-based male and female muscle models.
+* **Front & Back Views**: Display front, back, or both views simultaneously.
+* **Muscle Highlighting**: Highlight specific muscles with custom colors and opacity.
+* **Dynamic Gender Support**: Easily switch between male and female models at runtime.
+* **Localization**: Built-in support for 10+ languages (English, Spanish, Portuguese, Hindi, Arabic, French, Indonesian, German, Japanese, Korean).
+* **Path Access**: Access raw `Path` objects for custom rendering, animations, or hit testing.
+* **Styling**: Customize stroke widths, colors, and default fill styles.
 
 ## Getting started
 
@@ -47,15 +28,15 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_muscle_anatomy: ^1.0.0
-  flutter_svg: ^2.0.0 # Recommended for rendering SVG strings
+  flutter_muscle_anatomy: ^1.1.1
+  flutter_svg: ^2.0.0
 ```
 
 ## Usage
 
 ### 1. Simple Views (Male & Female)
 
-You can easily display the front or back view of a male or female body.
+Quickly display a specific view.
 
 ```dart
 // Male Front View
@@ -64,13 +45,13 @@ final maleFront = Male.front();
 // Female Back View with custom hair color
 final femaleBack = Female.back(hairColor: Colors.brown);
 
-// Render using SvgPicture
-SvgPicture.string(maleFront.toString());
+// Render using SvgPicture (from flutter_svg)
+Widget picture = SvgPicture.string(maleFront.toString());
 ```
 
 ### 2. Multi-View Displays
 
-Display both front and back views simultaneously. The library handles the layout and alignment.
+Display multiple views together. The library automatically manages layout and alignment.
 
 ```dart
 // Front then Back
@@ -79,30 +60,30 @@ final maleBoth = Male.frontBack();
 // Back then Front
 final femaleBoth = Female.backFront();
 
-// Shortcut for frontBack
+// Shortcut for front then back
 final anatomy = Male.both();
 ```
 
 ### 3. Smart View (By Muscles)
 
-If you only want to show the views that contain specific muscles, use `byMuscles`. It automatically decides whether to show the front, back, or both based on the muscles provided.
+Automatically select the views (front, back, or both) that contain a specific list of muscles.
 
 ```dart
 final anatomy = Male.byMuscles([
   Muscle.biceps,
   Muscle.trapezius,
 ]);
-// This will likely show both views since biceps are front and trapezius is back.
+// Since biceps are on the front and trapezius on the back, this shows both views.
 ```
 
 ### 4. Highlighting Muscles
 
-Highlight specific muscles with custom colors and opacity.
+Highlight muscles with specific colors. You can highlight a muscle on a specific side (left/right) or both.
 
 ```dart
 final anatomy = Male.front();
 
-// Highlight a single muscle (Specific side)
+// Highlight a specific muscle on one side
 anatomy.highlight(
   Muscle.biceps,
   position: MusclePosition.right,
@@ -110,47 +91,88 @@ anatomy.highlight(
   opacity: 0.7,
 );
 
-// Highlight multiple muscles (Both sides by default)
+// Highlight multiple muscles on both sides (default)
 anatomy.highlights(
   [Muscle.abs, Muscle.quadriceps],
   color: Colors.red,
 );
 ```
 
-### 5. Dynamic Gender Selection
+### 5. Custom Styling
 
-Use `BodyAnatomy` for scenarios where the gender is determined at runtime.
+Customize the look of the anatomy model, including outlines and default muscle fills.
 
 ```dart
-final gender = 'female'; // or 'm', 'male', 'f'
-final factory = BodyAnatomy(gender);
+final anatomy = Male.front();
 
-final anatomy = factory.front();
-// anatomy will be an instance of Female
+// Set default stroke (outline) color and width
+anatomy.setStroke(color: Colors.blueGrey, width: 0.5);
+
+// Set default fill for non-highlighted muscles
+anatomy.setFill(color: Colors.grey.withOpacity(0.1), opacity: 1.0);
+
+// Set default highlight style for subsequent highlights
+anatomy.setDefaultHighlight(color: Colors.orange, opacity: 0.8);
 ```
 
-### 6. Path Drawing (Canvas)
+### 6. Dynamic Gender Selection
 
-For high-performance custom rendering or animations, use the raw `Path` objects.
+Use `Anatomy` for scenarios where gender is determined at runtime.
+
+```dart
+final gender = 'female'; // Accepts 'male', 'm', 'female', 'f' (case-insensitive)
+final factory = Anatomy(gender, hairColor: Colors.black);
+
+final anatomy = factory.both();
+```
+
+### 7. Localization
+
+The library supports localization via the `easy_localization` package.
+
+#### Usage:
+To use localized muscle names, ensure `easy_localization` is initialized in your app, then use the extensions:
+
+```dart
+import 'package:flutter_muscle_anatomy/flutter_muscle_anatomy.dart';
+
+// Get localized muscle name
+String name = Muscle.biceps.localizedName;
+
+// Get localized gender name
+String gender = 'male'.localizedGender;
+
+// Get localized view name
+String view = BodyView.front.localizedName;
+```
+
+### 8. Advanced Path Drawing (Canvas)
+
+Access raw `Path` objects for high-performance custom painters or animations.
 
 ```dart
 class MyCustomPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final anatomy = Male.front();
+    
+    // Get all muscle paths
     final muscles = anatomy.getAllMusclePaths();
-    final outline = anatomy.outlinePaths.first;
+    
+    // Get specific muscle paths
+    final bicepsPaths = anatomy.getMusclePaths(Muscle.biceps, position: MusclePosition.both);
 
-    // ... scaling and transformation logic ...
+    // Get body outline
+    final outlines = anatomy.outlinePaths;
 
     final paint = Paint()
       ..style = PaintingStyle.stroke
-      ..color = Colors.black;
+      ..color = Colors.black
+      ..strokeWidth = 1.0;
 
     for (final path in muscles) {
       canvas.drawPath(path, paint);
     }
-    canvas.drawPath(outline, paint..strokeWidth = 2);
   }
 
   @override
@@ -158,20 +180,29 @@ class MyCustomPainter extends CustomPainter {
 }
 ```
 
+### 9. Scaling Utilities
+
+Scale a given `Size` to fit or fill the anatomy model's dimensions.
+
+```dart
+final anatomy = Male.both();
+Size screenSize = MediaQuery.of(context).size;
+
+// Get the size that fits the anatomy model within screen bounds
+Size scaled = anatomy.scaledSize(screenSize, fill: false);
+```
+
 ## Contributing
 
-Contributions are always welcome.
+Contributions are welcome! 
 
-Check out the *source-\*.svg* files under assets that were designed using Inkspace.
-
-Ensure you export as plain SVG to *female_\*.svg* and *male_\*.svg* files accordingly.
-
-Left and right muscles added should have *left_* and *right_* prefixes respectively, and the muscle
-should be added to the Muscle enum.
-
-Grouping muscles might not provide desired output, as group attributes such as *transform* are not
-handled currently.
+### Designing Muscles
+* Source files are available as SVG in `assets/`.
+* Designed using Inkscape.
+* Ensure you export as **plain SVG**.
+* Muscle IDs should follow the naming convention: `left_{muscle_name}` or `right_{muscle_name}`.
+* Avoid using `transform` attributes on groups as they are currently not fully supported by the internal parser.
 
 ## Additional information
 
-Give us a like.
+If you find this package useful, please give it a like on [pub.dev](https://pub.dev/packages/flutter_muscle_anatomy)!

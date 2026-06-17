@@ -231,10 +231,10 @@ class _Body with _BuildsSvgWriter implements MuscleAnatomy {
   }
 
   /// Internal factory helper to create a body instance based on a set of muscles.
-  static T _byMuscles<T extends _Body>(
+  static MuscleAnatomy _byMuscles(
     _GenderType gender,
     Iterable<Muscle> muscles, {
-    required T Function(List<_SkeletalMuscles>) constructor,
+    required MuscleAnatomy Function(List<_SkeletalMuscles>) constructor,
     Color? hairColor,
   }) {
     final fCounts = muscles.where((m) => m.isForView(BodyView.front)).length;
@@ -309,14 +309,6 @@ abstract class MuscleAnatomy implements _IMuscleHighlights {
 
   /// Returns a list of [Path] objects for a specific [muscle] at a given [position].
   List<Path> getMusclePaths(Muscle muscle, {required MusclePosition position});
-
-  /// Returns a [MuscleAnatomy] instance for the specified [gender].
-  ///
-  /// The [gender] string can be 'm', 'male', 'f', or 'female' (case-insensitive).
-  static MuscleAnatomy forGender(String gender) {
-    final g = _GenderType.fromName(gender);
-    return _Body._fromViews(g, [BodyView.front, BodyView.back]);
-  }
 }
 
 /// A factory for creating [MuscleAnatomy] instances for a specific gender.
@@ -356,9 +348,7 @@ class Anatomy {
   MuscleAnatomy byMuscles(Iterable<Muscle> muscles) => _Body._byMuscles(
     _genderType,
     muscles,
-    constructor: (skeletals) => _genderType == _GenderType.male
-        ? Male._(skeletals)
-        : Female._(skeletals),
+    constructor: _Body._,
     hairColor: _hairColor,
   );
 
@@ -368,64 +358,64 @@ class Anatomy {
 }
 
 /// Represents the male body anatomy.
-class Male extends _Body {
+final class Male {
   /// Private constructor for [Male].
-  Male._(super.skeletalMuscles) : super._();
+  Male._();
 
-  /// Returns a [Male] instance with only the front view.
+  /// Returns a [MuscleAnatomy] instance with only the front view.
   static MuscleAnatomy front() => Anatomy(_GenderType.male).front();
 
-  /// Returns a [Male] instance with only the back view.
+  /// Returns a [MuscleAnatomy] instance with only the back view.
   static MuscleAnatomy back() => Anatomy(_GenderType.male).back();
 
-  /// Returns a [Male] instance with both front and back views.
+  /// Returns a [MuscleAnatomy] instance with both front and back views.
   static MuscleAnatomy frontBack() => Anatomy(_GenderType.male).frontBack();
 
-  /// Returns a [Male] instance with both back and front views.
+  /// Returns a [MuscleAnatomy] instance with both back and front views.
   static MuscleAnatomy backFront() => Anatomy(_GenderType.male).backFront();
 
-  /// Returns a [Male] instance with both front and back views (alias for [frontBack]).
+  /// Returns a [MuscleAnatomy] instance with both front and back views (alias for [frontBack]).
   static MuscleAnatomy both() => Anatomy(_GenderType.male).both();
 
-  /// Creates a [Male] instance showing the views that best represent the provided [muscles].
+  /// Creates a [MuscleAnatomy] instance showing the views that best represent the provided [muscles].
   static MuscleAnatomy byMuscles(Iterable<Muscle> muscles) =>
       Anatomy(_GenderType.male).byMuscles(muscles);
 }
 
 /// Represents the female body anatomy.
-class Female extends _Body {
+final class Female {
   /// Private constructor for [Female].
-  Female._(super.skeletalMuscles) : super._();
+  Female._();
 
-  /// Returns a [Female] instance with only the front view.
+  /// Returns a [MuscleAnatomy] instance with only the front view.
   ///
   /// [hairColor] can optionally be specified.
   static MuscleAnatomy front({Color? hairColor}) =>
       Anatomy(_GenderType.female, hairColor: hairColor).front();
 
-  /// Returns a [Female] instance with only the back view.
+  /// Returns a [MuscleAnatomy] instance with only the back view.
   ///
   /// [hairColor] can optionally be specified.
   static MuscleAnatomy back({Color? hairColor}) =>
       Anatomy(_GenderType.female, hairColor: hairColor).back();
 
-  /// Returns a [Female] instance with both front and back views.
+  /// Returns a [MuscleAnatomy] instance with both front and back views.
   ///
   /// [hairColor] can optionally be specified.
   static MuscleAnatomy frontBack({Color? hairColor}) =>
       Anatomy(_GenderType.female, hairColor: hairColor).frontBack();
 
-  /// Returns a [Female] instance with both back and front views.
+  /// Returns a [MuscleAnatomy] instance with both back and front views.
   ///
   /// [hairColor] can optionally be specified.
   static MuscleAnatomy backFront({Color? hairColor}) =>
       Anatomy(_GenderType.female, hairColor: hairColor).backFront();
 
-  /// Returns a [Female] instance with both front and back views (alias for [frontBack]).
+  /// Returns a [MuscleAnatomy] instance with both front and back views (alias for [frontBack]).
   static MuscleAnatomy both({Color? hairColor}) =>
       frontBack(hairColor: hairColor);
 
-  /// Creates a [Female] instance showing the views that best represent the provided [muscles].
+  /// Creates a [MuscleAnatomy] instance showing the views that best represent the provided [muscles].
   static MuscleAnatomy byMuscles(
     Iterable<Muscle> muscles, {
     Color? hairColor,

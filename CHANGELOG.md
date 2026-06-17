@@ -1,3 +1,7 @@
+## 1.1.1
+
+* Improved translation coverage and fixed minor issues.
+
 ## 1.1.0
 
 * Added localization support using `easy_localization`.
@@ -9,7 +13,7 @@
 ## 1.0.0
 
 * Major refactoring of the internal engine for better performance and smaller codebase.
-* Added `BodyAnatomy` factory for easier gender-agnostic usage.
+* Added `Anatomy` factory for easier gender-agnostic usage.
 * Unified `Male` and `Female` implementation using shared skeletal muscle logic.
 * Improved support for hair color and gender-specific traits.
 * Enhanced documentation and example app with random muscle selection.
