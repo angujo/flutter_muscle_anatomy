@@ -93,10 +93,10 @@ mixin _BuildsSvgWriter {
   /// Tracks whether the SVG has already been built.
   bool _built = false;
 
-  /// Returns the root [SvgGroup]s that compose the body's SVG structure.
+  /// Returns the root [SvgElement]s that compose the body's SVG structure.
   ///
   /// This must be implemented by the class using the mixin.
-  List<SvgGroup> _getRootBuilds();
+  List<SvgElement> _getRootBuilds();
 
   /// The physical dimensions (width and height) of the SVG view box.
   Size get dimension;

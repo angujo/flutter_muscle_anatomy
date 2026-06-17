@@ -61,8 +61,35 @@ final class SvgFileWriter {
   }
 }
 
+/// Interface for SVG elements such as paths and groups.
+abstract interface class SvgElement {
+  /// Adds a custom attribute to the element.
+  void addAttribute(String key, String value);
+
+  /// Adds multiple attributes to the element.
+  void addAttributes(Map<String, String> attributes);
+
+  /// Adds multiple CSS-style attributes to the element.
+  void addStyles(Map<String, String> styles);
+
+  /// Adds a single CSS-style attribute to the element.
+  void addStyle(String key, String value);
+
+  /// Adds a child [SvgElement] to this element.
+  void addChild(SvgElement child);
+
+  /// Adds multiple child [SvgElement]s to this element.
+  void addChildren(Iterable<SvgElement> children);
+
+  /// Builds and returns the [XmlElement] for this element.
+  XmlElement build();
+
+  /// Internal method to contribute this element to an [XmlBuilder].
+  void _forBuilder(XmlBuilder builder);
+}
+
 /// Base class for SVG elements such as paths and groups.
-class SvgElement {
+abstract class _SvgElement implements SvgElement {
   final String _tag;
   final String _id;
   final Map<String, String> _attributes = {};
@@ -71,39 +98,46 @@ class SvgElement {
   XmlElement? _element;
 
   /// Creates an [SvgElement] with the given [_tag] and [_id].
-  SvgElement({required String tag, required String id}) : _tag = tag, _id = id;
+  _SvgElement({required String tag, required String id}) : _tag = tag, _id = id;
 
   /// Adds a custom attribute to the element.
+  @override
   void addAttribute(String key, String value) {
     _attributes[key] = value;
   }
 
   /// Adds multiple attributes to the element.
+  @override
   void addAttributes(Map<String, String> attributes) {
     _attributes.addAll(attributes);
   }
 
   /// Adds multiple CSS-style attributes to the element.
+  @override
   void addStyles(Map<String, String> styles) {
     _styles.addAll(styles);
   }
 
   /// Adds a single CSS-style attribute to the element.
+  @override
   void addStyle(String key, String value) {
     _styles[key] = value;
   }
 
   /// Adds a child [SvgElement] to this element.
+  @override
   void addChild(SvgElement child) {
     _children.add(child);
   }
 
   /// Adds multiple child [SvgElement]s to this element.
+  @override
   void addChildren(Iterable<SvgElement> children) {
     _children.addAll(children);
   }
 
   /// Internal method to contribute this element to an [XmlBuilder].
+  @override
   void _forBuilder(XmlBuilder builder) {
     final Map<String, String> attrs = Map.from(_attributes);
     attrs['id'] = _id;
@@ -122,6 +156,7 @@ class SvgElement {
   }
 
   /// Builds and returns the [XmlElement] for this element.
+  @override
   XmlElement build() {
     if (null != _element) {
       return _element!;
@@ -162,13 +197,13 @@ class SvgElement {
 }
 
 /// Represents an SVG group element (`<g>`).
-class SvgGroup extends SvgElement {
+final class SvgGroup extends _SvgElement {
   /// Creates an [SvgGroup] with the specified [id].
   SvgGroup({required super.id}) : super(tag: 'g');
 }
 
 /// Represents an SVG path element (`<path>`).
-class SvgPath extends SvgElement {
+final class SvgPath extends _SvgElement {
   /// The path data string (the 'd' attribute).
   final String d;
 

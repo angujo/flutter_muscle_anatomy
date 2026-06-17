@@ -89,10 +89,10 @@ class _SkeletalMuscles with _StrokesFill, _MusclesHighlights, _BuildsSvgWriter {
 
   /// Returns a [MuscleHelper] for the specified [muscle].
   MuscleHelper getMuscleHelper(Muscle muscle) =>
-      MuscleHelper.fromMuscle(muscle, _svgPathReader);
+      MuscleHelper(muscle, _svgPathReader);
 
   @override
-  List<SvgGroup> _getRootBuilds() {
+  List<SvgElement> _getRootBuilds() {
     final build = SvgGroup(id: _view.name);
     final outline = SvgPath(
       id: 'outline_${_view.name}',
@@ -219,8 +219,8 @@ class _Body with _BuildsSvgWriter implements MuscleAnatomy {
   }
 
   @override
-  List<SvgGroup> _getRootBuilds() {
-    List<SvgGroup> groups = [];
+  List<SvgElement> _getRootBuilds() {
+    List<SvgElement> groups = [];
     double x = 0;
     for (final entry in _skeletalMuscles.asMap().entries) {
       final group = SvgGroup(id: 'skeletal_${entry.key}');
@@ -330,9 +330,7 @@ class Anatomy {
   Anatomy(dynamic gender, {Color? hairColor})
     : _genderType = gender is _GenderType
           ? gender
-          : _GenderType.fromName(
-              gender is String ? gender : gender.toString(),
-            ),
+          : _GenderType.fromName(gender is String ? gender : gender.toString()),
       _hairColor = hairColor;
 
   /// Returns a [MuscleAnatomy] with only the front view.
