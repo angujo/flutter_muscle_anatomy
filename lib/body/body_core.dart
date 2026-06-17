@@ -328,9 +328,11 @@ class Anatomy {
   /// [gender] can be a [String] or any object whose `toString()` returns a valid gender string.
   /// [hairColor] can optionally be specified for the resulting anatomy views.
   Anatomy(dynamic gender, {Color? hairColor})
-    : _genderType = _GenderType.fromName(
-        gender is String ? gender : gender.toString(),
-      ),
+    : _genderType = gender is _GenderType
+          ? gender
+          : _GenderType.fromName(
+              gender is String ? gender : gender.toString(),
+            ),
       _hairColor = hairColor;
 
   /// Returns a [MuscleAnatomy] with only the front view.
