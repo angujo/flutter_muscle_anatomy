@@ -1,7 +1,7 @@
 ## 1.2.2
 
 * Added comprehensive documentation for all classes, methods, and functions.
-* Updated README with a preview video and detailed guide for interactivity (hit testing and InteractiveViewer).
+* Updated README with a preview GIF and detailed guide for interactivity (hit testing and InteractiveViewer).
 * Improved advanced path drawing example in documentation.
 
 ## 1.2.1
