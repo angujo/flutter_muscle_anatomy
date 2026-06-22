@@ -5,7 +5,7 @@
 A Flutter library for displaying and interacting with muscle anatomy models. It supports both male and female body types, front and back views, and allows for precise muscle highlighting.
 
 <div align="center">
-  <img src="images/screen-record-short-fma.gif" alt="Watch the Preview Video" width="300"/>
+  <img src="images/screen-record-short-fma.gif" alt="Watch the Preview Video" height="300"/>
 </div>
 <div align="center">
   <img src="images/app-screenshot1.png" alt="Mobile App View" height="250"/>
