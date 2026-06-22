@@ -5,3 +5,7 @@
 .packages
 build/
 pubspec.lock
+
+# Exclude large unused assets
+images/screen-record-fma.gif
+images/screen-record-fma.mp4

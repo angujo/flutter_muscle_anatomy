@@ -1,3 +1,8 @@
+## 1.2.3
+
+* Replaced preview video with an animated GIF for better compatibility on pub.dev.
+* Minor documentation refinements.
+
 ## 1.2.2
 
 * Added comprehensive documentation for all classes, methods, and functions.

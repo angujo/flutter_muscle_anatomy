@@ -33,7 +33,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_muscle_anatomy: ^1.2.2
+  flutter_muscle_anatomy: ^1.2.3
   flutter_svg: ^2.0.0
 ```
 
