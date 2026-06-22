@@ -177,12 +177,14 @@ enum Muscle {
   static List<Muscle> forView(BodyView view) =>
       Muscle.values.where((m) => m.isForView(view)).toList();
 
+  /// Returns the view that is most represented in the provided set of [muscles].
   static BodyView dominantView(Iterable<Muscle> muscles) {
     final frontCount = muscles.where((m) => m.isForView(BodyView.front)).length;
     final backCount = muscles.where((m) => m.isForView(BodyView.back)).length;
     return frontCount < backCount ? BodyView.back : BodyView.front;
   }
 
+  /// Returns the list of views necessary to display the provided [muscles].
   static List<BodyView> views(Iterable<Muscle> muscles) {
     final frontAny = muscles.any((m) => m.isForView(BodyView.front));
     final backAny = muscles.any((m) => m.isForView(BodyView.back));
@@ -194,13 +196,18 @@ enum Muscle {
   }
 }
 
+/// Represents raw SVG path data for a muscle.
 class SVGPathData {
+  /// The list of SVG path 'd' strings.
   final List<String> svgPaths;
 
+  /// Creates an instance of [SVGPathData].
   const SVGPathData({required this.svgPaths});
 
+  /// Returns the path data as a list of [Path] objects.
   List<Path> get paths => svgPaths.map(parseSvgPathData).toList();
 
+  /// Converts the path data to an [SvgElement].
   SvgElement toSvgElement(MuscleInstance loc, MuscleDecoration decoration) {
     final group = SvgGroup(id: loc.svgWriteId);
     final paths = svgPaths
@@ -253,10 +260,12 @@ class MuscleInstance {
     return "MuscleInstance(muscle: $muscle, position: $position)";
   }
 
+  /// Returns an inverted version of this muscle instance (swaps left/right).
   MuscleInstance inverse() =>
       MuscleInstance(muscle: muscle, position: position.inverse());
 }
 
+/// Defines the visual styling for a muscle.
 class MuscleDecoration {
   final Color _fillColor;
   final double? _fillOpacity;
@@ -264,14 +273,19 @@ class MuscleDecoration {
   final double? _strokeOpacity;
   final double _strokeWidth;
 
+  /// Returns the fill color with applied opacity.
   Color get fillColor => _fillColor.withValues(alpha: _fillOpacity);
 
+  /// The fill opacity (0.0 to 1.0).
   double? get fillOpacity => _fillOpacity;
 
+  /// Returns the stroke color with applied opacity.
   Color get strokeColor => _strokeColor.withValues(alpha: _strokeOpacity);
 
+  /// The stroke width.
   double get strokeWidth => _strokeWidth;
 
+  /// The stroke opacity (0.0 to 1.0).
   double? get strokeOpacity => _strokeOpacity;
 
   double get _paintStrokeWidth => _strokeWidth * 5;
@@ -288,6 +302,7 @@ class MuscleDecoration {
        _strokeColor = strokeColor ?? Colors.black,
        _strokeWidth = strokeWidth ?? .1;
 
+  /// Creates a [MuscleDecoration] instance.
   factory MuscleDecoration({
     Color? fillColor,
     double? fillOpacity,
@@ -302,6 +317,7 @@ class MuscleDecoration {
     strokeWidth: strokeWidth,
   );
 
+  /// Creates a copy of this decoration, merging properties from [other] if they are not null.
   MuscleDecoration copyFrom(MuscleDecoration? other) {
     return copyWith(
       fillColor: other?._fillColor,
@@ -311,6 +327,7 @@ class MuscleDecoration {
     );
   }
 
+  /// Creates a copy of this decoration with updated properties.
   MuscleDecoration copyWith({
     Color? fillColor,
     double? fillOpacity,
@@ -327,6 +344,7 @@ class MuscleDecoration {
     );
   }
 
+  /// Returns a [Paint] object for the stroke based on this decoration.
   Paint strokePaint() {
     return Paint()
       ..style = PaintingStyle.stroke
@@ -334,6 +352,7 @@ class MuscleDecoration {
       ..color = _strokeColor.withValues(alpha: _strokeOpacity);
   }
 
+  /// Returns a [Paint] object for the fill based on this decoration.
   Paint fillPaint() {
     return Paint()
       ..style = PaintingStyle.fill
@@ -346,28 +365,36 @@ class MuscleDecoration {
   }
 }
 
+/// Represents a muscle member within the anatomy visualization.
 final class MuscleMember {
   final MuscleInstance _instance;
   final SVGPathData _data;
   final Matrix4? _transform;
   final MuscleDecoration _decoration;
 
+  /// The muscle associated with this member.
   Muscle get muscle => _instance.muscle;
 
+  /// The lateral position of this member.
   MuscleSide get position => _instance.position;
 
+  /// The name of the muscle.
   String get name => _instance.name;
 
+  /// The list of SVG path strings for this member.
   List<String> get svgPaths => _data.svgPaths;
 
+  /// The visual decoration applied to this member.
   MuscleDecoration get decoration => _decoration;
 
+  /// The list of [Path] objects, with any transformations applied.
   List<Path> get paths {
     final rawPaths = _data.paths;
     if (null == _transform) return rawPaths;
     return rawPaths.map((p) => p.transform(_transform.storage)).toList();
   }
 
+  /// Creates an instance of [MuscleMember].
   const MuscleMember(
     this._instance,
     this._data,
@@ -376,27 +403,38 @@ final class MuscleMember {
   ]);
 }
 
+/// Represents a highlighted muscle in the anatomy visualization.
 final class MuscleHighlight {
   final MuscleInstance _instance;
   final MuscleDecoration _decoration;
 
+  /// The muscle associated with this highlight.
   Muscle get muscle => _instance.muscle;
 
+  /// The lateral position of this highlight.
   MuscleSide get position => _instance.position;
 
+  /// The fill color of the highlight.
   Color get fillColor => _decoration.fillColor;
 
+  /// The fill opacity of the highlight.
   double? get fillOpacity => _decoration.fillOpacity;
 
+  /// The stroke color of the highlight.
   Color get strokeColor => _decoration.strokeColor;
 
+  /// The stroke width of the highlight.
   double get strokeWidth => _decoration.strokeWidth;
 
+  /// The stroke opacity of the highlight.
   double? get strokeOpacity => _decoration.strokeOpacity;
 
+  /// Returns the [Paint] for the highlight stroke.
   Paint get strokePaint => _decoration.strokePaint();
 
+  /// Returns the [Paint] for the highlight fill.
   Paint get fillPaint => _decoration.fillPaint();
 
+  /// Creates an instance of [MuscleHighlight].
   const MuscleHighlight(this._instance, this._decoration);
 }

@@ -1,7 +1,11 @@
+## 1.2.1
+
+* Updated minimum Flutter version to 3.27.0 to support `withValues` API.
+* Minor documentation updates and fixes.
+
 ## 1.2.0
 
 * **Breaking Change**: Refactored `Male` and `Female` classes to utility classes (they no longer extend `_Body`).
-* **Breaking Change**: Renamed `Anatomy` factory class to `BodyAnatomy`.
 * Fixed Wasm compatibility by removing hard dependency on `easy_localization`.
 * Decoupled localization using a customizable translator.
 * Exported localization extensions and configuration.

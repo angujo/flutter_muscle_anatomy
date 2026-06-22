@@ -22,6 +22,7 @@ class SvgPathReader {
   /// Cached height of the SVG.
   double? _height;
 
+  /// Returns the list of muscles visible in this view.
   List<Muscle> get muscles => Muscle.forView(_view);
 
   /// Cache for individual path IDs: pathId -> path d string.
@@ -120,9 +121,11 @@ class SvgPathReader {
 
   //endregion
 
+  /// Returns the [SVGPathData] for a specific [muscle] at a given [position].
   SVGPathData? getPathData(Muscle muscle, {required MuscleSide position}) =>
       getMuscleData()[MuscleInstance(muscle: muscle, position: position)];
 
+  /// Returns a map of all muscle instances and their corresponding path data.
   Map<MuscleInstance, SVGPathData> getMuscleData() {
     return _muscleLocCache!;
   }

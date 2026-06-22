@@ -23,6 +23,7 @@ class _SkeletalMuscles with _Decorates, _MusclesHighlights, _BuildsSvgWriter {
   /// Returns the [Path] object for the body outline.
   Path get outlinePath => _svgPathReader.getPaths('outline').first;
 
+  /// Returns the [Paint] object for the body outline.
   Paint get outlinePaint => _defDecoration.strokePaint();
 
   /// @deprecated Use [hairPath] instead.
@@ -34,11 +35,14 @@ class _SkeletalMuscles with _Decorates, _MusclesHighlights, _BuildsSvgWriter {
     return _svgPathReader.getPaths('hair_outline').firstOrNull;
   }
 
+  /// Returns the [MuscleDecoration] for the hair.
   MuscleDecoration get hairDecoration =>
       _defDecoration.copyWith(fillColor: _hairColor);
 
+  /// Returns the [Paint] for the hair stroke.
   Paint get hairStrokePaint => hairDecoration.strokePaint();
 
+  /// Returns the [Paint] for the hair fill.
   Paint get hairFillPaint => hairDecoration.fillPaint();
 
   /// Returns the [Path] for a specific [muscle] at a given [position].
@@ -58,6 +62,7 @@ class _SkeletalMuscles with _Decorates, _MusclesHighlights, _BuildsSvgWriter {
         .firstOrNull;
   }
 
+  /// Returns a map of all muscle instances and their corresponding path data.
   Map<MuscleInstance, SVGPathData> getMuscleInstancesData() =>
       _svgPathReader.getMuscleData();
 
@@ -168,12 +173,15 @@ class _Body with _BuildsSvgWriter implements MuscleAnatomy {
     return paths;
   }
 
+  /// Returns the [Paint] for the body outline.
   @override
   Paint get outlinePaint => _skeletalMuscles.first.outlinePaint;
 
+  /// Returns the [Paint] for the hair stroke.
   @override
   Paint get hairStrokePaint => _skeletalMuscles.first.hairStrokePaint;
 
+  /// Returns the [Paint] for the hair fill.
   @override
   Paint get hairFillPaint => _skeletalMuscles.first.hairFillPaint;
 
@@ -361,14 +369,19 @@ abstract class MuscleAnatomy implements _IMuscleHighlights {
   /// Returns a list of [Path] objects for the hair outlines of the body views.
   List<Path> get hairOutlinePaths;
 
+  /// Returns the [Paint] for the body outline.
   Paint get outlinePaint;
 
+  /// Returns the [Paint] for the hair stroke.
   Paint get hairStrokePaint;
 
+  /// Returns the [Paint] for the hair fill.
   Paint get hairFillPaint;
 
+  /// Returns a list of current muscle highlights.
   List<MuscleHighlight> getHighlights();
 
+  /// Returns a list of all muscle members being visualized.
   List<MuscleMember> getMuscleMembers();
 
   /// Returns a list of [Path] objects for all available muscles in the body views.
@@ -411,6 +424,7 @@ class Anatomy {
   /// Returns a [MuscleAnatomy] with both front and back views (alias for [frontBack]).
   MuscleAnatomy both() => frontBack();
 
+  /// Returns a [MuscleAnatomy] for a specific [view].
   MuscleAnatomy byView(BodyView view) => _fromViews([view]);
 
   /// Returns a [MuscleAnatomy] with views that best represent the provided [muscles].

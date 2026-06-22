@@ -11,13 +11,16 @@ enum MuscleSide {
   /// Positioned on both sides of the body.
   both;
 
+  /// Checks if the given [pathId] represents a positioned path (starts with left_ or right_).
   static bool isPositionedPath(String pathId) => MuscleSide.values
       .whereNot((p) => p == MuscleSide.both)
       .any((pos) => pathId.startsWith("${pos.name}_"));
 
+  /// Returns an iterable of actual sides (left and right).
   static Iterable<MuscleSide> actual() =>
       MuscleSide.values.whereNot((p) => p == MuscleSide.both);
 
+  /// Returns the inverse side.
   MuscleSide inverse() => switch (this) {
     left => right,
     right => left,
@@ -36,6 +39,7 @@ enum BodyView {
   /// Both front and back views.
   both;
 
+  /// Returns the inverse view.
   BodyView inverse() => switch (this) {
     front => back,
     back => front,

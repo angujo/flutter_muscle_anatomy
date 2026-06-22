@@ -1,6 +1,6 @@
 name: flutter_muscle_anatomy
 description: "A flutter library for showing muscle anatomy, shows for both male and female body types with front and back view. It allows separation between left and right muscles."
-version: 1.2.0
+version: 1.2.1
 repository: "https://github.com/angujo/flutter_muscle_anatomy.git"
 homepage: "https://github.com/angujo/flutter_muscle_anatomy.git"
 issue_tracker: "https://github.com/angujo/flutter_muscle_anatomy/issues?q=is%3Aissue%20state%3Aopen"
@@ -8,7 +8,7 @@ issue_tracker: "https://github.com/angujo/flutter_muscle_anatomy/issues?q=is%3Ai
 
 environment:
   sdk: ^3.10.7
-  flutter: ">=1.17.0"
+  flutter: ">=3.27.0"
 
 dependencies:
   flutter:
