@@ -5,6 +5,9 @@
 A Flutter library for displaying and interacting with muscle anatomy models. It supports both male and female body types, front and back views, and allows for precise muscle highlighting.
 
 <div align="center">
+  <video src="images/screen-record-fma.mp4" width="400" controls muted autoplay loop></video>
+</div>
+<div align="center">
   <img src="images/app-screenshot1.png" alt="Mobile App View" width="200"/>
   <img src="images/screenshot1.png" alt="Female Back View" width="200"/>
   <img src="images/screenshot2.png" alt="Female Front View" width="200"/>
@@ -18,9 +21,11 @@ A Flutter library for displaying and interacting with muscle anatomy models. It 
 * **Front & Back Views**: Display front, back, or both views simultaneously.
 * **Muscle Highlighting**: Highlight specific muscles with custom colors and opacity.
 * **Dynamic Gender Support**: Easily switch between male and female models at runtime.
-* **Localization**: Built-in support for 10+ languages (English, Spanish, Portuguese, Hindi, Arabic, French, Indonesian, German, Japanese, Korean).
+* **Localization**: Built-in support for 10+ languages.
+* **Interactivity**: Easy-to-implement hit testing for muscle selection and custom interactions.
 * **Path Access**: Access raw `Path` objects for custom rendering, animations, or hit testing.
 * **Styling**: Customize stroke widths, colors, and default fill styles.
+* **Full Documentation**: Comprehensive doc comments for all classes and methods for excellent IDE support.
 
 ## Getting started
 
@@ -28,7 +33,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_muscle_anatomy: ^1.2.0
+  flutter_muscle_anatomy: ^1.2.2
   flutter_svg: ^2.0.0
 ```
 
@@ -86,7 +91,7 @@ final anatomy = Male.front();
 // Highlight a specific muscle on one side
 anatomy.highlight(
   Muscle.biceps,
-  position: MusclePosition.right,
+  position: MuscleSide.right,
   color: Colors.green,
   opacity: 0.7,
 );
@@ -164,35 +169,50 @@ String view = BodyView.front.localizedName;
 
 ### 8. Advanced Path Drawing (Canvas)
 
-Access raw `Path` objects for high-performance custom painters or animations.
+Access raw `Path` objects for high-performance custom painters or animations. The library provides pre-configured `Paint` objects and decoration data to make custom rendering easy.
 
 ```dart
-class MyCustomPainter extends CustomPainter {
+class AnatomyPainter extends CustomPainter {
+  final MuscleAnatomy anatomy;
+
+  AnatomyPainter({required this.anatomy});
+
   @override
   void paint(Canvas canvas, Size size) {
-    final anatomy = Male.front();
-    
-    // Get all muscle paths
-    final muscles = anatomy.getAllMusclePaths();
-    
-    // Get specific muscle paths
-    final bicepsPaths = anatomy.getMusclePaths(Muscle.biceps, position: MusclePosition.both);
+    // 1. Calculate scale and offset to center the anatomy model
+    final scaledSize = anatomy.scaledSize(size);
+    final scale = scaledSize.width / anatomy.dimension.width;
+    final dx = (size.width - scaledSize.width) / 2;
+    final dy = (size.height - scaledSize.height) / 2;
 
-    // Get body outline
-    final outlines = anatomy.outlinePaths;
+    final matrix = Matrix4.identity()
+      ..translate(dx, dy)
+      ..scale(scale);
 
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..color = Colors.black
-      ..strokeWidth = 1.0;
+    // 2. Draw body outlines
+    for (final path in anatomy.outlinePaths) {
+      canvas.drawPath(path.transform(matrix.storage), anatomy.outlinePaint);
+    }
 
-    for (final path in muscles) {
-      canvas.drawPath(path, paint);
+    // 3. Draw all muscles (with their current highlights/styling)
+    for (final member in anatomy.getMuscleMembers()) {
+      for (final path in member.paths) {
+        // Draw muscle fill
+        canvas.drawPath(path.transform(matrix.storage), member.decoration.fillPaint());
+        // Draw muscle stroke/outline
+        canvas.drawPath(path.transform(matrix.storage), member.decoration.strokePaint());
+      }
+    }
+
+    // 4. Draw hair (if visible)
+    for (final path in anatomy.hairOutlinePaths) {
+      canvas.drawPath(path.transform(matrix.storage), anatomy.hairFillPaint);
     }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant AnatomyPainter oldDelegate) => 
+      oldDelegate.anatomy != anatomy;
 }
 ```
 
@@ -206,6 +226,69 @@ Size screenSize = MediaQuery.of(context).size;
 
 // Get the size that fits the anatomy model within screen bounds
 Size scaled = anatomy.scaledSize(screenSize, fill: false);
+```
+
+### 10. Interactivity & Hit Testing
+
+The library's raw `Path` access makes it easy to build fully interactive anatomical maps. By combining `InteractiveViewer`, `GestureDetector`, and `CustomPaint`, you can create a viewport that supports **pinch-to-zoom**, **panning**, and **tap-to-select** muscles.
+
+#### Step 1: Layout the Widget
+Wrap your `CustomPaint` in an `InteractiveViewer` for navigation and a `GestureDetector` to capture interactions.
+
+```dart
+GestureDetector(
+  onTapUp: _onTapped,
+  child: InteractiveViewer(
+    transformationController: _controller, // Used to track zoom/pan state
+    minScale: 0.1,
+    maxScale: 10,
+    child: CustomPaint(
+      size: const Size(200.0, 300.0),
+      painter: AnatomyPainter(anatomy: anatomy),
+    ),
+  ),
+)
+```
+
+#### Step 2: Handle Taps with Zoom Support
+When using `InteractiveViewer`, you must account for the current transformation matrix to accurately convert a screen tap into model coordinates.
+
+```dart
+void _onTapped(TapUpDetails details) {
+  final RenderBox box = context.findRenderObject() as RenderBox;
+  final size = box.size;
+
+  // 1. Account for InteractiveViewer zoom/pan
+  final Matrix4 viewMatrix = _controller.value;
+  final Offset scenePoint = MatrixUtils.transformPoint(
+    Matrix4.inverted(viewMatrix),
+    details.localPosition,
+  );
+
+  // 2. Calculate model-to-screen scaling
+  final scaledSize = anatomy.scaledSize(size);
+  final scale = scaledSize.width / anatomy.dimension.width;
+  final dx = (size.width - scaledSize.width) / 2;
+  final dy = (size.height - scaledSize.height) / 2;
+
+  // 3. Convert to model coordinates
+  final Offset modelPoint = Offset(
+    (scenePoint.dx - dx) / scale,
+    (scenePoint.dy - dy) / scale,
+  );
+
+  // 4. Hit test muscles
+  for (final member in anatomy.getMuscleMembers()) {
+    for (final path in member.paths) {
+      if (path.contains(modelPoint)) {
+        setState(() {
+           anatomy.highlight(member.muscle, position: member.position);
+        });
+        return;
+      }
+    }
+  }
+}
 ```
 
 ## Contributing
