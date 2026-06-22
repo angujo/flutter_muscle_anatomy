@@ -27,8 +27,8 @@ extension BodyViewLocalization on BodyView {
   String get localizedName => MuscleAnatomyLocalization.translator('views.$name');
 }
 
-/// Extension to provide localized names for [MusclePosition].
-extension MusclePositionLocalization on MusclePosition {
+/// Extension to provide localized names for [MuscleSide].
+extension MusclePositionLocalization on MuscleSide {
   /// Returns the localized name of this position.
   String get localizedName => MuscleAnatomyLocalization.translator('positions.$name');
 }

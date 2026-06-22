@@ -8,7 +8,7 @@ void main() {
       final mf = Male.front();
       mf.highlight(
         Muscle.biceps,
-        position: MusclePosition.right,
+        position: MuscleSide.right,
         color: Colors.green,
       );
       mf.highlights([
@@ -29,7 +29,7 @@ void main() {
       final mf = Male.back();
       mf.highlight(
         Muscle.triceps,
-        position: MusclePosition.right,
+        position: MuscleSide.right,
         color: Colors.green,
       );
       mf.highlights([
@@ -48,7 +48,7 @@ void main() {
       final mf = Male.backFront();
       mf.highlight(
         Muscle.triceps,
-        position: MusclePosition.right,
+        position: MuscleSide.right,
         color: Colors.green,
       );
       mf.highlights([
@@ -66,7 +66,7 @@ void main() {
       final mf = Female.front();
       mf.highlight(
         Muscle.biceps,
-        position: MusclePosition.right,
+        position: MuscleSide.right,
         color: Colors.green,
       );
 
@@ -87,7 +87,7 @@ void main() {
     test('Default translator returns key', () {
       expect(Muscle.biceps.localizedName, equals('muscles.biceps'));
       expect(BodyView.front.localizedName, equals('views.front'));
-      expect(MusclePosition.left.localizedName, equals('positions.left'));
+      expect(MuscleSide.left.localizedName, equals('positions.left'));
       expect('male'.localizedGender, equals('genders.male'));
     });
 

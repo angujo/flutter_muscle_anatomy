@@ -4,7 +4,7 @@ part of 'body.dart';
 ///
 /// It handles SVG path reading and provides mechanisms for building SVG elements
 /// for both highlighted and non-highlighted muscles.
-class _SkeletalMuscles with _StrokesFill, _MusclesHighlights, _BuildsSvgWriter {
+class _SkeletalMuscles with _Decorates, _MusclesHighlights, _BuildsSvgWriter {
   @override
   final BodyView _view;
 
@@ -18,48 +18,58 @@ class _SkeletalMuscles with _StrokesFill, _MusclesHighlights, _BuildsSvgWriter {
   final Color? _hairColor;
 
   /// The intrinsic dimensions of the underlying SVG.
-  late final Size svgDimension = Size(
-    _svgPathReader.width,
-    _svgPathReader.height,
-  );
+  Size get svgDimension => Size(_svgPathReader.width, _svgPathReader.height);
 
   /// Returns the [Path] object for the body outline.
   Path get outlinePath => _svgPathReader.getPaths('outline').first;
 
+  Paint get outlinePaint => _defDecoration.strokePaint();
+
+  /// @deprecated Use [hairPath] instead.
+  Path? get hairOutlinePath => hairPath;
+
   /// Returns the [Path] for the hair outline if available.
-  Path? get hairOutlinePath {
+  Path? get hairPath {
     if (null == _hairColor) return null;
     return _svgPathReader.getPaths('hair_outline').firstOrNull;
   }
 
+  MuscleDecoration get hairDecoration =>
+      _defDecoration.copyWith(fillColor: _hairColor);
+
+  Paint get hairStrokePaint => hairDecoration.strokePaint();
+
+  Paint get hairFillPaint => hairDecoration.fillPaint();
+
   /// Returns the [Path] for a specific [muscle] at a given [position].
   ///
   /// Throws [UnimplementedError] if [position] is MusclePosition.both.
-  Path? getMusclePath(Muscle muscle, {required MusclePosition position}) {
-    if (MusclePosition.both == position) {
+  Path? getMusclePath(Muscle muscle, {required MuscleSide position}) {
+    if (MuscleSide.both == position) {
       throw UnimplementedError(
         MuscleAnatomyLocalization.translator(
           'errors.muscle_position_both_not_supported',
         ),
       );
     }
-    final name = '${position.name}_${muscle.name}';
-    return _svgPathReader.getPaths(name).firstOrNull;
+    return _svgPathReader
+        .getPathData(muscle, position: position)
+        ?.paths
+        .firstOrNull;
   }
+
+  Map<MuscleInstance, SVGPathData> getMuscleInstancesData() =>
+      _svgPathReader.getMuscleData();
 
   /// Returns a list of [Path] objects for all muscles defined in Muscle.values
   /// for both left and right positions.
-  List<Path> getMusclePaths() {
-    final positions = {MusclePosition.left, MusclePosition.right};
-    return Muscle.values
-        .map(
-          (Muscle m) => positions
-              .map((MusclePosition p) => getMusclePath(m, position: p))
-              .whereType<Path>(),
-        )
-        .expand((l) => l)
-        .toList();
-  }
+  List<Path> getMusclePaths() => _svgPathReader
+      .getMuscleData()
+      .values
+      .map((sd) => sd.paths)
+      .expand((l) => l)
+      .nonNulls
+      .toList();
 
   /// Creates an instance of [_SkeletalMuscles].
   _SkeletalMuscles({
@@ -72,12 +82,8 @@ class _SkeletalMuscles with _StrokesFill, _MusclesHighlights, _BuildsSvgWriter {
        dimension = Size(svgPathReader.width, svgPathReader.height);
 
   /// Returns an [_SkeletalMuscles] for the male body for a specific [view].
-  factory _SkeletalMuscles.male(BodyView view, {Color? hairColor}) =>
-      _SkeletalMuscles(
-        view: view,
-        svgPathReader: SvgPathReader.male(view),
-        hairColor: hairColor,
-      );
+  factory _SkeletalMuscles.male(BodyView view) =>
+      _SkeletalMuscles(view: view, svgPathReader: SvgPathReader.male(view));
 
   /// Returns an [_SkeletalMuscles] for the female body for a specific [view].
   factory _SkeletalMuscles.female(BodyView view, {Color? hairColor}) =>
@@ -87,50 +93,27 @@ class _SkeletalMuscles with _StrokesFill, _MusclesHighlights, _BuildsSvgWriter {
         hairColor: hairColor ?? Colors.grey,
       );
 
-  /// Returns a [MuscleHelper] for the specified [muscle].
-  MuscleHelper getMuscleHelper(Muscle muscle) =>
-      MuscleHelper(muscle, _svgPathReader);
-
   @override
   List<SvgElement> _getRootBuilds() {
     final build = SvgGroup(id: _view.name);
     final outline = SvgPath(
       id: 'outline_${_view.name}',
       d: _svgPathReader.getPathDs('outline').first,
-    );
+    )..decorate(_defDecoration);
+    (outline.toString());
     build.addChild(outline);
-    for (var (muscle, position) in _nonHighlightedMuscles) {
-      if (!muscle.isForView(_view)) continue;
-      build.addChild(
-        getMuscleHelper(muscle).toSvgElement(
-          position,
-          fillColor: _defFillColor,
-          fillOpacity: _defFillOpacity,
-          strokeColor: _strokeColor,
-          strokeWidth: _strokeWidth,
-          idSuffix: _view.name,
-        ),
+    for (final muscleEntry in _svgPathReader.getMuscleData().entries) {
+      final deco = _defDecoration.copyFrom(
+        _instanceDecoration(muscleEntry.key),
       );
-    }
-    for (final highlight in _highlights.values) {
-      if (!highlight.muscle.isForView(_view)) continue;
-      build.addChild(
-        MuscleHelper.fromHighlight(
-          highlight,
-          _svgPathReader,
-          strokeColor: _strokeColor,
-          strokeWidth: _strokeWidth,
-          idSuffix: _view.name,
-        ),
-      );
+      build.addChild(muscleEntry.value.toSvgElement(muscleEntry.key, deco));
     }
     if (null != _hairColor) {
       final hairs = _svgPathReader.getPathDs('hair_outline');
       if (hairs.isNotEmpty) {
         build.addChild(
           SvgPath(id: 'hair_outline_${_view.name}', d: hairs.first)
-            ..stroke(_strokeColor, width: _strokeWidth)
-            ..fill(_hairColor, opacity: 0.5),
+            ..decorate(hairDecoration),
         );
       }
     }
@@ -158,41 +141,120 @@ class _Body with _BuildsSvgWriter implements MuscleAnatomy {
 
   /// Returns a list of [Path] objects for the outlines of all skeletal muscle views.
   @override
-  List<Path> get outlinePaths =>
-      _skeletalMuscles.map((s) => s.outlinePath).toList();
+  List<Path> get outlinePaths {
+    List<Path> paths = [];
+    double x = 0;
+    for (final skel in _skeletalMuscles) {
+      final matrix = Matrix4.translationValues(x, 0, 0);
+      paths.add(skel.outlinePath.transform(matrix.storage));
+      x += skel.dimension.width + _margin;
+    }
+    return paths;
+  }
 
   /// Returns a list of [Path] objects for the hair outlines of all skeletal muscle views.
   @override
-  List<Path> get hairOutlinePaths =>
-      _skeletalMuscles.map((s) => s.hairOutlinePath).nonNulls.toList();
+  List<Path> get hairOutlinePaths {
+    List<Path> paths = [];
+    double x = 0;
+    for (final skel in _skeletalMuscles) {
+      final path = skel.hairPath;
+      if (path != null) {
+        final matrix = Matrix4.translationValues(x, 0, 0);
+        paths.add(path.transform(matrix.storage));
+      }
+      x += skel.dimension.width + _margin;
+    }
+    return paths;
+  }
+
+  @override
+  Paint get outlinePaint => _skeletalMuscles.first.outlinePaint;
+
+  @override
+  Paint get hairStrokePaint => _skeletalMuscles.first.hairStrokePaint;
+
+  @override
+  Paint get hairFillPaint => _skeletalMuscles.first.hairFillPaint;
 
   /// Private constructor for [_Body].
   _Body._(this._skeletalMuscles);
 
   @override
-  List<Path> getAllMusclePaths() =>
-      _skeletalMuscles.map((s) => s.getMusclePaths()).expand((l) => l).toList();
+  List<MuscleHighlight> getHighlights() {
+    List<MuscleHighlight> highlights = [];
+    for (final skeletal in _skeletalMuscles) {
+      highlights.addAll(
+        skeletal._highlights.entries.map(
+          (e) => MuscleHighlight(e.key, e.value),
+        ),
+      );
+    }
+    return highlights;
+  }
 
   @override
-  List<Path> getMusclePaths(Muscle muscle, {required MusclePosition position}) {
-    return _skeletalMuscles
-        .map(
-          (s) => MusclePosition.both == position
-              ? [
-                  s.getMusclePath(muscle, position: MusclePosition.left),
-                  s.getMusclePath(muscle, position: MusclePosition.right),
-                ]
-              : [s.getMusclePath(muscle, position: position)],
-        )
-        .expand((l) => l)
-        .nonNulls
-        .toList();
+  List<MuscleMember> getMuscleMembers() {
+    List<MuscleMember> members = [];
+    double x = 0;
+    for (final skel in _skeletalMuscles) {
+      final matrix = Matrix4.translationValues(x, 0, 0);
+      for (final entry in skel.getMuscleInstancesData().entries) {
+        members.add(
+          MuscleMember(
+            entry.key,
+            entry.value,
+            skel._decoration(entry.key),
+            matrix,
+          ),
+        );
+      }
+      x += skel.dimension.width + _margin;
+    }
+    return members;
+  }
+
+  @override
+  List<Path> getAllMusclePaths() {
+    List<Path> paths = [];
+    double x = 0;
+    for (final skel in _skeletalMuscles) {
+      final matrix = Matrix4.translationValues(x, 0, 0);
+      for (final path in skel.getMusclePaths()) {
+        paths.add(path.transform(matrix.storage));
+      }
+      x += skel.dimension.width + _margin;
+    }
+    return paths;
+  }
+
+  @override
+  List<Path> getMusclePaths(Muscle muscle, {required MuscleSide position}) {
+    List<Path> paths = [];
+    double x = 0;
+    for (final skel in _skeletalMuscles) {
+      final matrix = Matrix4.translationValues(x, 0, 0);
+      final skelPaths = MuscleSide.both == position
+          ? [
+              skel.getMusclePath(muscle, position: MuscleSide.left),
+              skel.getMusclePath(muscle, position: MuscleSide.right),
+            ]
+          : [skel.getMusclePath(muscle, position: position)];
+
+      for (final p in skelPaths) {
+        if (p != null) {
+          paths.add(p.transform(matrix.storage));
+        }
+      }
+      x += skel.dimension.width + _margin;
+    }
+    return paths;
   }
 
   @override
   void highlight(
     Muscle muscle, {
-    MusclePosition? position,
+    MuscleSide position = MuscleSide.both,
     Color? color,
     double? opacity,
   }) {
@@ -209,7 +271,7 @@ class _Body with _BuildsSvgWriter implements MuscleAnatomy {
   @override
   void highlights(
     Iterable<Muscle> muscles, {
-    MusclePosition? position,
+    MuscleSide position = MuscleSide.both,
     Color? color,
     double? opacity,
   }) {
@@ -240,23 +302,14 @@ class _Body with _BuildsSvgWriter implements MuscleAnatomy {
     Iterable<Muscle> muscles, {
     required MuscleAnatomy Function(List<_SkeletalMuscles>) constructor,
     Color? hairColor,
+    bool singleView = false,
   }) {
-    final fCounts = muscles.where((m) => m.isForView(BodyView.front)).length;
-    final bCounts = muscles.where((m) => m.isForView(BodyView.back)).length;
+    final domView = Muscle.dominantView(muscles);
 
-    List<BodyView> views;
-    if (0 == bCounts) {
-      views = [BodyView.front];
-    } else if (0 == fCounts) {
-      views = [BodyView.back];
-    } else if (fCounts > bCounts) {
-      views = [BodyView.front, BodyView.back];
-    } else {
-      views = [BodyView.back, BodyView.front];
-    }
+    List<BodyView> views = singleView ? [domView] : Muscle.views(muscles);
 
     final b = constructor(
-      _createSkeletals(gender, views, hairColor: hairColor),
+      _createSkeletals(gender, views.nonNulls.toList(), hairColor: hairColor),
     );
     b.highlights(muscles);
     return b;
@@ -271,7 +324,7 @@ class _Body with _BuildsSvgWriter implements MuscleAnatomy {
     return views
         .map(
           (v) => gender == _GenderType.male
-              ? _SkeletalMuscles.male(v, hairColor: hairColor)
+              ? _SkeletalMuscles.male(v)
               : _SkeletalMuscles.female(v, hairColor: hairColor),
         )
         .toList();
@@ -308,11 +361,21 @@ abstract class MuscleAnatomy implements _IMuscleHighlights {
   /// Returns a list of [Path] objects for the hair outlines of the body views.
   List<Path> get hairOutlinePaths;
 
+  Paint get outlinePaint;
+
+  Paint get hairStrokePaint;
+
+  Paint get hairFillPaint;
+
+  List<MuscleHighlight> getHighlights();
+
+  List<MuscleMember> getMuscleMembers();
+
   /// Returns a list of [Path] objects for all available muscles in the body views.
   List<Path> getAllMusclePaths();
 
   /// Returns a list of [Path] objects for a specific [muscle] at a given [position].
-  List<Path> getMusclePaths(Muscle muscle, {required MusclePosition position});
+  List<Path> getMusclePaths(Muscle muscle, {required MuscleSide position});
 }
 
 /// A factory for creating [MuscleAnatomy] instances for a specific gender.
@@ -348,12 +411,18 @@ class Anatomy {
   /// Returns a [MuscleAnatomy] with both front and back views (alias for [frontBack]).
   MuscleAnatomy both() => frontBack();
 
+  MuscleAnatomy byView(BodyView view) => _fromViews([view]);
+
   /// Returns a [MuscleAnatomy] with views that best represent the provided [muscles].
-  MuscleAnatomy byMuscles(Iterable<Muscle> muscles) => _Body._byMuscles(
+  MuscleAnatomy byMuscles(
+    Iterable<Muscle> muscles, {
+    bool singleView = false,
+  }) => _Body._byMuscles(
     _genderType,
     muscles,
     constructor: _Body._,
     hairColor: _hairColor,
+    singleView: singleView,
   );
 
   /// Internal helper to create the anatomy instance from requested views.

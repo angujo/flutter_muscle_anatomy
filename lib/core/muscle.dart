@@ -148,21 +148,21 @@ enum Muscle {
   /// The flexor fasciae latae muscle.
   flexorFasciaeLatae(view: BodyView.front);
 
-  final BodyView _view;
+  final BodyView view;
 
-  const Muscle({required BodyView view}) : _view = view;
+  const Muscle({required this.view});
 
   /// Returns true if the muscle is visible from the front view.
-  bool isFront() => _view == BodyView.front || _view == BodyView.both;
+  bool isFront() => view == BodyView.front || view == BodyView.both;
 
   /// Returns true if the muscle is visible from the back view.
-  bool isBack() => _view == BodyView.back || _view == BodyView.both;
+  bool isBack() => view == BodyView.back || view == BodyView.both;
 
   /// Returns true if the muscle is visible in the specified [view].
   bool isForView(BodyView view) =>
       view == BodyView.both ||
-      _view == view ||
-      (_view == BodyView.both &&
+      this.view == view ||
+      (this.view == BodyView.both &&
           (view == BodyView.front || view == BodyView.back));
 
   /// Returns a list of all muscles visible from the front.
@@ -176,139 +176,227 @@ enum Muscle {
   /// Returns a list of all muscles visible in the specified [view].
   static List<Muscle> forView(BodyView view) =>
       Muscle.values.where((m) => m.isForView(view)).toList();
+
+  static BodyView dominantView(Iterable<Muscle> muscles) {
+    final frontCount = muscles.where((m) => m.isForView(BodyView.front)).length;
+    final backCount = muscles.where((m) => m.isForView(BodyView.back)).length;
+    return frontCount < backCount ? BodyView.back : BodyView.front;
+  }
+
+  static List<BodyView> views(Iterable<Muscle> muscles) {
+    final frontAny = muscles.any((m) => m.isForView(BodyView.front));
+    final backAny = muscles.any((m) => m.isForView(BodyView.back));
+    final dom = dominantView(muscles);
+    if (frontAny && backAny) {
+      return [dom, dom.inverse()];
+    }
+    return [dom];
+  }
 }
 
-/// A helper class to facilitate mapping [Muscle] enum values to SVG path data.
-final class MuscleHelper {
-  /// Internal cache for [MuscleHelper] instances.
-  static final Map<(Muscle, SvgAssetType), MuscleHelper> _instances = {};
-  final String _name;
-  final SvgPathReader _svgPathReader;
+class SVGPathData {
+  final List<String> svgPaths;
 
-  /// The name of the muscle (corresponds to the enum member name).
-  String get name => _name;
+  const SVGPathData({required this.svgPaths});
 
-  /// The snake_case version of the muscle name, used for SVG IDs.
-  String get svgId => camelToSnake(_name);
+  List<Path> get paths => svgPaths.map(parseSvgPathData).toList();
 
-  /// Returns the SVG path data for the right side of this muscle.
-  List<String> get rightSvgPath => _svgPathReader.getPathDs("right_$svgId");
-
-  /// Returns the SVG path data for the left side of this muscle.
-  List<String> get leftSvgPath => _svgPathReader.getPathDs("left_$svgId");
-
-  /// Returns the SVG path data for this muscle (could be both or a single centered path).
-  List<String> get svgPaths => _svgPathReader.getPathDs(svgId);
-
-  const MuscleHelper._(this._name, this._svgPathReader);
-
-  factory MuscleHelper(Muscle muscle, SvgPathReader svgPathReader) =>
-      _instances.putIfAbsent((
-        muscle,
-        svgPathReader._assetType,
-      ), () => MuscleHelper._(muscle.name, svgPathReader));
-
-  /// Converts this muscle helper into an [SvgElement] for a specific [position].
-  SvgElement toSvgElement(
-    MusclePosition? position, {
-    Color fillColor = Colors.transparent,
-    double fillOpacity = 0,
-    Color strokeColor = Colors.black,
-    double strokeWidth = 1,
-    String? idSuffix,
-  }) {
-    final suffix = null == idSuffix || idSuffix.isEmpty ? '' : '_$idSuffix';
-    String id = switch (position) {
-      MusclePosition.left => 'left_$_name$suffix',
-      MusclePosition.right => 'right_$_name$suffix',
-      _ => '$_name$suffix',
-    };
-    final elmt = SvgGroup(id: id);
-    final paths = getSvgPath(position)
+  SvgElement toSvgElement(MuscleInstance loc, MuscleDecoration decoration) {
+    final group = SvgGroup(id: loc.svgWriteId);
+    final paths = svgPaths
         .asMap()
         .map(
           (idx, path) => MapEntry(
             idx,
-            SvgPath(id: '${id}_$idx', d: path)
-              ..fill(fillColor, opacity: fillOpacity)
-              ..stroke(strokeColor, width: strokeWidth),
+            SvgPath(id: '${loc.svgWriteId}_$idx', d: path)
+              ..fill(decoration.fillColor, opacity: decoration.fillOpacity)
+              ..stroke(decoration.strokeColor, width: decoration.strokeWidth),
           ),
         )
         .values;
-    elmt.addChildren(paths);
-    return elmt;
+    group.addChildren(paths);
+    return group;
   }
-
-  /// Returns the raw SVG path data string(s) for the specified [position].
-  List<String> getSvgPath(MusclePosition? position) {
-    switch (position) {
-      case MusclePosition.left:
-        return leftSvgPath;
-      case MusclePosition.right:
-        return rightSvgPath;
-      case MusclePosition.both:
-      default:
-        return svgPaths;
-    }
-  }
-
-  /// Creates an [SvgElement] from a [MuscleHighlight] object.
-  static SvgElement fromHighlight<T extends Muscle>(
-    MuscleHighlight<T> highlight,
-    SvgPathReader pathReader, {
-    Color? strokeColor,
-    double? strokeWidth,
-    String? idSuffix,
-  }) {
-    return MuscleHelper(highlight.muscle, pathReader).toSvgElement(
-      highlight.position,
-      fillColor: highlight.color,
-      fillOpacity: highlight.opacity,
-      strokeColor: strokeColor ?? highlight.color,
-      strokeWidth: strokeWidth ?? highlight.opacity,
-      idSuffix: idSuffix,
-    );
-  }
-
-  /// Factory-like method to get a [MuscleHelper] from a [Muscle].
-  factory MuscleHelper.fromMuscle(Muscle muscle, SvgPathReader svgPathReader) =>
-      MuscleHelper(muscle, svgPathReader);
 }
 
-/// Represents a configuration for highlighting a specific muscle.
-class MuscleHighlight<T extends Muscle> {
-  /// The muscle to be highlighted.
-  final T muscle;
+class MuscleInstance {
+  final Muscle muscle;
+  final MuscleSide position;
 
-  /// The position (left, right, or both) of the muscle to highlight.
-  final MusclePosition position;
+  /// The name of the muscle (corresponds to the enum member name).
+  String get name => muscle.name;
 
-  /// The color to use for the highlight.
-  final Color color;
+  /// The snake_case version of the muscle name, used for SVG IDs.
+  String get svgReadId => position == MuscleSide.both
+      ? camelToSnake(name)
+      : "${position.name}_${camelToSnake(name)}";
 
-  /// The opacity of the highlight color.
-  final double opacity;
+  /// The snake_case version of the muscle name, used for SVG IDs.
+  String get svgWriteId =>
+      "${camelToSnake(name)}_${position.name}_${muscle.view.name}";
 
-  /// Creates a new [MuscleHighlight] configuration.
-  MuscleHighlight({
-    required this.position,
-    required this.color,
-    required this.opacity,
-    required this.muscle,
-  });
+  const MuscleInstance({required this.muscle, required this.position});
 
-  /// Creates a copy of this [MuscleHighlight] with updated fields.
-  MuscleHighlight<T> copyWith({
-    T? muscle,
-    MusclePosition? position,
-    Color? color,
-    double? opacity,
-  }) {
-    return MuscleHighlight(
-      muscle: muscle ?? this.muscle,
-      position: position ?? this.position,
-      color: color ?? this.color,
-      opacity: opacity ?? this.opacity,
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is MuscleInstance &&
+            other.muscle == muscle &&
+            other.position == position);
+  }
+
+  @override
+  int get hashCode => Object.hash(muscle.hashCode, position.hashCode);
+
+  @override
+  String toString() {
+    return "MuscleInstance(muscle: $muscle, position: $position)";
+  }
+
+  MuscleInstance inverse() =>
+      MuscleInstance(muscle: muscle, position: position.inverse());
+}
+
+class MuscleDecoration {
+  final Color _fillColor;
+  final double? _fillOpacity;
+  final Color _strokeColor;
+  final double? _strokeOpacity;
+  final double _strokeWidth;
+
+  Color get fillColor => _fillColor.withValues(alpha: _fillOpacity);
+
+  double? get fillOpacity => _fillOpacity;
+
+  Color get strokeColor => _strokeColor.withValues(alpha: _strokeOpacity);
+
+  double get strokeWidth => _strokeWidth;
+
+  double? get strokeOpacity => _strokeOpacity;
+
+  double get _paintStrokeWidth => _strokeWidth * 5;
+
+  const MuscleDecoration._({
+    double? fillOpacity,
+    Color? fillColor,
+    Color? strokeColor,
+    double? strokeOpacity,
+    double? strokeWidth,
+  }) : _fillOpacity = fillOpacity,
+       _fillColor = fillColor ?? Colors.transparent,
+       _strokeOpacity = strokeOpacity,
+       _strokeColor = strokeColor ?? Colors.black,
+       _strokeWidth = strokeWidth ?? .1;
+
+  factory MuscleDecoration({
+    Color? fillColor,
+    double? fillOpacity,
+    Color? strokeColor,
+    double? strokeOpacity,
+    double? strokeWidth,
+  }) => MuscleDecoration._(
+    fillColor: fillColor,
+    fillOpacity: fillOpacity,
+    strokeColor: strokeColor,
+    strokeOpacity: strokeOpacity,
+    strokeWidth: strokeWidth,
+  );
+
+  MuscleDecoration copyFrom(MuscleDecoration? other) {
+    return copyWith(
+      fillColor: other?._fillColor,
+      fillOpacity: other?._fillOpacity,
+      strokeColor: other?._strokeColor,
+      strokeWidth: other?._strokeWidth,
     );
   }
+
+  MuscleDecoration copyWith({
+    Color? fillColor,
+    double? fillOpacity,
+    Color? strokeColor,
+    double? strokeWidth,
+    double? strokeOpacity,
+  }) {
+    return MuscleDecoration._(
+      fillColor: fillColor ?? _fillColor,
+      fillOpacity: fillOpacity ?? _fillOpacity,
+      strokeColor: strokeColor ?? _strokeColor,
+      strokeOpacity: strokeOpacity ?? _strokeOpacity,
+      strokeWidth: strokeWidth ?? _strokeWidth,
+    );
+  }
+
+  Paint strokePaint() {
+    return Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = _paintStrokeWidth
+      ..color = _strokeColor.withValues(alpha: _strokeOpacity);
+  }
+
+  Paint fillPaint() {
+    return Paint()
+      ..style = PaintingStyle.fill
+      ..color = _fillColor.withValues(alpha: _fillOpacity);
+  }
+
+  @override
+  String toString() {
+    return "MuscleDecoration(fillColor: ${_fillColor.toHex()}, fillOpacity: $_fillOpacity, strokeColor: ${strokeColor.toHex()}, strokeWidth: $strokeWidth)";
+  }
+}
+
+final class MuscleMember {
+  final MuscleInstance _instance;
+  final SVGPathData _data;
+  final Matrix4? _transform;
+  final MuscleDecoration _decoration;
+
+  Muscle get muscle => _instance.muscle;
+
+  MuscleSide get position => _instance.position;
+
+  String get name => _instance.name;
+
+  List<String> get svgPaths => _data.svgPaths;
+
+  MuscleDecoration get decoration => _decoration;
+
+  List<Path> get paths {
+    final rawPaths = _data.paths;
+    if (null == _transform) return rawPaths;
+    return rawPaths.map((p) => p.transform(_transform.storage)).toList();
+  }
+
+  const MuscleMember(
+    this._instance,
+    this._data,
+    this._decoration, [
+    this._transform,
+  ]);
+}
+
+final class MuscleHighlight {
+  final MuscleInstance _instance;
+  final MuscleDecoration _decoration;
+
+  Muscle get muscle => _instance.muscle;
+
+  MuscleSide get position => _instance.position;
+
+  Color get fillColor => _decoration.fillColor;
+
+  double? get fillOpacity => _decoration.fillOpacity;
+
+  Color get strokeColor => _decoration.strokeColor;
+
+  double get strokeWidth => _decoration.strokeWidth;
+
+  double? get strokeOpacity => _decoration.strokeOpacity;
+
+  Paint get strokePaint => _decoration.strokePaint();
+
+  Paint get fillPaint => _decoration.fillPaint();
+
+  const MuscleHighlight(this._instance, this._decoration);
 }

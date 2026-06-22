@@ -50,11 +50,7 @@ enum _GenderType {
 
   /// Returns a list of short and full names for all available genders, including localized ones.
   static List<String> names() => values
-      .expand((e) => [
-            e.name.substring(0, 1),
-            e.name,
-            e.name.localizedGender,
-          ])
+      .expand((e) => [e.name.substring(0, 1), e.name, e.name.localizedGender])
       .toSet()
       .toList();
 }
@@ -67,7 +63,7 @@ abstract class _IMuscleHighlights {
   /// [color] and [opacity] can override the default highlight styling.
   void highlight(
     Muscle muscle, {
-    MusclePosition? position,
+    MuscleSide position,
     Color? color,
     double? opacity,
   });
@@ -78,7 +74,7 @@ abstract class _IMuscleHighlights {
   /// [color] and [opacity] can override the default highlight styling.
   void highlights(
     Iterable<Muscle> muscles, {
-    MusclePosition? position,
+    MuscleSide position,
     Color? color,
     double? opacity,
   });
@@ -143,78 +139,54 @@ mixin _BuildsSvgWriter {
 
 /// A mixin that manages styling properties for strokes and default fills
 /// of the body parts.
-mixin _StrokesFill {
-  /// The color of the strokes for body part outlines.
-  Color _strokeColor = Colors.black;
+mixin _Decorates {
+  MuscleDecoration _defDecoration = MuscleDecoration();
+  MuscleDecoration _defHighlightDecoration = MuscleDecoration(
+    fillColor: Colors.red,
+    fillOpacity: 0.5,
+  );
 
-  /// The thickness of the strokes for body part outlines.
-  double _strokeWidth = 0.2;
-
-  /// The default fill color for body parts when not highlighted.
-  Color _defFillColor = Colors.transparent;
-
-  /// The default fill opacity for body parts when not highlighted.
-  double _defFillOpacity = 0;
+  /// @deprecated Use [setDefaultStroke] instead.
+  void setStroke({required Color color, required double width}) =>
+      setDefaultStroke(color: color, width: width);
 
   /// Sets the default stroke [color] and [width].
-  void setStroke({required Color color, required double width}) {
-    _strokeColor = color;
-    _strokeWidth = width;
+  void setDefaultStroke({required Color color, required double width}) {
+    _defDecoration = _defDecoration.copyWith(
+      strokeColor: color,
+      strokeWidth: width,
+    );
   }
 
+  /// @deprecated Use [setDefaultFill] instead.
+  void setFill({required Color color, required double opacity}) =>
+      setDefaultFill(color: color, opacity: opacity);
+
   /// Sets the default fill [color] and [opacity].
-  void setFill({required Color color, required double opacity}) {
-    _defFillColor = color;
-    _defFillOpacity = opacity;
+  void setDefaultFill({required Color color, required double opacity}) {
+    _defDecoration = _defDecoration.copyWith(
+      fillColor: color,
+      fillOpacity: opacity,
+    );
+  }
+
+  /// Sets the default highlight [color] and [opacity] to be used when not explicitly specified in [highlight].
+  void setDefaultHighlight({required Color color, required double opacity}) {
+    _defHighlightDecoration = _defHighlightDecoration.copyWith(
+      fillColor: color,
+      fillOpacity: opacity,
+    );
   }
 }
 
 /// A mixin that implements the [_IMuscleHighlights] interface to track
 /// and manage muscle highlighting state.
-mixin _MusclesHighlights {
+mixin _MusclesHighlights on _Decorates {
   /// The specific [BodyView] (e.g., front, back) this highlighting logic is applied to.
   BodyView get _view;
 
-  /// The default color used for highlighting muscles.
-  Color _defHighlightColor = Colors.red;
-
-  /// The default opacity used for highlighting muscles.
-  double _defHighlightOpacity = 0.5;
-
   /// Internal storage for tracked highlights, keyed by muscle and its position.
-  final Map<(Muscle, MusclePosition), MuscleHighlight<Muscle>> _highlights = {};
-
-  /// Returns a list of keys representing currently highlighted muscles and their positions.
-  List<(Muscle, MusclePosition)> get _highlightedMuscles =>
-      _highlights.keys.toList();
-
-  /// Returns a list of muscles and positions that are currently NOT highlighted for the current [_view].
-  List<(Muscle, MusclePosition)> get _nonHighlightedMuscles {
-    final Set<(Muscle, MusclePosition)> highlighted = Set.from(
-      _highlightedMuscles,
-    );
-    return Muscle.forView(_view)
-        .map((m) {
-          final both = (m, MusclePosition.both);
-          if (highlighted.contains(both)) {
-            return <(Muscle, MusclePosition)>[];
-          }
-          final left = (m, MusclePosition.left);
-          final right = (m, MusclePosition.right);
-          final positions = {left, right};
-          final diff = positions.difference(highlighted);
-          if (diff.length == positions.length) return [both];
-          return List<(Muscle, MusclePosition)>.from(diff);
-        })
-        .expand((l) => l)
-        .toList();
-  }
-
-  /// Sets the default highlight [color] and [opacity] to be used when not explicitly specified in [highlight].
-  void setDefaultHighlight({required Color color, required double opacity}) {
-    _defHighlightColor = color;
-    _defHighlightOpacity = opacity;
-  }
+  final Map<MuscleInstance, MuscleDecoration> _highlights = {};
 
   /// Highlights a [muscle] at a specific [position].
   ///
@@ -222,41 +194,90 @@ mixin _MusclesHighlights {
   /// If [position] is left or right and a "both" highlight exists, it replaces the "both" highlight with the other side's highlight.
   void highlight(
     Muscle muscle, {
-    MusclePosition? position,
+    MuscleSide position = MuscleSide.both,
     Color? color,
     double? opacity,
   }) {
     if (!muscle.isForView(_view)) return;
-    final key = (muscle, position ?? MusclePosition.both);
-    final left = (muscle, MusclePosition.left);
-    final right = (muscle, MusclePosition.right);
-    final both = (muscle, MusclePosition.both);
-    if (key == both) {
-      _highlights.remove(left);
-      _highlights.remove(right);
-    } else if (_highlights.keys.contains(both)) {
-      final bothHigh = _highlights.remove(both);
-      _highlights.putIfAbsent(key == left ? right : left, () => bothHigh!);
-    }
-    _highlights.putIfAbsent(key, () {
-      return MuscleHighlight(
-        muscle: muscle,
-        color: color ?? _defHighlightColor,
-        opacity: opacity ?? _defHighlightOpacity,
-        position: position ?? MusclePosition.both,
+    final decoration = _defHighlightDecoration.copyWith(
+      fillColor: color,
+      fillOpacity: opacity,
+    );
+    if (position == MuscleSide.both) {
+      for (final pst in MuscleSide.actual()) {
+        _highlights.putIfAbsent(
+          MuscleInstance(muscle: muscle, position: pst),
+          () => decoration,
+        );
+      }
+    } else {
+      _highlights.putIfAbsent(
+        MuscleInstance(muscle: muscle, position: position),
+        () => decoration,
       );
-    });
+    }
+  }
+
+  void dehighlight(Muscle muscle, {MuscleSide position = MuscleSide.both}) {
+    if (!muscle.isForView(_view)) return;
+    if (position == MuscleSide.both) {
+      _highlights.removeWhere((key, value) => key.muscle == muscle);
+    } else {
+      _highlights.removeWhere(
+        (key, value) => key.muscle == muscle && key.position == position,
+      );
+    }
+  }
+
+  bool _instanceHighlighted(MuscleInstance instance) =>
+      isHighlighted(instance.muscle, position: instance.position);
+
+  MuscleDecoration? _instanceDecoration(MuscleInstance instance) {
+    if (!_instanceHighlighted(instance)) return null;
+    if (MuscleSide.both == instance.position) {
+      return MuscleSide.actual()
+          .map(
+            (ms) => _instanceDecoration(
+              MuscleInstance(muscle: instance.muscle, position: ms),
+            ),
+          )
+          .firstOrNull;
+    }
+    return _highlights[instance];
+  }
+
+  bool isHighlighted(Muscle muscle, {MuscleSide position = MuscleSide.both}) {
+    if (!muscle.isForView(_view)) return false;
+    final psts = position == MuscleSide.both ? MuscleSide.actual() : [position];
+    return psts.any(
+      (pst) => _highlights.containsKey(
+        MuscleInstance(muscle: muscle, position: pst),
+      ),
+    );
   }
 
   /// Highlights multiple [muscles] with an optional [position], [color], and [opacity].
   void highlights(
     Iterable<Muscle> muscles, {
-    MusclePosition? position,
+    MuscleSide position = MuscleSide.both,
     Color? color,
     double? opacity,
   }) {
     for (final muscle in muscles) {
       highlight(muscle, position: position, color: color, opacity: opacity);
     }
+  }
+
+  MuscleDecoration _decoration(MuscleInstance muscleInst) {
+    if (MuscleSide.both == muscleInst.position) {
+      return MuscleSide.actual()
+          .map(
+            (ms) => _decoration(
+              MuscleInstance(muscle: muscleInst.muscle, position: ms),
+            ),
+          )
+          .first;
+    }
+    return _defDecoration.copyFrom(_instanceDecoration(muscleInst));
   }
 }

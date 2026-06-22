@@ -142,6 +142,7 @@ abstract class _SvgElement implements SvgElement {
     final Map<String, String> attrs = Map.from(_attributes);
     attrs['id'] = _id;
     if (_styles.isNotEmpty) attrs['style'] = _stylesToString();
+
     builder.element(
       _tag,
       attributes: attrs,
@@ -164,10 +165,11 @@ abstract class _SvgElement implements SvgElement {
     final Map<String, String> attrs = Map.from(_attributes);
     attrs['id'] = _id;
     if (_styles.isNotEmpty) attrs['style'] = _stylesToString();
+
     _element = XmlElement(
       XmlName.parts(_tag),
       [
-        ..._attributes.entries.map(
+        ...attrs.entries.map(
           (e) => XmlAttribute(XmlName.parts(e.key), e.value),
         ),
       ],
@@ -217,13 +219,23 @@ final class SvgPath extends _SvgElement {
       'fill': 'none',
       'stroke': '#000000',
       'stroke-width': '0.2',
-      'stroke-linecap': 'round',
-      'stroke-linejoin': 'round',
+      'stroke-linecap': 'butt',
+      'stroke-linejoin': 'miter',
       'stroke-dasharray': 'none',
       'stroke-dashoffset': '0',
       'stroke-opacity': '1',
       'paint-order': 'stroke fill markers',
+      'stroke-miterlimit': '4',
     });
+  }
+
+  void decorate(MuscleDecoration decoration) {
+    stroke(
+      decoration.strokeColor,
+      width: decoration.strokeWidth,
+      opacity: decoration.strokeOpacity,
+    );
+    fill(decoration.fillColor, opacity: decoration.fillOpacity);
   }
 
   /// Sets the stroke color, width, and opacity for the path.

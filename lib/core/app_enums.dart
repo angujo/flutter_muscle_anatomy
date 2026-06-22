@@ -1,7 +1,7 @@
 part of 'core.dart';
 
 /// Represents the lateral position of a muscle on the body.
-enum MusclePosition {
+enum MuscleSide {
   /// Positioned on the left side of the body.
   left,
 
@@ -9,7 +9,20 @@ enum MusclePosition {
   right,
 
   /// Positioned on both sides of the body.
-  both,
+  both;
+
+  static bool isPositionedPath(String pathId) => MuscleSide.values
+      .whereNot((p) => p == MuscleSide.both)
+      .any((pos) => pathId.startsWith("${pos.name}_"));
+
+  static Iterable<MuscleSide> actual() =>
+      MuscleSide.values.whereNot((p) => p == MuscleSide.both);
+
+  MuscleSide inverse() => switch (this) {
+    left => right,
+    right => left,
+    _ => both,
+  };
 }
 
 /// Represents the perspective or view of the human body.
@@ -21,5 +34,11 @@ enum BodyView {
   back,
 
   /// Both front and back views.
-  both,
+  both;
+
+  BodyView inverse() => switch (this) {
+    front => back,
+    back => front,
+    _ => both,
+  };
 }
