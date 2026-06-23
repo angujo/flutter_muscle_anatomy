@@ -61,8 +61,11 @@ jobs:
           git tag "v${VERSION}"
           git push origin "v${VERSION}"
 
-      - name: Publish
-        run: flutter pub publish
+      - name: Publish to pub.dev
+        if: steps.tag_check.outputs.exists == 'false'
+        run: |
+          # Automatically confirm the publication
+          echo "y" | flutter pub publish --force
 
       - name: Create GitHub Release
         if: steps.tag_check.outputs.exists == 'false'
