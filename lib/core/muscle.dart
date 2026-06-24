@@ -273,14 +273,15 @@ class MuscleDecoration {
   final double? _strokeOpacity;
   final double _strokeWidth;
 
-  /// Returns the fill color with applied opacity.
-  Color get fillColor => _fillColor.withValues(alpha: _fillOpacity);
+  /// Returns the fill color with applied opacity (defaults to 1.0 if null).
+  Color get fillColor => _fillColor.withValues(alpha: _fillOpacity ?? 1.0);
 
   /// The fill opacity (0.0 to 1.0).
   double? get fillOpacity => _fillOpacity;
 
-  /// Returns the stroke color with applied opacity.
-  Color get strokeColor => _strokeColor.withValues(alpha: _strokeOpacity);
+  /// Returns the stroke color with applied opacity (defaults to 1.0 if null).
+  Color get strokeColor =>
+      _strokeColor.withValues(alpha: _strokeOpacity ?? 1.0);
 
   /// The stroke width.
   double get strokeWidth => _strokeWidth;
@@ -291,16 +292,16 @@ class MuscleDecoration {
   double get _paintStrokeWidth => _strokeWidth * 5;
 
   const MuscleDecoration._({
-    double? fillOpacity,
     Color? fillColor,
+    double? fillOpacity,
     Color? strokeColor,
     double? strokeOpacity,
     double? strokeWidth,
-  }) : _fillOpacity = fillOpacity,
-       _fillColor = fillColor ?? Colors.transparent,
-       _strokeOpacity = strokeOpacity,
+  }) : _fillColor = fillColor ?? Colors.transparent,
+       _fillOpacity = fillOpacity,
        _strokeColor = strokeColor ?? Colors.black,
-       _strokeWidth = strokeWidth ?? .1;
+       _strokeOpacity = strokeOpacity,
+       _strokeWidth = strokeWidth ?? 0.1;
 
   /// Creates a [MuscleDecoration] instance.
   factory MuscleDecoration({
@@ -317,13 +318,17 @@ class MuscleDecoration {
     strokeWidth: strokeWidth,
   );
 
-  /// Creates a copy of this decoration, merging properties from [other] if they are not null.
+  /// Merges properties of [other] into this decoration.
+  /// If [other] is null, returns this instance unchanged.
   MuscleDecoration copyFrom(MuscleDecoration? other) {
+    if (other == null) return this;
     return copyWith(
-      fillColor: other?._fillColor,
-      fillOpacity: other?._fillOpacity,
-      strokeColor: other?._strokeColor,
-      strokeWidth: other?._strokeWidth,
+      fillColor: other._fillColor,
+      fillOpacity: other._fillOpacity,
+      strokeColor: other._strokeColor,
+      strokeOpacity: other._strokeOpacity,
+      // Added missing property
+      strokeWidth: other._strokeWidth,
     );
   }
 
@@ -332,11 +337,12 @@ class MuscleDecoration {
     Color? fillColor,
     double? fillOpacity,
     Color? strokeColor,
-    double? strokeWidth,
     double? strokeOpacity,
+    double? strokeWidth,
   }) {
     return MuscleDecoration._(
       fillColor: fillColor ?? _fillColor,
+      // We allow explicitly passing null or falling back to current value
       fillOpacity: fillOpacity ?? _fillOpacity,
       strokeColor: strokeColor ?? _strokeColor,
       strokeOpacity: strokeOpacity ?? _strokeOpacity,
@@ -349,19 +355,19 @@ class MuscleDecoration {
     return Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = _paintStrokeWidth
-      ..color = _strokeColor.withValues(alpha: _strokeOpacity);
+      ..color = strokeColor; // Uses the getter safely
   }
 
   /// Returns a [Paint] object for the fill based on this decoration.
   Paint fillPaint() {
     return Paint()
       ..style = PaintingStyle.fill
-      ..color = _fillColor.withValues(alpha: _fillOpacity);
+      ..color = fillColor; // Uses the getter safely
   }
 
   @override
   String toString() {
-    return "MuscleDecoration(fillColor: ${_fillColor.toHex()}, fillOpacity: $_fillOpacity, strokeColor: ${strokeColor.toHex()}, strokeWidth: $strokeWidth)";
+    return "MuscleDecoration(fillColor: ${_fillColor.toHex()}, fillOpacity: $_fillOpacity, strokeColor: ${_strokeColor.toHex()}, strokeOpacity: $_strokeOpacity, strokeWidth: $_strokeWidth)";
   }
 }
 
