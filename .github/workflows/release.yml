@@ -1,9 +1,9 @@
-name: Flutter
+name: Flutter Package Release
 
 on:
   push:
     branches:
-      - "master"
+      - master
 
 permissions:
   contents: write
@@ -13,15 +13,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # Setup Flutter
-      - uses: subosito/flutter-action@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
-          channel: 'stable'
+          channel: stable
 
       - name: Install dependencies
         run: flutter pub get
@@ -29,6 +29,7 @@ jobs:
       - name: Analyze project source
         run: flutter analyze
 
+      # Uncomment if you have tests
       # - name: Run tests
       #   run: flutter test
 
@@ -36,84 +37,62 @@ jobs:
         id: version
         run: |
           VERSION=$(grep '^version:' pubspec.yaml | awk '{print $2}' | cut -d '+' -f1)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Debug - Show version
-        run: |
-          echo "Extracted version: ${{ env.VERSION }}"
-          echo "Extracted version: ${{ steps.version.outputs.version }}"
-
-      - name: Check if tag exists
-        id: tag_check
-        run: |
-          VERSION="${{ env.VERSION }}"
-          echo "Checking for tag: v${VERSION}"
-          
-          if git rev-parse "v${VERSION}" >/dev/null 2>&1; then
-            echo "Tag exists!"
-            echo "exists=true" >> $GITHUB_OUTPUT
-            echo "TAG_EXISTS=true" >> $GITHUB_ENV
-          else
-            echo "Tag does not exist!"
-            echo "exists=false" >> $GITHUB_OUTPUT
-            echo "TAG_EXISTS=false" >> $GITHUB_ENV
-          fi
-
-      - name: Debug - Show tag check result
-        run: |
-          echo "exists output: ${{ steps.tag_check.outputs.exists }}"
-          echo "TAG_EXISTS env: ${{ env.TAG_EXISTS }}"
-
-      - name: Create and push tag
-        if: steps.tag_check.outputs.exists == 'false'
-        run: |
-          echo "Creating tag v${{ env.VERSION }}"
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          
-          git tag "v${{ env.VERSION }}"
-          git push origin "v${{ env.VERSION }}"
-
-      # Setup pub credentials for authentication
-      - name: Setup pub credentials
-        if: steps.tag_check.outputs.exists == 'false'
-        run: |
-          mkdir -p ~/.pub-cache
-          echo "${{ secrets.PUB_CREDENTIALS }}" > ~/.pub-cache/credentials.json
-          echo "Credentials file created at ~/.pub-cache/credentials.json"
-          # Verify file exists and has content
-          if [ -f ~/.pub-cache/credentials.json ]; then
-            echo "Credentials file exists"
-            # Check if it's valid JSON (basic check)
-            if cat ~/.pub-cache/credentials.json | jq empty 2>/dev/null; then
-              echo "Credentials file is valid JSON"
-            else
-              echo "Warning: Credentials file may not be valid JSON"
-            fi
-          else
-            echo "Error: Credentials file not created"
+          if [ -z "$VERSION" ]; then
+            echo "Failed to extract version from pubspec.yaml"
             exit 1
           fi
 
-      - name: Publish to pub.dev
-        if: steps.tag_check.outputs.exists == 'false'
-        env:
-          # Increase timeout for pub.dev operations
-          PUB_HOSTED_URL: https://pub.dev
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Check if version already released
+        id: tag_check
         run: |
-          echo "Publishing version ${{ env.VERSION }}"
-          
-          # First, validate the package
-          echo "Validating package..."
-          flutter pub publish --dry-run
-          
-          # If validation passes, publish
-          echo "Publishing package..."
-          flutter pub publish --force
+          git fetch --tags
+
+          if git tag -l "v${VERSION}" | grep -q .; then
+            echo "Version v${VERSION} already released."
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Version v${VERSION} not released yet."
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          VERSION: ${{ env.VERSION }}
+
+      - name: Skip existing release
+        if: steps.tag_check.outputs.exists == 'true'
+        run: |
+          echo "Tag v${VERSION} already exists. Nothing to do."
+          exit 0
+        env:
+          VERSION: ${{ env.VERSION }}
+
+      - name: Setup pub.dev credentials
+        run: |
+          mkdir -p ~/.pub-cache
+          cat << 'EOF' > ~/.pub-cache/credentials.json
+          ${{ secrets.PUB_CREDENTIALS }}
+          EOF
+
+      - name: Validate package
+        run: flutter pub publish --dry-run
+
+      - name: Publish package
+        run: flutter pub publish --force
+
+      - name: Create and push tag
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git tag "v${VERSION}"
+          git push origin "v${VERSION}"
+        env:
+          VERSION: ${{ env.VERSION }}
 
       - name: Create GitHub Release
-        if: steps.tag_check.outputs.exists == 'false'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ env.VERSION }}
