@@ -1,3 +1,9 @@
+## 1.2.4
+
+* Enhanced documentation for interactivity, including `InteractiveViewer` integration and hit-testing examples.
+* Refined advanced path drawing examples in README.
+* Added full doc comments for all public classes and methods.
+
 ## 1.2.3
 
 * Replaced preview video with an animated GIF for better compatibility on pub.dev.
