@@ -7,21 +7,21 @@ on:
 
 permissions:
   contents: write
-  id-token: write # Required for secure OIDC authentication with pub.dev
+  id-token: write # Critical for secure OIDC token handshake
 
 jobs:
   publish:
-    permissions:
-      contents: write
-      id-token: write # Required for secure OIDC authentication with pub.dev
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Source
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
+      # 1. Add the official Dart action to provision OIDC tokens
+      - name: Setup Dart Environment
+        uses: dart-lang/setup-dart@v1
+
+      # 2. Keep the Flutter setup right after
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -33,65 +33,16 @@ jobs:
       - name: Analyze project source
         run: flutter analyze
 
-      # Uncomment if you have tests
-      # - name: Run tests
-      #   run: flutter test
-
-      # - name: Extract version
-      #   id: version
-      #   run: |
-      #     VERSION=$(grep '^version:' pubspec.yaml | awk '{print $2}' | cut -d '+' -f1)
-#
-      #     if [ -z "$VERSION" ]; then
-      #       echo "Failed to extract version from pubspec.yaml"
-      #       exit 1
-      #     fi
-#
-      #     echo "VERSION=$VERSION" >> $GITHUB_ENV
-      #     echo "version=$VERSION" >> $GITHUB_OUTPUT
-
-      # - name: Check if version already released
-      #   id: tag_check
-      #   run: |
-      #     git fetch --tags
-#
-      #     if git tag -l "v${VERSION}" | grep -q .; then
-      #       echo "Version v${VERSION} already released."
-      #       echo "exists=true" >> $GITHUB_OUTPUT
-      #     else
-      #       echo "Version v${VERSION} not released yet."
-      #       echo "exists=false" >> $GITHUB_OUTPUT
-      #     fi
-      #   env:
-      #     VERSION: ${{ env.VERSION }}
-
-      # - name: Skip existing release
-      #   if: steps.tag_check.outputs.exists == 'true'
-      #   run: |
-      #     echo "Tag v${VERSION} already exists. Terminating workflow gracefully."
-      #     exit 0
-      #   env:
-      #     VERSION: ${{ env.VERSION }}
-
       - name: Validate package
         run: flutter pub publish --dry-run
 
-      # OIDC handles authentication automatically if permissions are configured correctly
+      # 3. Publish using dart pub publish (which hooks natively into setup-dart's OIDC context)
       - name: Publish package to pub.dev
-        run: flutter pub publish --force
+        run: dart pub publish --force
 
-      # - name: Create and push tag
-      #   run: |
-      #     git config user.name "github-actions[bot]"
-      #     git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-      #     git tag "v${VERSION}"
-      #     git push origin "v${VERSION}"
-      #   env:
-      #     VERSION: ${{ env.VERSION }}
-
-      # - name: Create GitHub Release
-      #   uses: softprops/action-gh-release@v2
-      #   with:
-      #     tag_name: v${{ env.VERSION }}
-      #     generate_release_notes: true
+      # Optional: Auto-create a GitHub Release page
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          generate_release_notes: true
