@@ -79,6 +79,11 @@ jobs:
           ls -la ~/.pub-cache
           cat ~/.pub-cache/credentials.json | head
 
+      - name: Debug Dart
+        run: |
+          dart --version
+          flutter --version
+
       - name: Verify authentication
         run: dart pub token list
 
