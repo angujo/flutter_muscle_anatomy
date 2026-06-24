@@ -1,3 +1,7 @@
+## 1.2.5
+
+* Update automated publishing workflow using GitHub Actions
+
 ## 1.2.4
 
 * Enhanced documentation for interactivity, including `InteractiveViewer` integration and hit-testing examples.

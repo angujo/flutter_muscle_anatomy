@@ -17,18 +17,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Setup Flutter instead of just Dart
+      # Setup Flutter
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'  # or specify a specific version like '3.16.0'
+          flutter-version: '3.x'
           channel: 'stable'
 
       - name: Install dependencies
         run: flutter pub get
-
-      # Uncomment this step to verify formatting
-      # - name: Verify formatting
-      #   run: flutter format --output=none --set-exit-if-changed .
 
       - name: Analyze project source
         run: flutter analyze
@@ -79,12 +75,42 @@ jobs:
           git tag "v${{ env.VERSION }}"
           git push origin "v${{ env.VERSION }}"
 
-      - name: Publish to pub.dev
+      # Setup pub credentials for authentication
+      - name: Setup pub credentials
         if: steps.tag_check.outputs.exists == 'false'
         run: |
+          mkdir -p ~/.pub-cache
+          echo "${{ secrets.PUB_CREDENTIALS }}" > ~/.pub-cache/credentials.json
+          echo "Credentials file created at ~/.pub-cache/credentials.json"
+          # Verify file exists and has content
+          if [ -f ~/.pub-cache/credentials.json ]; then
+            echo "Credentials file exists"
+            # Check if it's valid JSON (basic check)
+            if cat ~/.pub-cache/credentials.json | jq empty 2>/dev/null; then
+              echo "Credentials file is valid JSON"
+            else
+              echo "Warning: Credentials file may not be valid JSON"
+            fi
+          else
+            echo "Error: Credentials file not created"
+            exit 1
+          fi
+
+      - name: Publish to pub.dev
+        if: steps.tag_check.outputs.exists == 'false'
+        env:
+          # Increase timeout for pub.dev operations
+          PUB_HOSTED_URL: https://pub.dev
+        run: |
           echo "Publishing version ${{ env.VERSION }}"
+          
+          # First, validate the package
+          echo "Validating package..."
           flutter pub publish --dry-run
-          echo "y" | flutter pub publish --force
+          
+          # If validation passes, publish
+          echo "Publishing package..."
+          flutter pub publish --force
 
       - name: Create GitHub Release
         if: steps.tag_check.outputs.exists == 'false'
