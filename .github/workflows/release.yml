@@ -43,28 +43,47 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
+      - name: Debug - Show version
+        run: |
+          echo "Extracted version: ${{ env.VERSION }}"
+          echo "Extracted version: ${{ steps.version.outputs.version }}"
+
       - name: Check if tag exists
         id: tag_check
         run: |
+          VERSION="${{ env.VERSION }}"
+          echo "Checking for tag: v${VERSION}"
+          
           if git rev-parse "v${VERSION}" >/dev/null 2>&1; then
+            echo "Tag exists!"
             echo "exists=true" >> $GITHUB_OUTPUT
+            echo "TAG_EXISTS=true" >> $GITHUB_ENV
           else
+            echo "Tag does not exist!"
             echo "exists=false" >> $GITHUB_OUTPUT
+            echo "TAG_EXISTS=false" >> $GITHUB_ENV
           fi
+
+      - name: Debug - Show tag check result
+        run: |
+          echo "exists output: ${{ steps.tag_check.outputs.exists }}"
+          echo "TAG_EXISTS env: ${{ env.TAG_EXISTS }}"
 
       - name: Create and push tag
         if: steps.tag_check.outputs.exists == 'false'
         run: |
+          echo "Creating tag v${{ env.VERSION }}"
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           
-          git tag "v${VERSION}"
-          git push origin "v${VERSION}"
+          git tag "v${{ env.VERSION }}"
+          git push origin "v${{ env.VERSION }}"
 
       - name: Publish to pub.dev
         if: steps.tag_check.outputs.exists == 'false'
         run: |
-          # Automatically confirm the publication
+          echo "Publishing version ${{ env.VERSION }}"
+          flutter pub publish --dry-run
           echo "y" | flutter pub publish --force
 
       - name: Create GitHub Release
