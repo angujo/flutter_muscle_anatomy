@@ -7,13 +7,14 @@ on:
 
 permissions:
   contents: write
+  id-token: write # Required for secure OIDC authentication with pub.dev
 
 jobs:
   release:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout Source
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -64,43 +65,22 @@ jobs:
       - name: Skip existing release
         if: steps.tag_check.outputs.exists == 'true'
         run: |
-          echo "Tag v${VERSION} already exists. Nothing to do."
+          echo "Tag v${VERSION} already exists. Terminating workflow gracefully."
           exit 0
         env:
           VERSION: ${{ env.VERSION }}
 
-      - name: Configure pub.dev credentials
-        run: |
-          mkdir -p ~/.pub-cache
-          echo '${{ secrets.PUB_CREDENTIALS }}' > ~/.pub-cache/credentials.json
-
-      - name: Verify pub credentials
-        run: |
-          ls -la ~/.pub-cache
-          cat ~/.pub-cache/credentials.json | head
-          echo "Secret..."
-          echo '${{ secrets.PUB_CREDENTIALS }}'
-          echo "Credentials..."
-          cat ~/.pub-cache/credentials.json
-
-      - name: Debug Dart
-        run: |
-          dart --version
-          flutter --version
-
-      - name: Verify authentication
-        run: dart pub token list
-
       - name: Validate package
         run: flutter pub publish --dry-run
 
-      - name: Publish package
+      # OIDC handles authentication automatically if permissions are configured correctly
+      - name: Publish package to pub.dev
         run: flutter pub publish --force
 
       - name: Create and push tag
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git tag "v${VERSION}"
           git push origin "v${VERSION}"
