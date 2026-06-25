@@ -526,7 +526,8 @@ class _MuscleGroups {
 
     const _MuscleGroup(
       name: 'Obliques',
-      muscles: {Muscle.externalAbdominalOblique}, // Kept one for redundancy cleanup, update to match your enum
+      // Uses both variants from your enum definitions (back and front views)
+      muscles: {Muscle.externalOblique, Muscle.externalAbdominalOblique},
       searchTerms: {
         'oblique',
         'obliques',
@@ -538,7 +539,8 @@ class _MuscleGroups {
 
     const _MuscleGroup(
       name: 'Chest',
-      muscles: {Muscle.pectoralisMajor}, // Fixed typo: pectolaris -> pectoralis
+      muscles: {Muscle.pectoralisMajor},
+      // Cleaned from deprecated pectolarisMajor
       searchTerms: {
         'chest',
         'pec',
@@ -649,7 +651,11 @@ class _MuscleGroups {
 
     const _MuscleGroup(
       name: 'Hip Flexors',
-      muscles: {Muscle.iliopsoas, Muscle.tensorFasciaeLatae},
+      muscles: {
+        Muscle.iliopsoas,
+        Muscle.tensorFasciaeLatae,
+        Muscle.flexorFasciaeLatae,
+      },
       searchTerms: {'hip flexor', 'hip flexors', 'iliopsoas', 'psoas', 'tfl'},
     ),
 
@@ -670,7 +676,6 @@ class _MuscleGroups {
         Muscle.rectusFemoris,
         Muscle.vastusMedialis,
         Muscle.vastusLateralis,
-        // Optional: Muscle.vastusIntermedius (the 4th quad muscle, if you want full completion)
       },
       searchTerms: {'quad', 'quads', 'quadriceps', 'front thigh', 'vmo'},
     ),
@@ -680,7 +685,7 @@ class _MuscleGroups {
       muscles: {
         Muscle.bicepsFemoris,
         Muscle.semitendinosus,
-        Muscle.semimembranosus, // Fixed typo: semimebranosus -> semimembranosus
+        Muscle.semimembranosus, // Cleaned from deprecated semimebranosus
       },
       searchTerms: {'hamstring', 'hamstrings', 'rear thigh', 'back of thigh'},
     ),
