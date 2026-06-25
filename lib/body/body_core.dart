@@ -27,6 +27,7 @@ class _SkeletalMuscles with _Decorates, _MusclesHighlights, _BuildsSvgWriter {
   Paint get outlinePaint => _defDecoration.strokePaint();
 
   /// @deprecated Use [hairPath] instead.
+  @Deprecated('Use hairPath instead.')
   Path? get hairOutlinePath => hairPath;
 
   /// Returns the [Path] for the hair outline if available.

@@ -147,6 +147,7 @@ mixin _Decorates {
   );
 
   /// @deprecated Use [setDefaultStroke] instead.
+  @Deprecated('Use setDefaultStroke instead.')
   void setStroke({required Color color, required double width}) =>
       setDefaultStroke(color: color, width: width);
 
@@ -159,6 +160,7 @@ mixin _Decorates {
   }
 
   /// @deprecated Use [setDefaultFill] instead.
+  @Deprecated('Use setDefaultFill instead.')
   void setFill({required Color color, required double opacity}) =>
       setDefaultFill(color: color, opacity: opacity);
 
