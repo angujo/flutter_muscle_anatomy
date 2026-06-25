@@ -241,6 +241,12 @@ enum Muscle {
     return [backAny ? BodyView.back : BodyView.front];
   }
 
+  /// Searches for muscles based on a [query] string.
+  ///
+  /// The search uses fuzzy matching (Levenshtein distance) against localized names
+  /// and common synonyms.
+  ///
+  /// [top] can be used to limit the number of search results.
   static List<Muscle> search(String query, {int? top}) {
     return _MuscleSearch.search(
       query,

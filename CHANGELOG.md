@@ -1,3 +1,8 @@
+## 1.2.5
+
+* Added `Muscle.search` function documentation and examples in README.
+* Exposed muscle grouping and fuzzy search capability for easier muscle discovery.
+
 ## 1.2.4
 
 * Enhanced documentation for interactivity, including `InteractiveViewer` integration and hit-testing examples.

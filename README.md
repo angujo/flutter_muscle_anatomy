@@ -33,7 +33,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_muscle_anatomy: ^1.2.3
+  flutter_muscle_anatomy: ^1.2.5
   flutter_svg: ^2.0.0
 ```
 
@@ -228,7 +228,20 @@ Size screenSize = MediaQuery.of(context).size;
 Size scaled = anatomy.scaledSize(screenSize, fill: false);
 ```
 
-### 10. Interactivity & Hit Testing
+### 10. Searching Muscles
+
+The library includes a powerful fuzzy-search feature to find muscles by name, anatomical terms, or common synonyms.
+
+```dart
+// Search for muscles related to "six pack"
+List<Muscle> results = Muscle.search('six pack');
+// returns [Muscle.rectusAbdominis]
+
+// Search with a limit
+List<Muscle> topResults = Muscle.search('leg', top: 3);
+```
+
+### 11. Interactivity & Hit Testing
 
 The library's raw `Path` access makes it easy to build fully interactive anatomical maps. By combining `InteractiveViewer`, `GestureDetector`, and `CustomPaint`, you can create a viewport that supports **pinch-to-zoom**, **panning**, and **tap-to-select** muscles.
 
