@@ -48,9 +48,11 @@ enum Muscle {
 
   /// The gluteus maximus muscle, the main extensor muscle of the hip.
   gluteusMaximus(view: BodyView.back),
+  @Deprecated("Use iliotibialTract instead")
+  iliotibialTact(view: BodyView.back),
 
   /// The iliotibial tract, a longitudinal fibrous reinforcement of the fascia lata.
-  iliotibialTact(view: BodyView.back),
+  iliotibialTract(view: BodyView.back),
 
   /// The biceps femoris muscle, a muscle of the thigh located to the posterior, or back.
   bicepsFemoris(view: BodyView.back),
@@ -62,6 +64,8 @@ enum Muscle {
   adductorMagnus(view: BodyView.back),
 
   /// The semimembranosus muscle, the most medial of the three hamstring muscles.
+  semimembranosus(view: BodyView.back),
+  @Deprecated("Use semimembranosus instead")
   semimebranosus(view: BodyView.back),
 
   /// The gastrocnemius muscle, a powerful superficial bipennate muscle that is in the back part of the lower leg.
@@ -89,6 +93,8 @@ enum Muscle {
   biceps(view: BodyView.front),
 
   /// The pectoralis major muscle, a thick, fan-shaped muscle, situated at the chest of the human body.
+  pectoralisMajor(view: BodyView.front),
+  @Deprecated("Use pectoralisMajor instead")
   pectolarisMajor(view: BodyView.front),
 
   /// The rectus abdominis muscle, also known as the "abs".
@@ -148,22 +154,46 @@ enum Muscle {
   /// The flexor fasciae latae muscle.
   flexorFasciaeLatae(view: BodyView.front);
 
+  //region Aliases
+  static Muscle get abs => rectusAbdominis;
+
+  static Muscle get obliques => externalAbdominalOblique;
+
+  static Muscle get pecs => pectoralisMajor;
+
+  static Muscle get chest => pectoralisMajor;
+
+  static Muscle get lats => latissimusDorsi;
+
+  static Muscle get traps => trapezius;
+
+  static Muscle get quads => rectusFemoris;
+
+  static Muscle get hamstrings => bicepsFemoris;
+
+  static Muscle get calves => gastrocnemius;
+
+  static Muscle get glutes => gluteusMaximus;
+
+  static Muscle get rearDelts => posteriorDeltoid;
+
+  static Muscle get frontDelts => anteriorDeltoid;
+
+  //endregion
+
   final BodyView view;
 
   const Muscle({required this.view});
 
   /// Returns true if the muscle is visible from the front view.
-  bool isFront() => view == BodyView.front || view == BodyView.both;
+  bool get isFront => view == BodyView.front || view == BodyView.both;
 
   /// Returns true if the muscle is visible from the back view.
-  bool isBack() => view == BodyView.back || view == BodyView.both;
+  bool get isBack => view == BodyView.back || view == BodyView.both;
 
   /// Returns true if the muscle is visible in the specified [view].
   bool isForView(BodyView view) =>
-      view == BodyView.both ||
-      this.view == view ||
-      (this.view == BodyView.both &&
-          (view == BodyView.front || view == BodyView.back));
+      view == BodyView.both || this.view == view || this.view == BodyView.both;
 
   /// Returns a list of all muscles visible from the front.
   static List<Muscle> front() =>
@@ -179,20 +209,43 @@ enum Muscle {
 
   /// Returns the view that is most represented in the provided set of [muscles].
   static BodyView dominantView(Iterable<Muscle> muscles) {
-    final frontCount = muscles.where((m) => m.isForView(BodyView.front)).length;
-    final backCount = muscles.where((m) => m.isForView(BodyView.back)).length;
+    if (muscles.isEmpty) return BodyView.front;
+    var frontCount = 0, backCount = 0;
+    for (final muscle in muscles) {
+      frontCount += muscle.isFront ? 1 : 0;
+      backCount += muscle.isBack ? 1 : 0;
+    }
     return frontCount < backCount ? BodyView.back : BodyView.front;
   }
 
   /// Returns the list of views necessary to display the provided [muscles].
   static List<BodyView> views(Iterable<Muscle> muscles) {
-    final frontAny = muscles.any((m) => m.isForView(BodyView.front));
-    final backAny = muscles.any((m) => m.isForView(BodyView.back));
-    final dom = dominantView(muscles);
-    if (frontAny && backAny) {
-      return [dom, dom.inverse()];
+    var frontCount = 0;
+    var backCount = 0;
+
+    for (final muscle in muscles) {
+      if (muscle.isFront) frontCount++;
+      if (muscle.isBack) backCount++;
     }
-    return [dom];
+
+    final frontAny = frontCount > 0;
+    final backAny = backCount > 0;
+
+    if (frontAny && backAny) {
+      return [
+        backCount > frontCount ? BodyView.back : BodyView.front,
+        backCount > frontCount ? BodyView.front : BodyView.back,
+      ];
+    }
+
+    return [backAny ? BodyView.back : BodyView.front];
+  }
+
+  static List<Muscle> search(String query, {int? top}) {
+    return _MuscleSearch.search(
+      query,
+      top: top,
+    ).map((g) => g.muscles).expand((m) => m).toList();
   }
 }
 
@@ -443,4 +496,316 @@ final class MuscleHighlight {
 
   /// Creates an instance of [MuscleHighlight].
   const MuscleHighlight(this._instance, this._decoration);
+}
+
+class _MuscleSearchResult {
+  final _MuscleGroup group;
+  final double score;
+
+  const _MuscleSearchResult({required this.group, required this.score});
+}
+
+class _MuscleGroups {
+  static final List<_MuscleGroup> values = [
+    const _MuscleGroup(
+      name: 'Abs',
+      muscles: {Muscle.rectusAbdominis},
+      searchTerms: {
+        'abs',
+        'ab',
+        'abdominals',
+        'rectus abdominis',
+        'six pack',
+        'six-pack',
+        'sixpack',
+        'core',
+        'stomach',
+        'stomach muscles',
+      },
+    ),
+
+    const _MuscleGroup(
+      name: 'Obliques',
+      muscles: {Muscle.externalAbdominalOblique}, // Kept one for redundancy cleanup, update to match your enum
+      searchTerms: {
+        'oblique',
+        'obliques',
+        'side abs',
+        'waist',
+        'waist muscles',
+      },
+    ),
+
+    const _MuscleGroup(
+      name: 'Chest',
+      muscles: {Muscle.pectoralisMajor}, // Fixed typo: pectolaris -> pectoralis
+      searchTerms: {
+        'chest',
+        'pec',
+        'pecs',
+        'pectoral',
+        'pectorals',
+        'pectoralis major',
+      },
+    ),
+
+    const _MuscleGroup(
+      name: 'Lats',
+      muscles: {Muscle.latissimusDorsi},
+      searchTerms: {
+        'lat',
+        'lats',
+        'latissimus',
+        'latissimus dorsi',
+        'wings',
+        'back width',
+        'v taper',
+      },
+    ),
+
+    const _MuscleGroup(
+      name: 'Traps',
+      muscles: {Muscle.trapezius, Muscle.upperTrapezius},
+      searchTerms: {'trap', 'traps', 'trapezius', 'upper traps', 'upper back'},
+    ),
+
+    const _MuscleGroup(
+      name: 'Shoulders',
+      muscles: {
+        Muscle.deltoid,
+        Muscle.anteriorDeltoid,
+        Muscle.posteriorDeltoid,
+      },
+      searchTerms: {
+        'shoulder',
+        'shoulders',
+        'delt',
+        'delts',
+        'deltoid',
+        'deltoids',
+      },
+    ),
+
+    const _MuscleGroup(
+      name: 'Front Delts',
+      muscles: {Muscle.anteriorDeltoid},
+      searchTerms: {
+        'front delt',
+        'front delts',
+        'anterior delt',
+        'anterior deltoid',
+        'front shoulder',
+      },
+    ),
+
+    const _MuscleGroup(
+      name: 'Rear Delts',
+      muscles: {Muscle.posteriorDeltoid},
+      searchTerms: {
+        'rear delt',
+        'rear delts',
+        'posterior delt',
+        'posterior deltoid',
+        'rear shoulder',
+      },
+    ),
+
+    const _MuscleGroup(
+      name: 'Biceps',
+      muscles: {Muscle.biceps, Muscle.brachialis},
+      searchTerms: {'bicep', 'biceps', 'biceps brachii', 'arm flexors'},
+    ),
+
+    const _MuscleGroup(
+      name: 'Triceps',
+      muscles: {Muscle.triceps},
+      searchTerms: {'tricep', 'triceps', 'triceps brachii'},
+    ),
+
+    const _MuscleGroup(
+      name: 'Forearms',
+      muscles: {
+        Muscle.brachioradialis,
+        Muscle.flexorCarpiUlnaris,
+        Muscle.extensorCarpiUlnaris,
+        Muscle.extensorDigitorum,
+        Muscle.pronatorTeres,
+      },
+      searchTerms: {
+        'forearm',
+        'forearms',
+        'grip',
+        'grip strength',
+        'wrist flexors',
+        'wrist extensors',
+      },
+    ),
+
+    const _MuscleGroup(
+      name: 'Glutes',
+      muscles: {Muscle.gluteusMaximus, Muscle.gluteusMedius},
+      searchTerms: {'glute', 'glutes', 'gluteal', 'butt', 'buttocks', 'hips'},
+    ),
+
+    const _MuscleGroup(
+      name: 'Hip Flexors',
+      muscles: {Muscle.iliopsoas, Muscle.tensorFasciaeLatae},
+      searchTerms: {'hip flexor', 'hip flexors', 'iliopsoas', 'psoas', 'tfl'},
+    ),
+
+    const _MuscleGroup(
+      name: 'Adductors',
+      muscles: {
+        Muscle.adductorLongus,
+        Muscle.adductorMagnus,
+        Muscle.gracilis,
+        Muscle.pectineus,
+      },
+      searchTerms: {'adductor', 'adductors', 'inner thigh', 'groin'},
+    ),
+
+    const _MuscleGroup(
+      name: 'Quads',
+      muscles: {
+        Muscle.rectusFemoris,
+        Muscle.vastusMedialis,
+        Muscle.vastusLateralis,
+        // Optional: Muscle.vastusIntermedius (the 4th quad muscle, if you want full completion)
+      },
+      searchTerms: {'quad', 'quads', 'quadriceps', 'front thigh', 'vmo'},
+    ),
+
+    const _MuscleGroup(
+      name: 'Hamstrings',
+      muscles: {
+        Muscle.bicepsFemoris,
+        Muscle.semitendinosus,
+        Muscle.semimembranosus, // Fixed typo: semimebranosus -> semimembranosus
+      },
+      searchTerms: {'hamstring', 'hamstrings', 'rear thigh', 'back of thigh'},
+    ),
+
+    const _MuscleGroup(
+      name: 'Calves',
+      muscles: {Muscle.gastrocnemius, Muscle.soleus},
+      searchTerms: {'calf', 'calves', 'gastrocnemius', 'soleus'},
+    ),
+
+    const _MuscleGroup(
+      name: 'Shins',
+      muscles: {Muscle.tibialisAnterior},
+      searchTerms: {'shin', 'shins', 'tibialis anterior'},
+    ),
+  ];
+}
+
+class _MuscleGroup {
+  final String name;
+  final Set<Muscle> muscles;
+  final Set<String> searchTerms;
+
+  const _MuscleGroup({
+    required this.name,
+    required this.muscles,
+    required this.searchTerms,
+  });
+}
+
+class _MuscleSearch {
+  static List<_MuscleGroup> search(String query, {int? top}) {
+    if (query.trim().isEmpty || 0 == top) return [];
+    final q = _normalize(query);
+
+    final results = <_MuscleSearchResult>[];
+
+    for (final group in _MuscleGroups.values) {
+      double bestScore = 0;
+
+      for (final term in group.searchTerms) {
+        final score = _score(q, _normalize(term));
+
+        if (score > bestScore) {
+          bestScore = score;
+        }
+      }
+
+      if (bestScore >= 0.4) {
+        results.add(_MuscleSearchResult(group: group, score: bestScore));
+      }
+    }
+
+    results.sort((a, b) => b.score.compareTo(a.score));
+
+    return (null == top ? results : results.take(top))
+        .map((sr) => sr.group)
+        .toList();
+  }
+
+  static double _score(String query, String term) {
+    if (query == term) {
+      return 1.0;
+    }
+
+    if (term.startsWith(query)) {
+      return 0.95;
+    }
+
+    if (term.contains(query)) {
+      return 0.85;
+    }
+
+    final similarity = _similarity(query, term);
+
+    return similarity * 0.75;
+  }
+
+  static double _similarity(String a, String b) {
+    final distance = _levenshtein(a, b);
+
+    final maxLength = a.length > b.length ? a.length : b.length;
+
+    if (maxLength == 0) {
+      return 1;
+    }
+
+    return 1 - (distance / maxLength);
+  }
+
+  static int _levenshtein(String a, String b) {
+    final matrix = List.generate(
+      a.length + 1,
+      (_) => List.filled(b.length + 1, 0),
+    );
+
+    for (var i = 0; i <= a.length; i++) {
+      matrix[i][0] = i;
+    }
+
+    for (var j = 0; j <= b.length; j++) {
+      matrix[0][j] = j;
+    }
+
+    for (var i = 1; i <= a.length; i++) {
+      for (var j = 1; j <= b.length; j++) {
+        final cost = a[i - 1] == b[j - 1] ? 0 : 1;
+
+        matrix[i][j] = [
+          matrix[i - 1][j] + 1,
+          matrix[i][j - 1] + 1,
+          matrix[i - 1][j - 1] + cost,
+        ].reduce((a, b) => a < b ? a : b);
+      }
+    }
+
+    return matrix[a.length][b.length];
+  }
+
+  static String _normalize(String value) {
+    return value
+        .toLowerCase()
+        .replaceAll('&', 'and')
+        .replaceAll(RegExp(r'[^a-z0-9 ]'), '')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
+  }
 }
