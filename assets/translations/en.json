@@ -68,7 +68,10 @@
     "random_muscles": "Random Muscles",
     "clear": "Clear",
     "switch_language": "Switch Language",
-    "choose_language": "Choose Language"
+    "choose_language": "Choose Language",
+    "zoom_in": "Zoom In",
+    "zoom_out": "Zoom Out",
+    "flip_view": "Flip View"
   },
   "languages": {
     "en": "English",

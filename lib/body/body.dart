@@ -9,3 +9,5 @@ import 'package:collection/collection.dart';
 part 'body_mixins.dart' ;
 
 part 'body_core.dart';
+
+part 'body_view.dart';

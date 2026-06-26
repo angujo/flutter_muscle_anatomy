@@ -68,7 +68,10 @@
     "random_muscles": "यादृच्छिक मांसपेशियां",
     "clear": "साफ़ करें",
     "switch_language": "भाषा बदलें",
-    "choose_language": "भाषा चुनें"
+    "choose_language": "भाषा चुनें",
+    "zoom_in": "ज़ूम इन करें",
+    "zoom_out": "ज़ूम आउट करें",
+    "flip_view": "दृश्य बदलें"
   },
   "languages": {
     "en": "English",

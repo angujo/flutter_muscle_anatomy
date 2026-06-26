@@ -26,10 +26,6 @@ class _SkeletalMuscles with _Decorates, _MusclesHighlights, _BuildsSvgWriter {
   /// Returns the [Paint] object for the body outline.
   Paint get outlinePaint => _defDecoration.strokePaint();
 
-  /// @deprecated Use [hairPath] instead.
-  @Deprecated('Use hairPath instead.')
-  Path? get hairOutlinePath => hairPath;
-
   /// Returns the [Path] for the hair outline if available.
   Path? get hairPath {
     if (null == _hairColor) return null;
@@ -125,6 +121,28 @@ class _SkeletalMuscles with _Decorates, _MusclesHighlights, _BuildsSvgWriter {
     }
     return [build];
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is _SkeletalMuscles &&
+            other._view == _view &&
+            other._svgPathReader == _svgPathReader &&
+            other._hairColor == _hairColor &&
+            other._defDecoration == _defDecoration &&
+            other._defHighlightDecoration == _defHighlightDecoration &&
+            const MapEquality().equals(other._highlights, _highlights));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    _view,
+    _svgPathReader,
+    _hairColor,
+    _defDecoration,
+    _defHighlightDecoration,
+    const MapEquality().hash(_highlights),
+  );
 }
 
 /// Base class for body anatomy visualization.
@@ -158,9 +176,13 @@ class _Body with _BuildsSvgWriter implements MuscleAnatomy {
     return paths;
   }
 
+  @override
+  @Deprecated('Use hairPaths instead.')
+  List<Path> get hairOutlinePaths => hairPaths;
+
   /// Returns a list of [Path] objects for the hair outlines of all skeletal muscle views.
   @override
-  List<Path> get hairOutlinePaths {
+  List<Path> get hairPaths {
     List<Path> paths = [];
     double x = 0;
     for (final skel in _skeletalMuscles) {
@@ -185,6 +207,18 @@ class _Body with _BuildsSvgWriter implements MuscleAnatomy {
   /// Returns the [Paint] for the hair fill.
   @override
   Paint get hairFillPaint => _skeletalMuscles.first.hairFillPaint;
+
+  /// Returns a [CustomPainter] capable of drawing this anatomy model onto a [Canvas].
+  ///
+  /// The [size] is the target canvas size, and [fill] determines whether the
+  /// anatomy model should be scaled to fill the entire [size] (true) or fit
+  /// within it (false).
+  @override
+  CustomPainter customPainter(Size size, {bool fill = false}) =>
+      _AnatomyPainter(
+        anatomy: this,
+        viewScale: getViewScale(size, filled: fill),
+      );
 
   /// Private constructor for [_Body].
   _Body._(this._skeletalMuscles);
@@ -278,6 +312,13 @@ class _Body with _BuildsSvgWriter implements MuscleAnatomy {
   }
 
   @override
+  void dehighlight(Muscle muscle, {MuscleSide position = MuscleSide.both}) {
+    for (final skeletal in _skeletalMuscles) {
+      skeletal.dehighlight(muscle, position: position);
+    }
+  }
+
+  @override
   void highlights(
     Iterable<Muscle> muscles, {
     MuscleSide position = MuscleSide.both,
@@ -348,6 +389,11 @@ class _Body with _BuildsSvgWriter implements MuscleAnatomy {
     final skeletals = _createSkeletals(gender, views, hairColor: hairColor);
     return _Body._(skeletals);
   }
+
+  @override
+  @Deprecated('Use getViewScale(size, filled: fill).scaleSize instead.')
+  Size scaledSize(Size size, {bool fill = false}) =>
+      getViewScale(size, filled: fill).scaleSize;
 }
 
 /// Interface for body anatomy visualization.
@@ -356,19 +402,39 @@ abstract class MuscleAnatomy implements _IMuscleHighlights {
   Size get dimension;
 
   /// Forces a rebuild of the SVG content.
+  ///
+  /// This will clear any cached SVG elements and regenerate them
+  /// from the current state (including highlights).
   void rebuild();
 
   /// Builds the SVG document if it hasn't been built yet.
+  ///
+  /// This is typically called automatically before rendering if needed.
   void build();
 
   /// Scales the given [size] to either fill or fit the current [dimension].
+  @Deprecated('Use getViewScale(size, filled: fill).scaleSize instead.')
   Size scaledSize(Size size, {bool fill = false});
+
+  /// Computes and returns a [ViewScale] for mapping the anatomy model to a target [size].
+  ///
+  /// The [ViewScale] handles the math for scaling (fit vs fill) and centering
+  /// the model within the provided [size].
+  ///
+  /// [size] is the target canvas or widget size.
+  /// [filled] determines if the model should cover the entire [size] (true)
+  /// or be contained within it (false).
+  ViewScale getViewScale(Size size, {bool filled = false});
 
   /// Returns a list of [Path] objects for the outlines of the body views.
   List<Path> get outlinePaths;
 
   /// Returns a list of [Path] objects for the hair outlines of the body views.
+  @Deprecated('Use hairPaths instead.')
   List<Path> get hairOutlinePaths;
+
+  /// Returns a list of [Path] objects for the hair outlines of the body views.
+  List<Path> get hairPaths;
 
   /// Returns the [Paint] for the body outline.
   Paint get outlinePaint;
@@ -378,6 +444,13 @@ abstract class MuscleAnatomy implements _IMuscleHighlights {
 
   /// Returns the [Paint] for the hair fill.
   Paint get hairFillPaint;
+
+  /// Returns a [CustomPainter] capable of drawing this anatomy model onto a [Canvas].
+  ///
+  /// The [size] is the target canvas size, and [fill] determines whether the
+  /// anatomy model should be scaled to fill the entire [size] (true) or fit
+  /// within it (false).
+  CustomPainter customPainter(Size size, {bool fill = false});
 
   /// Returns a list of current muscle highlights.
   List<MuscleHighlight> getHighlights();
@@ -443,6 +516,17 @@ class Anatomy {
   /// Internal helper to create the anatomy instance from requested views.
   MuscleAnatomy _fromViews(List<BodyView> views) =>
       _Body._fromViews(_genderType, views, hairColor: _hairColor);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is Anatomy &&
+            other._genderType == _genderType &&
+            other._hairColor == _hairColor);
+  }
+
+  @override
+  int get hashCode => Object.hash(_genderType, _hairColor);
 }
 
 /// Represents the male body anatomy.

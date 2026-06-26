@@ -68,7 +68,10 @@
     "random_muscles": "ランダムな筋肉",
     "clear": "クリア",
     "switch_language": "言語を切り替える",
-    "choose_language": "言語を選択"
+    "choose_language": "言語を選択",
+    "zoom_in": "拡大",
+    "zoom_out": "縮小",
+    "flip_view": "ビューを反転"
   },
   "languages": {
     "en": "English",

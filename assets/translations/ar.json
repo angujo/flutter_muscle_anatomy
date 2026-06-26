@@ -68,7 +68,10 @@
     "random_muscles": "عضلات عشوائية",
     "clear": "مسح",
     "switch_language": "تغيير اللغة",
-    "choose_language": "اختر اللغة"
+    "choose_language": "اختر اللغة",
+    "zoom_in": "تكبير",
+    "zoom_out": "تصغير",
+    "flip_view": "قلب العرض"
   },
   "languages": {
     "en": "English",

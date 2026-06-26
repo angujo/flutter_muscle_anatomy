@@ -68,7 +68,10 @@
     "random_muscles": "Otot Acak",
     "clear": "Bersihkan",
     "switch_language": "Ganti Bahasa",
-    "choose_language": "Pilih Bahasa"
+    "choose_language": "Pilih Bahasa",
+    "zoom_in": "Perbesar",
+    "zoom_out": "Perkecil",
+    "flip_view": "Balik Tampilan"
   },
   "languages": {
     "en": "English",

@@ -1,6 +1,13 @@
 ## 1.2.5
 
-* Added `Muscle.search` function documentation and examples in README.
+* Introduced `ViewScale` interface for advanced scaling, centering, and transformation logic.
+* Added `getViewScale` to `MuscleAnatomy` (deprecated `scaledSize`) and `customPainter` to return a configured painter.
+* Enhanced `MuscleInteractiveView`:
+    - Replaced custom `AxisSide` with Flutter's `Alignment` for control positioning.
+    - Improved layout to prevent UI controls from obstructing the anatomy model.
+    - Integrated localized tooltips for Zoom In, Zoom Out, and Flip View controls across all 10 supported languages.
+* Added comprehensive documentation for all public classes, including `MuscleInteractiveView` and `ViewScale`.
+* Updated README with detailed API references, `Muscle.search` documentation, and modernized code examples.
 * Exposed muscle grouping and fuzzy search capability for easier muscle discovery.
 
 ## 1.2.4

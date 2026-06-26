@@ -17,6 +17,7 @@ A Flutter library for displaying and interacting with muscle anatomy models. It 
 
 ## Features
 
+* **Interactive Viewer**: Built-in `MuscleInteractiveView` with support for zoom, pan, and tap-to-highlight.
 * **Anatomical Models**: High-quality SVG-based male and female muscle models.
 * **Front & Back Views**: Display front, back, or both views simultaneously.
 * **Muscle Highlighting**: Highlight specific muscles with custom colors and opacity.
@@ -171,6 +172,19 @@ String view = BodyView.front.localizedName;
 
 Access raw `Path` objects for high-performance custom painters or animations. The library provides pre-configured `Paint` objects and decoration data to make custom rendering easy.
 
+#### Using the built-in Painter
+For simple rendering, you can use the `customPainter` method:
+
+```dart
+final painter = CustomPaint(
+  size: const Size(200, 300),
+  painter: anatomy.customPainter(const Size(200, 300), fill: false),
+);
+```
+
+#### Implementing a Custom Painter
+For custom rendering logic, animations, or special effects:
+
 ```dart
 class AnatomyPainter extends CustomPainter {
   final MuscleAnatomy anatomy;
@@ -179,15 +193,9 @@ class AnatomyPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // 1. Calculate scale and offset to center the anatomy model
-    final scaledSize = anatomy.scaledSize(size);
-    final scale = scaledSize.width / anatomy.dimension.width;
-    final dx = (size.width - scaledSize.width) / 2;
-    final dy = (size.height - scaledSize.height) / 2;
-
-    final matrix = Matrix4.identity()
-      ..translate(dx, dy)
-      ..scale(scale);
+    // 1. Calculate transformation matrix to center and scale the anatomy model
+    final viewScale = anatomy.getViewScale(size);
+    final matrix = viewScale.painterTransform;
 
     // 2. Draw body outlines
     for (final path in anatomy.outlinePaths) {
@@ -205,7 +213,7 @@ class AnatomyPainter extends CustomPainter {
     }
 
     // 4. Draw hair (if visible)
-    for (final path in anatomy.hairOutlinePaths) {
+    for (final path in anatomy.hairPaths) {
       canvas.drawPath(path.transform(matrix.storage), anatomy.hairFillPaint);
     }
   }
@@ -218,14 +226,20 @@ class AnatomyPainter extends CustomPainter {
 
 ### 9. Scaling Utilities
 
-Scale a given `Size` to fit or fill the anatomy model's dimensions.
+The `getViewScale` method provides comprehensive scaling and positioning data, including transformation matrices for custom painters and coordinate conversion.
 
 ```dart
 final anatomy = Male.both();
 Size screenSize = MediaQuery.of(context).size;
 
-// Get the size that fits the anatomy model within screen bounds
-Size scaled = anatomy.scaledSize(screenSize, fill: false);
+// Get the scaling information for the model within screen bounds
+ViewScale viewScale = anatomy.getViewScale(screenSize, filled: false);
+
+// Access the scaled size of the model
+Size scaledSize = viewScale.scaleSize;
+
+// Access transformation matrix for Canvas
+Matrix4 matrix = viewScale.painterTransform;
 ```
 
 ### 10. Searching Muscles
@@ -241,7 +255,28 @@ List<Muscle> results = Muscle.search('six pack');
 List<Muscle> topResults = Muscle.search('leg', top: 3);
 ```
 
-### 11. Interactivity & Hit Testing
+### 11. Built-in Interactivity (`MuscleInteractiveView`)
+
+The library provides a ready-to-use `MuscleInteractiveView` widget that handles zooming, panning, and muscle selection out of the box.
+
+```dart
+MuscleInteractiveView(
+  anatomy: Male.both(),
+  size: const Size(300, 400),
+  highlightedMuscles: {
+    (Muscle.biceps, MuscleSide.left),
+  },
+  onTap: (muscleMember, currentHighlights) {
+    print('Tapped: ${muscleMember.$1.name}');
+  },
+  alignment: Alignment.centerRight, // Positioning of control buttons
+  zoomInIcon: Icons.add,
+  zoomOutIcon: Icons.remove,
+  flipViewIcon: Icons.flip,
+)
+```
+
+### 12. Interactivity & Hit Testing (Custom)
 
 The library's raw `Path` access makes it easy to build fully interactive anatomical maps. By combining `InteractiveViewer`, `GestureDetector`, and `CustomPaint`, you can create a viewport that supports **pinch-to-zoom**, **panning**, and **tap-to-select** muscles.
 
@@ -278,19 +313,14 @@ void _onTapped(TapUpDetails details) {
     details.localPosition,
   );
 
-  // 2. Calculate model-to-screen scaling
-  final scaledSize = anatomy.scaledSize(size);
-  final scale = scaledSize.width / anatomy.dimension.width;
-  final dx = (size.width - scaledSize.width) / 2;
-  final dy = (size.height - scaledSize.height) / 2;
-
-  // 3. Convert to model coordinates
-  final Offset modelPoint = Offset(
-    (scenePoint.dx - dx) / scale,
-    (scenePoint.dy - dy) / scale,
+  // 2. Convert to model coordinates using ViewScale
+  final viewScale = anatomy.getViewScale(size);
+  final Offset modelPoint = MatrixUtils.transformPoint(
+    Matrix4.inverted(viewScale.painterTransform),
+    scenePoint,
   );
 
-  // 4. Hit test muscles
+  // 3. Hit test muscles
   for (final member in anatomy.getMuscleMembers()) {
     for (final path in member.paths) {
       if (path.contains(modelPoint)) {
@@ -303,6 +333,89 @@ void _onTapped(TapUpDetails details) {
   }
 }
 ```
+
+### 13. API Reference
+
+#### `MuscleAnatomy`
+
+The main interface for an anatomy model.
+
+| Method / Property | Description | Return Type |
+| :--- | :--- | :--- |
+| `dimension` | The physical dimensions (width and height) of the SVG view box. | `Size` |
+| `outlinePaths` | Returns a list of `Path` objects for the outlines of the body views. | `List<Path>` |
+| `hairPaths` | Returns a list of `Path` objects for the hair outlines. | `List<Path>` |
+| `hairOutlinePaths` | **Deprecated**: Use `hairPaths`. | `List<Path>` |
+| `outlinePaint` | Returns the `Paint` for the body outline. | `Paint` |
+| `hairStrokePaint` | Returns the `Paint` for the hair stroke. | `Paint` |
+| `hairFillPaint` | Returns the `Paint` for the hair fill. | `Paint` |
+| `rebuild()` | Forces a rebuild of the SVG content. | `void` |
+| `build()` | Builds the SVG document if it hasn't been built yet. | `void` |
+| `scaledSize(...)` | **Deprecated**: Use `getViewScale`. | `Size` |
+| `getViewScale(Size size, {bool filled})` | Returns a `ViewScale` for the given size. | `ViewScale` |
+| `customPainter(Size size, {bool fill})` | Returns a `CustomPainter` for the model. | `CustomPainter` |
+| `getHighlights()` | Returns a list of current muscle highlights. | `List<MuscleHighlight>` |
+| `getMuscleMembers()` | Returns a list of all muscle members being visualized. | `List<MuscleMember>` |
+| `getAllMusclePaths()` | Returns a list of `Path` objects for all available muscles. | `List<Path>` |
+| `getMusclePaths(Muscle muscle, ...)` | Returns a list of `Path` objects for a specific muscle. | `List<Path>` |
+| `highlight(Muscle muscle, ...)` | Highlights a specific muscle. | `void` |
+| `highlights(Iterable<Muscle> muscles, ...)` | Highlights a collection of muscles. | `void` |
+
+#### `Anatomy` (Factory)
+
+Factory class for creating `MuscleAnatomy` instances.
+
+| Method | Description |
+| :--- | :--- |
+| `front()` | Returns a model with only the front view. |
+| `back()` | Returns a model with only the back view. |
+| `frontBack()` | Returns a model with both front and back views. |
+| `backFront()` | Returns a model with both back and front views. |
+| `both()` | Alias for `frontBack()`. |
+| `byView(BodyView view)` | Returns a model for a specific view. |
+| `byMuscles(Iterable<Muscle> muscles, ...)` | Selects views based on provided muscles. |
+
+#### `Male` & `Female` (Utilities)
+
+Convenience classes for creating gender-specific models. `Female` methods accept an optional `hairColor`.
+
+| Method | Description |
+| :--- | :--- |
+| `front()` | Returns a model with only the front view. |
+| `back()` | Returns a model with only the back view. |
+| `frontBack()` | Returns a model with both front and back views. |
+| `backFront()` | Returns a model with both back and front views. |
+| `both()` | Alias for `frontBack()`. |
+| `byMuscles(Iterable<Muscle> muscles, ...)` | Selects views based on provided muscles. |
+
+#### `ViewScale`
+
+Handles scaling and positioning logic.
+
+| Property / Method | Description | Return Type |
+| :--- | :--- | :--- |
+| `scale` | The calculated scale factor. | `double` |
+| `scaleSize` | The size of the model after scaling. | `Size` |
+| `dx`, `dy` | Horizontal and vertical offsets for centering. | `double` |
+| `painterTransform` | Matrix for `Canvas` transformation. | `Matrix4` |
+| `center` | The center point of the target size. | `Offset` |
+| `getZoomTransform(double factor)` | Returns a zoom matrix relative to the center. | `Matrix4` |
+
+#### `MuscleInteractiveView` (Widget)
+
+The built-in interactive viewer widget.
+
+| Property | Description | Default |
+| :--- | :--- | :--- |
+| `anatomy` | The `Anatomy` factory instance. | Required |
+| `size` | The target display size. | Required |
+| `highlightedMuscles` | Initial set of muscles to highlight. | Required |
+| `zoomStep` | The factor by which to zoom. | `1.0` |
+| `minScale`, `maxScale` | Zoom limits. | `0.5`, `5.0` |
+| `onTap` | Callback when a muscle is tapped. | `null` |
+| `alignment` | Positioning of control buttons. | `Alignment.centerRight` |
+| `zoomInIcon`, `zoomOutIcon`, `flipViewIcon` | Custom icons for controls. | `null` |
+| `filled` | Whether to fill the entire size. | `false` |
 
 ## Contributing
 

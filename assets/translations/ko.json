@@ -68,7 +68,10 @@
     "random_muscles": "무작위 근육",
     "clear": "지우기",
     "switch_language": "언어 전환",
-    "choose_language": "언어 선택"
+    "choose_language": "언어 선택",
+    "zoom_in": "확대",
+    "zoom_out": "축소",
+    "flip_view": "보기 전환"
   },
   "languages": {
     "en": "English",

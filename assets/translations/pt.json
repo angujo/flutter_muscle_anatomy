@@ -68,7 +68,10 @@
     "random_muscles": "Músculos Aleatórios",
     "clear": "Limpar",
     "switch_language": "Mudar Idioma",
-    "choose_language": "Escolher Idioma"
+    "choose_language": "Escolher Idioma",
+    "zoom_in": "Aumentar zoom",
+    "zoom_out": "Diminuir zoom",
+    "flip_view": "Inverter vista"
   },
   "languages": {
     "en": "English",

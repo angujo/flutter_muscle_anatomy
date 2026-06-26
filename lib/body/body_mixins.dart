@@ -78,6 +78,8 @@ abstract class _IMuscleHighlights {
     Color? color,
     double? opacity,
   });
+
+  void dehighlight(Muscle muscle, {MuscleSide position = MuscleSide.both});
 }
 
 /// A mixin that provides functionality for building an [SvgFileWriter] and
@@ -85,6 +87,7 @@ abstract class _IMuscleHighlights {
 mixin _BuildsSvgWriter {
   /// The writer used to generate SVG content.
   late SvgFileWriter _svgFileWriter;
+  ViewScale? _viewScale;
 
   /// Tracks whether the SVG has already been built.
   bool _built = false;
@@ -125,16 +128,146 @@ mixin _BuildsSvgWriter {
     _built = true;
   }
 
-  /// Scales the given [size] to either [fill] or fit the current [dimension].
+  /// Computes and returns a [ViewScale] for mapping the anatomy model to a target [size].
   ///
-  /// If [fill] is true, the size is scaled using the maximum multiplier between
-  /// width and height ratios. Otherwise, it uses the minimum multiplier.
-  Size scaledSize(Size size, {bool fill = false}) {
-    final mW = size.width / dimension.width;
-    final mH = size.height / dimension.height;
-    final scale = fill ? math.max(mW, mH) : math.min(mW, mH);
-    return Size(dimension.width * scale, dimension.height * scale);
+  /// The [ViewScale] handles the math for scaling (fit vs fill) and centering
+  /// the model within the provided [size].
+  ///
+  /// [size] is the target canvas or widget size.
+  /// [filled] determines if the model should cover the entire [size] (true)
+  /// or be contained within it (false).
+  ViewScale getViewScale(Size size, {bool filled = false}) {
+    _viewScale ??= _ViewScale._(
+      dimension: dimension,
+      size: size,
+      filled: filled,
+    );
+    return _viewScale!;
   }
+}
+
+/// Interface representing the scaling and positioning logic for a view.
+///
+/// It provides scale factors, offsets, and transforms to map between
+/// the SVG dimension and the actual render size.
+abstract interface class ViewScale {
+  /// Returns the width scale factor between the render size and the SVG dimension.
+  double get widthScale;
+
+  /// Returns the height scale factor between the render size and the SVG dimension.
+  double get heightScale;
+
+  /// Returns the effective scale factor, depending on whether the view should
+  /// be filled or fitted.
+  double get scale;
+
+  /// Returns the size of the SVG content after scaling.
+  Size get scaleSize;
+
+  /// Returns the horizontal offset to center the scaled content.
+  double get dx;
+
+  /// Returns the vertical offset to center the scaled content.
+  double get dy;
+
+  /// Returns the center point of the render view.
+  Offset get center;
+
+  /// Returns a transformation matrix that translates and scales the content
+  /// to fit and center within the render view.
+  Matrix4 get painterTransform;
+
+  /// Returns a transformation matrix for zooming the view by a given [factor]
+  /// relative to the center.
+  Matrix4 getZoomTransform(
+    double factor,
+    Matrix4 controllerMatrix, {
+    double? minScale,
+    double? maxScale,
+  });
+}
+
+final class _ViewScale implements ViewScale {
+  /// This is the dimension of the SVG view box.
+  final Size _dimension;
+
+  /// This is the size of the Render view.
+  final Size _size;
+
+  /// This is a flag to indicate whether the size should be filled or not.
+  final bool _filled;
+
+  @override
+  double get widthScale => _size.width / _dimension.width;
+
+  @override
+  double get heightScale => _size.height / _dimension.height;
+
+  @override
+  double get scale => _filled
+      ? math.max(widthScale, heightScale)
+      : math.min(widthScale, heightScale);
+
+  @override
+  Size get scaleSize =>
+      Size(_dimension.width * scale, _dimension.height * scale);
+
+  @override
+  double get dx => (_size.width - scaleSize.width) / 2;
+
+  @override
+  double get dy => (_size.height - scaleSize.height) / 2;
+
+  @override
+  Offset get center => Offset(_size.width / 2, _size.height / 2);
+
+  @override
+  Matrix4 get painterTransform => Matrix4.identity()
+    ..translateByDouble(dx, dy, 0, 1)
+    ..scaleByDouble(scale, scale, 1.0, 1.0);
+
+  @override
+  Matrix4 getZoomTransform(
+    double factor,
+    Matrix4 controllerMatrix, {
+    double? minScale,
+    double? maxScale,
+  }) {
+    final currentScale = controllerMatrix.getMaxScaleOnAxis();
+
+    if (currentScale == 0) {
+      return Matrix4.identity();
+    }
+
+    double targetScale = currentScale * factor;
+
+    if (minScale != null) {
+      targetScale = targetScale < minScale ? minScale : targetScale;
+    }
+
+    if (maxScale != null) {
+      targetScale = targetScale > maxScale ? maxScale : targetScale;
+    }
+
+    final actualFactor = targetScale / currentScale;
+
+    if (actualFactor == 1.0) {
+      return Matrix4.identity();
+    }
+
+    return Matrix4.identity()
+      ..translateByDouble(center.dx, center.dy, 0, 1)
+      ..scaleByDouble(actualFactor, actualFactor, 1, 1)
+      ..translateByDouble(-center.dx, -center.dy, 0, 1);
+  }
+
+  const _ViewScale._({
+    required Size dimension,
+    required Size size,
+    required bool filled,
+  }) : _dimension = dimension,
+       _size = size,
+       _filled = filled;
 }
 
 /// A mixin that manages styling properties for strokes and default fills

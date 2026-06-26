@@ -256,4 +256,15 @@ class SvgPathReader {
     collect(group);
     return paths;
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is SvgPathReader &&
+            other._assetType == _assetType &&
+            other._view == _view);
+  }
+
+  @override
+  int get hashCode => Object.hash(_assetType, _view);
 }

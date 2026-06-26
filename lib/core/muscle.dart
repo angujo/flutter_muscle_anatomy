@@ -333,14 +333,17 @@ class MuscleDecoration {
   final double _strokeWidth;
 
   /// Returns the fill color with applied opacity (defaults to 1.0 if null).
-  Color get fillColor => _fillColor.withValues(alpha: _fillOpacity ?? 1.0);
+  Color get fillColor => Colors.transparent == _fillColor
+      ? Colors.transparent
+      : _fillColor.withValues(alpha: _fillOpacity ?? 1.0);
 
   /// The fill opacity (0.0 to 1.0).
   double? get fillOpacity => _fillOpacity;
 
   /// Returns the stroke color with applied opacity (defaults to 1.0 if null).
-  Color get strokeColor =>
-      _strokeColor.withValues(alpha: _strokeOpacity ?? 1.0);
+  Color get strokeColor => Colors.transparent == _strokeColor
+      ? Colors.transparent
+      : _strokeColor.withValues(alpha: _strokeOpacity ?? 1.0);
 
   /// The stroke width.
   double get strokeWidth => _strokeWidth;
@@ -428,6 +431,26 @@ class MuscleDecoration {
   String toString() {
     return "MuscleDecoration(fillColor: ${_fillColor.toHex()}, fillOpacity: $_fillOpacity, strokeColor: ${_strokeColor.toHex()}, strokeOpacity: $_strokeOpacity, strokeWidth: $_strokeWidth)";
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is MuscleDecoration &&
+            other._fillColor == _fillColor &&
+            other._fillOpacity == _fillOpacity &&
+            other._strokeColor == _strokeColor &&
+            other._strokeOpacity == _strokeOpacity &&
+            other._strokeWidth == _strokeWidth);
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    _fillColor,
+    _fillOpacity,
+    _strokeColor,
+    _strokeOpacity,
+    _strokeWidth,
+  );
 }
 
 /// Represents a muscle member within the anatomy visualization.

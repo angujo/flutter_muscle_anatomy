@@ -240,7 +240,7 @@ final class SvgPath extends _SvgElement {
 
   /// Sets the stroke color, width, and opacity for the path.
   void stroke(Color color, {double? width, double? opacity}) {
-    addStyle('stroke', color.toHex());
+    addStyle('stroke', Colors.transparent == color ? 'none' : color.toHex());
     if (width != null) addStyle('stroke-width', width.toString());
     if (opacity != null) addStyle('stroke-opacity', opacity.toString());
   }
