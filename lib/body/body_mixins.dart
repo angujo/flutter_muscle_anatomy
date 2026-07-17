@@ -281,11 +281,11 @@ mixin _Decorates {
 
   /// @deprecated Use [setDefaultStroke] instead.
   @Deprecated('Use setDefaultStroke instead.')
-  void setStroke({required Color color, required double width}) =>
+  void setStroke({ Color? color,  double? width}) =>
       setDefaultStroke(color: color, width: width);
 
   /// Sets the default stroke [color] and [width].
-  void setDefaultStroke({required Color color, required double width}) {
+  void setDefaultStroke({ Color? color,  double? width}) {
     _defDecoration = _defDecoration.copyWith(
       strokeColor: color,
       strokeWidth: width,
@@ -294,11 +294,11 @@ mixin _Decorates {
 
   /// @deprecated Use [setDefaultFill] instead.
   @Deprecated('Use setDefaultFill instead.')
-  void setFill({required Color color, required double opacity}) =>
+  void setFill({ Color? color,  double? opacity}) =>
       setDefaultFill(color: color, opacity: opacity);
 
   /// Sets the default fill [color] and [opacity].
-  void setDefaultFill({required Color color, required double opacity}) {
+  void setDefaultFill({Color? color, double? opacity}) {
     _defDecoration = _defDecoration.copyWith(
       fillColor: color,
       fillOpacity: opacity,
@@ -306,7 +306,7 @@ mixin _Decorates {
   }
 
   /// Sets the default highlight [color] and [opacity] to be used when not explicitly specified in [highlight].
-  void setDefaultHighlight({required Color color, required double opacity}) {
+  void setDefaultHighlight({Color? color, double? opacity}) {
     _defHighlightDecoration = _defHighlightDecoration.copyWith(
       fillColor: color,
       fillOpacity: opacity,

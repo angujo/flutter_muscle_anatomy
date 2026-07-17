@@ -149,13 +149,14 @@ class _SkeletalMuscles with _Decorates, _MusclesHighlights, _BuildsSvgWriter {
 ///
 /// It aggregates one or more [_SkeletalMuscles] views (e.g., front and back)
 /// and coordinates highlighting across them.
-class _Body with _BuildsSvgWriter implements MuscleAnatomy {
+class _Body with _BuildsSvgWriter, _Decorates implements MuscleAnatomy {
   /// The list of skeletal muscle views (e.g., front, back) being visualized.
   final List<_SkeletalMuscles> _skeletalMuscles;
 
   /// The horizontal margin between multiple views.
   static const double _margin = 0.5;
 
+  /// The overall physical dimensions of the combined body views, including margins.
   @override
   late final Size dimension = Size(
     (_margin * (_skeletalMuscles.length - 1)) +
@@ -330,6 +331,10 @@ class _Body with _BuildsSvgWriter implements MuscleAnatomy {
     }
   }
 
+  /// Generates the root SVG elements for all aggregated skeletal muscle views.
+  ///
+  /// Each skeletal muscle view is wrapped in an [SvgGroup] and translated
+  /// horizontally based on its position and the [_margin].
   @override
   List<SvgElement> _getRootBuilds() {
     List<SvgElement> groups = [];
@@ -390,14 +395,51 @@ class _Body with _BuildsSvgWriter implements MuscleAnatomy {
     return _Body._(skeletals);
   }
 
+  /// Scales the given [size] to either fill or fit the current [dimension].
   @override
   @Deprecated('Use getViewScale(size, filled: fill).scaleSize instead.')
   Size scaledSize(Size size, {bool fill = false}) =>
       getViewScale(size, filled: fill).scaleSize;
+
+  /// Sets the default fill [color] and [opacity] for all skeletal muscle views.
+  @override
+  void setDefaultFill({Color? color, double? opacity}) {
+    for (var sm in _skeletalMuscles) {
+      sm.setDefaultFill(color: color, opacity: opacity);
+    }
+  }
+
+  /// Sets the default highlight [color] and [opacity] for all skeletal muscle views.
+  @override
+  void setDefaultHighlight({Color? color, double? opacity}) {
+    for (var sm in _skeletalMuscles) {
+      sm.setDefaultHighlight(color: color, opacity: opacity);
+    }
+  }
+
+  /// Sets the default stroke [color] and [width] for all skeletal muscle views.
+  @override
+  void setDefaultStroke({Color? color, double? width}) {
+    for (var sm in _skeletalMuscles) {
+      sm.setDefaultStroke(color: color, width: width);
+    }
+  }
+
+  /// Sets the fill [color] and [opacity] for all skeletal muscle views.
+  @override
+  @Deprecated('Use setDefaultFill instead.')
+  void setFill({Color? color, double? opacity}) =>
+      setDefaultFill(color: color, opacity: opacity);
+
+  /// Sets the stroke [color] and [width] for all skeletal muscle views.
+  @override
+  @Deprecated('Use setDefaultStroke instead.')
+  void setStroke({Color? color, double? width}) =>
+      setDefaultStroke(color: color, width: width);
 }
 
 /// Interface for body anatomy visualization.
-abstract class MuscleAnatomy implements _IMuscleHighlights {
+abstract class MuscleAnatomy implements _IMuscleHighlights, _Decorates {
   /// The physical dimensions (width and height) of the SVG view box.
   Size get dimension;
 

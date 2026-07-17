@@ -1,3 +1,12 @@
+## 1.2.6
+
+* Made global styling methods officially available and documented their behavior for the combined anatomy model:
+    * `setDefaultFill`: Sets the default fill color and opacity across all body views.
+    * `setDefaultHighlight`: Sets the default highlight color and opacity across all body views.
+    * `setDefaultStroke`: Sets the default stroke color and width across all body views.
+* Documented `_Body` specific implementations for `dimension` and `_getRootBuilds` (SVG structure generation).
+* Formally deprecated `setFill` and `setStroke` in favor of the `setDefault*` styling API.
+
 ## 1.2.5
 
 * Introduced `ViewScale` interface for advanced scaling, centering, and transformation logic.

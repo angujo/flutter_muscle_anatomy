@@ -47,6 +47,9 @@ class _ViewOnlyState extends State<ViewOnly> {
     String name,
     Set<(Muscle, MuscleSide)> selectedMuscles,
   ) {
+    anatomy.setDefaultFill(color: Colors.grey[300]!);
+    anatomy.setDefaultHighlight(color: Colors.blue, opacity: 0.5);
+    anatomy.setDefaultStroke(color: Colors.red,);
     for (var m in selectedMuscles) {
       anatomy.highlight(m.$1, position: m.$2);
     }
