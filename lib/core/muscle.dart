@@ -196,12 +196,10 @@ enum Muscle {
       view == BodyView.both || this.view == view || this.view == BodyView.both;
 
   /// Returns a list of all muscles visible from the front.
-  static List<Muscle> front() =>
-      Muscle.values.where((m) => m.isForView(BodyView.front)).toList();
+  static List<Muscle> front() => Muscle.values.where((m) => m.isForView(BodyView.front)).toList();
 
   /// Returns a list of all muscles visible from the back.
-  static List<Muscle> back() =>
-      Muscle.values.where((m) => m.isForView(BodyView.back)).toList();
+  static List<Muscle> back() => Muscle.values.where((m) => m.isForView(BodyView.back)).toList();
 
   /// Returns a list of all muscles visible in the specified [view].
   static List<Muscle> forView(BodyView view) =>
@@ -248,10 +246,7 @@ enum Muscle {
   ///
   /// [top] can be used to limit the number of search results.
   static List<Muscle> search(String query, {int? top}) {
-    return _MuscleSearch.search(
-      query,
-      top: top,
-    ).map((g) => g.muscles).expand((m) => m).toList();
+    return _MuscleSearch.search(query, top: top).map((g) => g.muscles).expand((m) => m).toList();
   }
 }
 
@@ -293,22 +288,23 @@ class MuscleInstance {
   String get name => muscle.name;
 
   /// The snake_case version of the muscle name, used for SVG IDs.
-  String get svgReadId => position == MuscleSide.both
-      ? camelToSnake(name)
-      : "${position.name}_${camelToSnake(name)}";
+  String get svgReadId =>
+      position == MuscleSide.both ? camelToSnake(name) : "${position.name}_${camelToSnake(name)}";
 
   /// The snake_case version of the muscle name, used for SVG IDs.
-  String get svgWriteId =>
-      "${camelToSnake(name)}_${position.name}_${muscle.view.name}";
+  String get svgWriteId => "${camelToSnake(name)}_${position.name}_${muscle.view.name}";
 
   const MuscleInstance({required this.muscle, required this.position});
+
+  /// Returns a copy of this [MuscleInstance] with the given fields replaced.
+  MuscleInstance copyWith({Muscle? muscle, MuscleSide? position}) {
+    return MuscleInstance(muscle: muscle ?? this.muscle, position: position ?? this.position);
+  }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other is MuscleInstance &&
-            other.muscle == muscle &&
-            other.position == position);
+        (other is MuscleInstance && other.muscle == muscle && other.position == position);
   }
 
   @override
@@ -320,8 +316,7 @@ class MuscleInstance {
   }
 
   /// Returns an inverted version of this muscle instance (swaps left/right).
-  MuscleInstance inverse() =>
-      MuscleInstance(muscle: muscle, position: position.inverse());
+  MuscleInstance inverse() => MuscleInstance(muscle: muscle, position: position.inverse());
 }
 
 /// Defines the visual styling for a muscle.
@@ -444,13 +439,8 @@ class MuscleDecoration {
   }
 
   @override
-  int get hashCode => Object.hash(
-    _fillColor,
-    _fillOpacity,
-    _strokeColor,
-    _strokeOpacity,
-    _strokeWidth,
-  );
+  int get hashCode =>
+      Object.hash(_fillColor, _fillOpacity, _strokeColor, _strokeOpacity, _strokeWidth);
 }
 
 /// Represents a muscle member within the anatomy visualization.
@@ -483,12 +473,7 @@ final class MuscleMember {
   }
 
   /// Creates an instance of [MuscleMember].
-  const MuscleMember(
-    this._instance,
-    this._data,
-    this._decoration, [
-    this._transform,
-  ]);
+  const MuscleMember(this._instance, this._data, this._decoration, [this._transform]);
 }
 
 /// Represents a highlighted muscle in the anatomy visualization.
@@ -557,27 +542,14 @@ class _MuscleGroups {
       name: 'Obliques',
       // Uses both variants from your enum definitions (back and front views)
       muscles: {Muscle.externalOblique, Muscle.externalAbdominalOblique},
-      searchTerms: {
-        'oblique',
-        'obliques',
-        'side abs',
-        'waist',
-        'waist muscles',
-      },
+      searchTerms: {'oblique', 'obliques', 'side abs', 'waist', 'waist muscles'},
     ),
 
     const _MuscleGroup(
       name: 'Chest',
       muscles: {Muscle.pectoralisMajor},
       // Cleaned from deprecated pectolarisMajor
-      searchTerms: {
-        'chest',
-        'pec',
-        'pecs',
-        'pectoral',
-        'pectorals',
-        'pectoralis major',
-      },
+      searchTerms: {'chest', 'pec', 'pecs', 'pectoral', 'pectorals', 'pectoralis major'},
     ),
 
     const _MuscleGroup(
@@ -602,19 +574,8 @@ class _MuscleGroups {
 
     const _MuscleGroup(
       name: 'Shoulders',
-      muscles: {
-        Muscle.deltoid,
-        Muscle.anteriorDeltoid,
-        Muscle.posteriorDeltoid,
-      },
-      searchTerms: {
-        'shoulder',
-        'shoulders',
-        'delt',
-        'delts',
-        'deltoid',
-        'deltoids',
-      },
+      muscles: {Muscle.deltoid, Muscle.anteriorDeltoid, Muscle.posteriorDeltoid},
+      searchTerms: {'shoulder', 'shoulders', 'delt', 'delts', 'deltoid', 'deltoids'},
     ),
 
     const _MuscleGroup(
@@ -680,32 +641,19 @@ class _MuscleGroups {
 
     const _MuscleGroup(
       name: 'Hip Flexors',
-      muscles: {
-        Muscle.iliopsoas,
-        Muscle.tensorFasciaeLatae,
-        Muscle.flexorFasciaeLatae,
-      },
+      muscles: {Muscle.iliopsoas, Muscle.tensorFasciaeLatae, Muscle.flexorFasciaeLatae},
       searchTerms: {'hip flexor', 'hip flexors', 'iliopsoas', 'psoas', 'tfl'},
     ),
 
     const _MuscleGroup(
       name: 'Adductors',
-      muscles: {
-        Muscle.adductorLongus,
-        Muscle.adductorMagnus,
-        Muscle.gracilis,
-        Muscle.pectineus,
-      },
+      muscles: {Muscle.adductorLongus, Muscle.adductorMagnus, Muscle.gracilis, Muscle.pectineus},
       searchTerms: {'adductor', 'adductors', 'inner thigh', 'groin'},
     ),
 
     const _MuscleGroup(
       name: 'Quads',
-      muscles: {
-        Muscle.rectusFemoris,
-        Muscle.vastusMedialis,
-        Muscle.vastusLateralis,
-      },
+      muscles: {Muscle.rectusFemoris, Muscle.vastusMedialis, Muscle.vastusLateralis},
       searchTerms: {'quad', 'quads', 'quadriceps', 'front thigh', 'vmo'},
     ),
 
@@ -738,11 +686,7 @@ class _MuscleGroup {
   final Set<Muscle> muscles;
   final Set<String> searchTerms;
 
-  const _MuscleGroup({
-    required this.name,
-    required this.muscles,
-    required this.searchTerms,
-  });
+  const _MuscleGroup({required this.name, required this.muscles, required this.searchTerms});
 }
 
 class _MuscleSearch {
@@ -770,9 +714,7 @@ class _MuscleSearch {
 
     results.sort((a, b) => b.score.compareTo(a.score));
 
-    return (null == top ? results : results.take(top))
-        .map((sr) => sr.group)
-        .toList();
+    return (null == top ? results : results.take(top)).map((sr) => sr.group).toList();
   }
 
   static double _score(String query, String term) {
@@ -806,10 +748,7 @@ class _MuscleSearch {
   }
 
   static int _levenshtein(String a, String b) {
-    final matrix = List.generate(
-      a.length + 1,
-      (_) => List.filled(b.length + 1, 0),
-    );
+    final matrix = List.generate(a.length + 1, (_) => List.filled(b.length + 1, 0));
 
     for (var i = 0; i <= a.length; i++) {
       matrix[i][0] = i;

@@ -61,24 +61,20 @@ abstract class _IMuscleHighlights {
   ///
   /// [position] specifies which side to highlight (defaults to MusclePosition.both).
   /// [color] and [opacity] can override the default highlight styling.
-  void highlight(
-    Muscle muscle, {
-    MuscleSide position,
-    Color? color,
-    double? opacity,
-  });
+  void highlight(Muscle muscle, {MuscleSide position, Color? color, double? opacity});
 
   /// Highlights a collection of [muscles] in the view.
   ///
   /// [position] specifies which side to highlight (defaults to MusclePosition.both).
   /// [color] and [opacity] can override the default highlight styling.
-  void highlights(
-    Iterable<Muscle> muscles, {
-    MuscleSide position,
-    Color? color,
-    double? opacity,
-  });
+  void highlightAll(Iterable<Muscle> muscles, {MuscleSide position, Color? color, double? opacity});
 
+  @Deprecated('Use highlightAll instead')
+  void highlights(Iterable<Muscle> muscles, {MuscleSide position, Color? color, double? opacity});
+
+  void unhighlight(Muscle muscle, {MuscleSide position = MuscleSide.both});
+
+  @Deprecated('Use unhighlight instead')
   void dehighlight(Muscle muscle, {MuscleSide position = MuscleSide.both});
 }
 
@@ -137,11 +133,7 @@ mixin _BuildsSvgWriter {
   /// [filled] determines if the model should cover the entire [size] (true)
   /// or be contained within it (false).
   ViewScale getViewScale(Size size, {bool filled = false}) {
-    _viewScale ??= _ViewScale._(
-      dimension: dimension,
-      size: size,
-      filled: filled,
-    );
+    _viewScale ??= _ViewScale._(dimension: dimension, size: size, filled: filled);
     return _viewScale!;
   }
 }
@@ -204,13 +196,11 @@ final class _ViewScale implements ViewScale {
   double get heightScale => _size.height / _dimension.height;
 
   @override
-  double get scale => _filled
-      ? math.max(widthScale, heightScale)
-      : math.min(widthScale, heightScale);
+  double get scale =>
+      _filled ? math.max(widthScale, heightScale) : math.min(widthScale, heightScale);
 
   @override
-  Size get scaleSize =>
-      Size(_dimension.width * scale, _dimension.height * scale);
+  Size get scaleSize => Size(_dimension.width * scale, _dimension.height * scale);
 
   @override
   double get dx => (_size.width - scaleSize.width) / 2;
@@ -261,13 +251,10 @@ final class _ViewScale implements ViewScale {
       ..translateByDouble(-center.dx, -center.dy, 0, 1);
   }
 
-  const _ViewScale._({
-    required Size dimension,
-    required Size size,
-    required bool filled,
-  }) : _dimension = dimension,
-       _size = size,
-       _filled = filled;
+  const _ViewScale._({required Size dimension, required Size size, required bool filled})
+    : _dimension = dimension,
+      _size = size,
+      _filled = filled;
 }
 
 /// A mixin that manages styling properties for strokes and default fills
@@ -281,35 +268,31 @@ mixin _Decorates {
 
   /// @deprecated Use [setDefaultStroke] instead.
   @Deprecated('Use setDefaultStroke instead.')
-  void setStroke({ Color? color,  double? width}) =>
-      setDefaultStroke(color: color, width: width);
+  void setStroke({Color? color, double? width}) => setDefaultStroke(color: color, width: width);
 
   /// Sets the default stroke [color] and [width].
-  void setDefaultStroke({ Color? color,  double? width}) {
+  void setDefaultStroke({Color? color, double? width, double? opacity}) {
     _defDecoration = _defDecoration.copyWith(
       strokeColor: color,
       strokeWidth: width,
+      strokeOpacity: opacity,
     );
   }
 
   /// @deprecated Use [setDefaultFill] instead.
   @Deprecated('Use setDefaultFill instead.')
-  void setFill({ Color? color,  double? opacity}) =>
-      setDefaultFill(color: color, opacity: opacity);
+  void setFill({Color? color, double? opacity}) => setDefaultFill(color: color, opacity: opacity);
 
   /// Sets the default fill [color] and [opacity].
   void setDefaultFill({Color? color, double? opacity}) {
-    _defDecoration = _defDecoration.copyWith(
-      fillColor: color,
-      fillOpacity: opacity,
-    );
+    _defDecoration = _defDecoration.copyWith(fillColor: color, fillOpacity: opacity ?? color?.a);
   }
 
   /// Sets the default highlight [color] and [opacity] to be used when not explicitly specified in [highlight].
   void setDefaultHighlight({Color? color, double? opacity}) {
     _defHighlightDecoration = _defHighlightDecoration.copyWith(
       fillColor: color,
-      fillOpacity: opacity,
+      fillOpacity: opacity ?? color?.a,
     );
   }
 }
@@ -334,33 +317,23 @@ mixin _MusclesHighlights on _Decorates {
     double? opacity,
   }) {
     if (!muscle.isForView(_view)) return;
-    final decoration = _defHighlightDecoration.copyWith(
-      fillColor: color,
-      fillOpacity: opacity,
-    );
+    final decoration = _defHighlightDecoration.copyWith(fillColor: color, fillOpacity: opacity);
+    final mKey = MuscleInstance(muscle: muscle, position: position);
     if (position == MuscleSide.both) {
       for (final pst in MuscleSide.actual()) {
-        _highlights.putIfAbsent(
-          MuscleInstance(muscle: muscle, position: pst),
-          () => decoration,
-        );
+        _highlights[mKey.copyWith(position: pst)] = decoration;
       }
     } else {
-      _highlights.putIfAbsent(
-        MuscleInstance(muscle: muscle, position: position),
-        () => decoration,
-      );
+      _highlights[mKey] = decoration;
     }
   }
 
-  void dehighlight(Muscle muscle, {MuscleSide position = MuscleSide.both}) {
+  void unhighlight(Muscle muscle, {MuscleSide position = MuscleSide.both}) {
     if (!muscle.isForView(_view)) return;
     if (position == MuscleSide.both) {
       _highlights.removeWhere((key, value) => key.muscle == muscle);
     } else {
-      _highlights.removeWhere(
-        (key, value) => key.muscle == muscle && key.position == position,
-      );
+      _highlights.removeWhere((key, value) => key.muscle == muscle && key.position == position);
     }
   }
 
@@ -371,11 +344,7 @@ mixin _MusclesHighlights on _Decorates {
     if (!_instanceHighlighted(instance)) return null;
     if (MuscleSide.both == instance.position) {
       return MuscleSide.actual()
-          .map(
-            (ms) => _instanceDecoration(
-              MuscleInstance(muscle: instance.muscle, position: ms),
-            ),
-          )
+          .map((ms) => _instanceDecoration(MuscleInstance(muscle: instance.muscle, position: ms)))
           .firstOrNull;
     }
     return _highlights[instance];
@@ -385,14 +354,12 @@ mixin _MusclesHighlights on _Decorates {
     if (!muscle.isForView(_view)) return false;
     final psts = position == MuscleSide.both ? MuscleSide.actual() : [position];
     return psts.any(
-      (pst) => _highlights.containsKey(
-        MuscleInstance(muscle: muscle, position: pst),
-      ),
+      (pst) => _highlights.containsKey(MuscleInstance(muscle: muscle, position: pst)),
     );
   }
 
   /// Highlights multiple [muscles] with an optional [position], [color], and [opacity].
-  void highlights(
+  void highlightAll(
     Iterable<Muscle> muscles, {
     MuscleSide position = MuscleSide.both,
     Color? color,
@@ -406,11 +373,7 @@ mixin _MusclesHighlights on _Decorates {
   MuscleDecoration _decoration(MuscleInstance muscleInst) {
     if (MuscleSide.both == muscleInst.position) {
       return MuscleSide.actual()
-          .map(
-            (ms) => _decoration(
-              MuscleInstance(muscle: muscleInst.muscle, position: ms),
-            ),
-          )
+          .map((ms) => _decoration(MuscleInstance(muscle: muscleInst.muscle, position: ms)))
           .first;
     }
     return _defDecoration.copyFrom(_instanceDecoration(muscleInst));

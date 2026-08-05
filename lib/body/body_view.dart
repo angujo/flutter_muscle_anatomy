@@ -154,7 +154,7 @@ class _MuscleInteractiveViewState extends State<MuscleInteractiveView> {
         if (path.contains(modelPoint)) {
           if (_highlightedMuscles.contains(key)) {
             _highlightedMuscles.remove(key);
-            _muscleAnatomy.dehighlight(key.$1, position: key.$2);
+            _muscleAnatomy.unhighlight(key.$1, position: key.$2);
           } else {
             _highlightedMuscles.add(key);
             _muscleAnatomy.highlight(key.$1, position: key.$2);

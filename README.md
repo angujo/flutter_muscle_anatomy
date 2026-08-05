@@ -34,7 +34,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_muscle_anatomy: ^1.2.5
+  flutter_muscle_anatomy: ^1.2.7
   flutter_svg: ^2.0.0
 ```
 
@@ -112,10 +112,10 @@ Customize the look of the anatomy model, including outlines and default muscle f
 final anatomy = Male.front();
 
 // Set default stroke (outline) color and width
-anatomy.setStroke(color: Colors.blueGrey, width: 0.5);
+anatomy.setDefaultStroke(color: Colors.blueGrey, width: 0.5);
 
 // Set default fill for non-highlighted muscles
-anatomy.setFill(color: Colors.grey.withOpacity(0.1), opacity: 1.0);
+anatomy.setDefaultFill(color: Colors.grey.withOpacity(0.1), opacity: 1.0);
 
 // Set default highlight style for subsequent highlights
 anatomy.setDefaultHighlight(color: Colors.orange, opacity: 0.8);

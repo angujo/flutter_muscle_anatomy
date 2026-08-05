@@ -33,8 +33,7 @@ class _SkeletalMuscles with _Decorates, _MusclesHighlights, _BuildsSvgWriter {
   }
 
   /// Returns the [MuscleDecoration] for the hair.
-  MuscleDecoration get hairDecoration =>
-      _defDecoration.copyWith(fillColor: _hairColor);
+  MuscleDecoration get hairDecoration => _defDecoration.copyWith(fillColor: _hairColor);
 
   /// Returns the [Paint] for the hair stroke.
   Paint get hairStrokePaint => hairDecoration.strokePaint();
@@ -48,20 +47,14 @@ class _SkeletalMuscles with _Decorates, _MusclesHighlights, _BuildsSvgWriter {
   Path? getMusclePath(Muscle muscle, {required MuscleSide position}) {
     if (MuscleSide.both == position) {
       throw UnimplementedError(
-        MuscleAnatomyLocalization.translator(
-          'errors.muscle_position_both_not_supported',
-        ),
+        MuscleAnatomyLocalization.translator('errors.muscle_position_both_not_supported'),
       );
     }
-    return _svgPathReader
-        .getPathData(muscle, position: position)
-        ?.paths
-        .firstOrNull;
+    return _svgPathReader.getPathData(muscle, position: position)?.paths.firstOrNull;
   }
 
   /// Returns a map of all muscle instances and their corresponding path data.
-  Map<MuscleInstance, SVGPathData> getMuscleInstancesData() =>
-      _svgPathReader.getMuscleData();
+  Map<MuscleInstance, SVGPathData> getMuscleInstancesData() => _svgPathReader.getMuscleData();
 
   /// Returns a list of [Path] objects for all muscles defined in Muscle.values
   /// for both left and right positions.
@@ -74,26 +67,22 @@ class _SkeletalMuscles with _Decorates, _MusclesHighlights, _BuildsSvgWriter {
       .toList();
 
   /// Creates an instance of [_SkeletalMuscles].
-  _SkeletalMuscles({
-    required BodyView view,
-    required SvgPathReader svgPathReader,
-    Color? hairColor,
-  }) : _view = view,
-       _svgPathReader = svgPathReader,
-       _hairColor = hairColor,
-       dimension = Size(svgPathReader.width, svgPathReader.height);
+  _SkeletalMuscles({required BodyView view, required SvgPathReader svgPathReader, Color? hairColor})
+    : _view = view,
+      _svgPathReader = svgPathReader,
+      _hairColor = hairColor,
+      dimension = Size(svgPathReader.width, svgPathReader.height);
 
   /// Returns an [_SkeletalMuscles] for the male body for a specific [view].
   factory _SkeletalMuscles.male(BodyView view) =>
       _SkeletalMuscles(view: view, svgPathReader: SvgPathReader.male(view));
 
   /// Returns an [_SkeletalMuscles] for the female body for a specific [view].
-  factory _SkeletalMuscles.female(BodyView view, {Color? hairColor}) =>
-      _SkeletalMuscles(
-        view: view,
-        svgPathReader: SvgPathReader.female(view),
-        hairColor: hairColor ?? Colors.grey,
-      );
+  factory _SkeletalMuscles.female(BodyView view, {Color? hairColor}) => _SkeletalMuscles(
+    view: view,
+    svgPathReader: SvgPathReader.female(view),
+    hairColor: hairColor ?? Colors.grey,
+  );
 
   @override
   List<SvgElement> _getRootBuilds() {
@@ -105,17 +94,14 @@ class _SkeletalMuscles with _Decorates, _MusclesHighlights, _BuildsSvgWriter {
     (outline.toString());
     build.addChild(outline);
     for (final muscleEntry in _svgPathReader.getMuscleData().entries) {
-      final deco = _defDecoration.copyFrom(
-        _instanceDecoration(muscleEntry.key),
-      );
+      final deco = _defDecoration.copyFrom(_instanceDecoration(muscleEntry.key));
       build.addChild(muscleEntry.value.toSvgElement(muscleEntry.key, deco));
     }
     if (null != _hairColor) {
       final hairs = _svgPathReader.getPathDs('hair_outline');
       if (hairs.isNotEmpty) {
         build.addChild(
-          SvgPath(id: 'hair_outline_${_view.name}', d: hairs.first)
-            ..decorate(hairDecoration),
+          SvgPath(id: 'hair_outline_${_view.name}', d: hairs.first)..decorate(hairDecoration),
         );
       }
     }
@@ -215,11 +201,10 @@ class _Body with _BuildsSvgWriter, _Decorates implements MuscleAnatomy {
   /// anatomy model should be scaled to fill the entire [size] (true) or fit
   /// within it (false).
   @override
-  CustomPainter customPainter(Size size, {bool fill = false}) =>
-      _AnatomyPainter(
-        anatomy: this,
-        viewScale: getViewScale(size, filled: fill),
-      );
+  CustomPainter customPainter(Size size, {bool fill = false}) => _AnatomyPainter(
+    anatomy: this,
+    viewScale: getViewScale(size, filled: fill),
+  );
 
   /// Private constructor for [_Body].
   _Body._(this._skeletalMuscles);
@@ -228,11 +213,7 @@ class _Body with _BuildsSvgWriter, _Decorates implements MuscleAnatomy {
   List<MuscleHighlight> getHighlights() {
     List<MuscleHighlight> highlights = [];
     for (final skeletal in _skeletalMuscles) {
-      highlights.addAll(
-        skeletal._highlights.entries.map(
-          (e) => MuscleHighlight(e.key, e.value),
-        ),
-      );
+      highlights.addAll(skeletal._highlights.entries.map((e) => MuscleHighlight(e.key, e.value)));
     }
     return highlights;
   }
@@ -244,14 +225,7 @@ class _Body with _BuildsSvgWriter, _Decorates implements MuscleAnatomy {
     for (final skel in _skeletalMuscles) {
       final matrix = Matrix4.translationValues(x, 0, 0);
       for (final entry in skel.getMuscleInstancesData().entries) {
-        members.add(
-          MuscleMember(
-            entry.key,
-            entry.value,
-            skel._decoration(entry.key),
-            matrix,
-          ),
-        );
+        members.add(MuscleMember(entry.key, entry.value, skel._decoration(entry.key), matrix));
       }
       x += skel.dimension.width + _margin;
     }
@@ -303,24 +277,33 @@ class _Body with _BuildsSvgWriter, _Decorates implements MuscleAnatomy {
     double? opacity,
   }) {
     for (final skeletal in _skeletalMuscles) {
-      skeletal.highlight(
-        muscle,
-        position: position,
-        color: color,
-        opacity: opacity,
-      );
+      skeletal.highlight(muscle, position: position, color: color, opacity: opacity);
     }
   }
 
   @override
-  void dehighlight(Muscle muscle, {MuscleSide position = MuscleSide.both}) {
+  @Deprecated('Use [unhighlight] instead')
+  void dehighlight(Muscle muscle, {MuscleSide position = MuscleSide.both}) =>
+      unhighlight(muscle, position: position);
+
+  @override
+  void unhighlight(Muscle muscle, {MuscleSide position = MuscleSide.both}) {
     for (final skeletal in _skeletalMuscles) {
-      skeletal.dehighlight(muscle, position: position);
+      skeletal.unhighlight(muscle, position: position);
     }
   }
 
   @override
+  @Deprecated('Use [highlightAll] instead')
   void highlights(
+    Iterable<Muscle> muscles, {
+    MuscleSide position = MuscleSide.both,
+    Color? color,
+    double? opacity,
+  }) => highlightAll(muscles, position: position, color: color, opacity: opacity);
+
+  @override
+  void highlightAll(
     Iterable<Muscle> muscles, {
     MuscleSide position = MuscleSide.both,
     Color? color,
@@ -363,10 +346,8 @@ class _Body with _BuildsSvgWriter, _Decorates implements MuscleAnatomy {
 
     List<BodyView> views = singleView ? [domView] : Muscle.views(muscles);
 
-    final b = constructor(
-      _createSkeletals(gender, views.nonNulls.toList(), hairColor: hairColor),
-    );
-    b.highlights(muscles);
+    final b = constructor(_createSkeletals(gender, views.nonNulls.toList(), hairColor: hairColor));
+    b.highlightAll(muscles);
     return b;
   }
 
@@ -386,11 +367,7 @@ class _Body with _BuildsSvgWriter, _Decorates implements MuscleAnatomy {
   }
 
   /// Internal factory to create a [MuscleAnatomy] instance from specific views.
-  static MuscleAnatomy _fromViews(
-    _GenderType gender,
-    List<BodyView> views, {
-    Color? hairColor,
-  }) {
+  static MuscleAnatomy _fromViews(_GenderType gender, List<BodyView> views, {Color? hairColor}) {
     final skeletals = _createSkeletals(gender, views, hairColor: hairColor);
     return _Body._(skeletals);
   }
@@ -398,8 +375,7 @@ class _Body with _BuildsSvgWriter, _Decorates implements MuscleAnatomy {
   /// Scales the given [size] to either fill or fit the current [dimension].
   @override
   @Deprecated('Use getViewScale(size, filled: fill).scaleSize instead.')
-  Size scaledSize(Size size, {bool fill = false}) =>
-      getViewScale(size, filled: fill).scaleSize;
+  Size scaledSize(Size size, {bool fill = false}) => getViewScale(size, filled: fill).scaleSize;
 
   /// Sets the default fill [color] and [opacity] for all skeletal muscle views.
   @override
@@ -419,23 +395,21 @@ class _Body with _BuildsSvgWriter, _Decorates implements MuscleAnatomy {
 
   /// Sets the default stroke [color] and [width] for all skeletal muscle views.
   @override
-  void setDefaultStroke({Color? color, double? width}) {
+  void setDefaultStroke({Color? color, double? width, double? opacity}) {
     for (var sm in _skeletalMuscles) {
-      sm.setDefaultStroke(color: color, width: width);
+      sm.setDefaultStroke(color: color, width: width, opacity: opacity);
     }
   }
 
   /// Sets the fill [color] and [opacity] for all skeletal muscle views.
   @override
   @Deprecated('Use setDefaultFill instead.')
-  void setFill({Color? color, double? opacity}) =>
-      setDefaultFill(color: color, opacity: opacity);
+  void setFill({Color? color, double? opacity}) => setDefaultFill(color: color, opacity: opacity);
 
   /// Sets the stroke [color] and [width] for all skeletal muscle views.
   @override
   @Deprecated('Use setDefaultStroke instead.')
-  void setStroke({Color? color, double? width}) =>
-      setDefaultStroke(color: color, width: width);
+  void setStroke({Color? color, double? width}) => setDefaultStroke(color: color, width: width);
 }
 
 /// Interface for body anatomy visualization.
@@ -544,10 +518,7 @@ class Anatomy {
   MuscleAnatomy byView(BodyView view) => _fromViews([view]);
 
   /// Returns a [MuscleAnatomy] with views that best represent the provided [muscles].
-  MuscleAnatomy byMuscles(
-    Iterable<Muscle> muscles, {
-    bool singleView = false,
-  }) => _Body._byMuscles(
+  MuscleAnatomy byMuscles(Iterable<Muscle> muscles, {bool singleView = false}) => _Body._byMuscles(
     _genderType,
     muscles,
     constructor: _Body._,
@@ -562,9 +533,7 @@ class Anatomy {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other is Anatomy &&
-            other._genderType == _genderType &&
-            other._hairColor == _hairColor);
+        (other is Anatomy && other._genderType == _genderType && other._hairColor == _hairColor);
   }
 
   @override
@@ -626,12 +595,9 @@ final class Female {
       Anatomy(_GenderType.female, hairColor: hairColor).backFront();
 
   /// Returns a [MuscleAnatomy] instance with both front and back views (alias for [frontBack]).
-  static MuscleAnatomy both({Color? hairColor}) =>
-      frontBack(hairColor: hairColor);
+  static MuscleAnatomy both({Color? hairColor}) => frontBack(hairColor: hairColor);
 
   /// Creates a [MuscleAnatomy] instance showing the views that best represent the provided [muscles].
-  static MuscleAnatomy byMuscles(
-    Iterable<Muscle> muscles, {
-    Color? hairColor,
-  }) => Anatomy(_GenderType.female, hairColor: hairColor).byMuscles(muscles);
+  static MuscleAnatomy byMuscles(Iterable<Muscle> muscles, {Color? hairColor}) =>
+      Anatomy(_GenderType.female, hairColor: hairColor).byMuscles(muscles);
 }

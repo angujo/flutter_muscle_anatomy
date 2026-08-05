@@ -1,3 +1,9 @@
+## 1.2.7
+
+* Added `MuscleInstance.copyWith` to allow easy duplication and modification of muscle instances.
+* Updated the `highlight` method to replace existing decorations for the same muscle and position instead of ignoring subsequent calls.
+* Refreshed documentation and README to reflect latest styling API changes.
+
 ## 1.2.6
 
 * Made global styling methods officially available and documented their behavior for the combined anatomy model:

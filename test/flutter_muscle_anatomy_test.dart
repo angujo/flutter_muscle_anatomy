@@ -32,7 +32,7 @@ void main() {
         position: MuscleSide.right,
         color: Colors.green,
       );
-      mf.highlights([
+      mf.highlightAll([
         Muscle.trapezius,
         Muscle.extensorDigitorumLongus,
       ], color: Colors.blue);
@@ -51,7 +51,7 @@ void main() {
         position: MuscleSide.right,
         color: Colors.green,
       );
-      mf.highlights([
+      mf.highlightAll([
         Muscle.soleus,
       ], color: Colors.blue);
 
