@@ -34,8 +34,23 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_muscle_anatomy: ^1.2.7
+  flutter_muscle_anatomy: ^1.3.0-beta.1
   flutter_svg: ^2.0.0
+```
+
+## Initialization
+
+Before using the library, you must initialize it to pre-load the SVG assets. This is typically done in your `main()` function.
+
+```dart
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize the library
+  await FlutterMuscleAnatomy().initialize();
+  
+  runApp(const MyApp());
+}
 ```
 
 ## Usage
@@ -145,6 +160,9 @@ The library is localization-ready. To use localized muscle names, you can provid
     void main() async {
       WidgetsFlutterBinding.ensureInitialized();
       await EasyLocalization.ensureInitialized();
+      
+      // Initialize the library
+      await FlutterMuscleAnatomy().initialize();
     
       // Link the library to easy_localization
       MuscleAnatomyLocalization.translator = (key, {namedArgs}) => key.tr(namedArgs: namedArgs);

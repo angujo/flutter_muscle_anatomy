@@ -4,14 +4,9 @@
 /// and allows for precise muscle highlighting.
 library;
 
-export 'body/body.dart'
-    show
-        Male,
-        Female,
-        MuscleAnatomy,
-        Anatomy,
-        ViewScale,
-        MuscleInteractiveView;
+import 'core/assets/svg_assets.dart';
+
+export 'body/body.dart' show Male, Female, MuscleAnatomy, Anatomy, ViewScale, MuscleInteractiveView;
 export 'core/core.dart'
     show
         Muscle,
@@ -23,3 +18,9 @@ export 'core/core.dart'
         MusclePositionLocalization,
         GenderLocalization,
         MuscleAnatomyLocalization;
+
+class FlutterMuscleAnatomy {
+  Future<void> initialize() async {
+    await SvgAssets.initialize();
+  }
+}

@@ -3,12 +3,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:example/view_only.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_muscle_anatomy/core/core.dart';
+import 'package:flutter_muscle_anatomy/flutter_muscle_anatomy.dart';
 
 import 'interactive_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+  await FlutterMuscleAnatomy().initialize();
 
   // Initialize the library's translator to use easy_localization
   MuscleAnatomyLocalization.translator = (key, {namedArgs}) =>

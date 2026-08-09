@@ -1,3 +1,9 @@
+## 1.3.0-beta.1
+
+* **BREAKING CHANGE**: Mandatory library initialization is now required. Call `await FlutterMuscleAnatomy().initialize();` in your `main()` function before using any anatomy models.
+* Optimized asset loading: SVG files are now pre-loaded during initialization, significantly improving performance when switching between views.
+* Reverted factory methods (`Male.*`, `Female.*`, `Anatomy.*`) to synchronous signatures for better developer experience after initial loading.
+
 ## 1.2.8
 
 * Enhanced `MuscleInteractiveView` with support for default icons (`zoomInIcon`, `zoomOutIcon`, `flipViewIcon`).

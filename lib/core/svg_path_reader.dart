@@ -156,7 +156,7 @@ class SvgPathReader {
   /// Reads the file from disk, parses the XML, and indexes elements by ID.
   void _loadDocument() {
     if (_document == null) {
-      final content = getSvgAssetString(_assetType);
+      final content = SvgAssets.getSvgAssetString(_assetType);
       _document = XmlDocument.parse(content);
       _indexElements(_document!.rootElement);
       _loadDimensions();
