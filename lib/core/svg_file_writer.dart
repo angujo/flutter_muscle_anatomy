@@ -167,10 +167,10 @@ abstract class _SvgElement implements SvgElement {
     if (_styles.isNotEmpty) attrs['style'] = _stylesToString();
 
     _element = XmlElement(
-      XmlName.parts(_tag),
+      XmlName(_tag),
       [
         ...attrs.entries.map(
-          (e) => XmlAttribute(XmlName.parts(e.key), e.value),
+          (e) => XmlAttribute(XmlName(e.key), e.value),
         ),
       ],
       [..._children.map((e) => e.build())],
