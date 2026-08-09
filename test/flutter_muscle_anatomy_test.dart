@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_muscle_anatomy/flutter_muscle_anatomy.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-void main() {
+Future<void> main() async {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  await FlutterMuscleAnatomy().initialize();
   group('Test Canvas drawings', () {
     testWidgets('Render Front Male', (WidgetTester tester) async {
-      final mf = await Male.front();
+      final mf = Male.front();
       mf.highlight(Muscle.biceps, position: MuscleSide.right, color: Colors.green);
       mf.highlightAll([Muscle.brachialis, Muscle.extensorDigitorumLongus], color: Colors.blue);
 
@@ -19,7 +21,7 @@ void main() {
     });
 
     testWidgets('Render Back Male', (WidgetTester tester) async {
-      final mf = await Male.back();
+      final mf = Male.back();
       mf.highlight(Muscle.triceps, position: MuscleSide.right, color: Colors.green);
       mf.highlightAll([Muscle.trapezius, Muscle.extensorDigitorumLongus], color: Colors.blue);
 
@@ -31,7 +33,7 @@ void main() {
     });
 
     testWidgets('Render Both Male', (WidgetTester tester) async {
-      final mf = await Male.backFront();
+      final mf = Male.backFront();
       mf.highlight(Muscle.triceps, position: MuscleSide.right, color: Colors.green);
       mf.highlightAll([Muscle.soleus], color: Colors.blue);
 
@@ -44,7 +46,7 @@ void main() {
     });
 
     testWidgets('Render Front Female', (WidgetTester tester) async {
-      final mf = await Female.front();
+      final mf = Female.front();
       mf.highlight(Muscle.biceps, position: MuscleSide.right, color: Colors.green);
 
       final svg = mf.toString();
@@ -53,22 +55,22 @@ void main() {
     });
 
     testWidgets('Render ByMuscles Female', (WidgetTester tester) async {
-      final mf = await Female.byMuscles(Muscle.values);
+      final mf = Female.byMuscles(Muscle.values);
       final svg = mf.toString();
       expect(svg, contains('id="skeletal_0"'));
       expect(svg, contains('id="skeletal_1"'));
     });
-  }, skip: true);
+  });
 
   group('Localization', () {
-    test('Default translator returns key', () {
+    test('Default translator returns key', () async {
       expect(Muscle.biceps.localizedName, equals('muscles.biceps'));
       expect(BodyView.front.localizedName, equals('views.front'));
       expect(MuscleSide.left.localizedName, equals('positions.left'));
       expect('male'.localizedGender, equals('genders.male'));
     });
 
-    test('Custom translator works', () {
+    test('Custom translator works', () async {
       MuscleAnatomyLocalization.translator = (key, {namedArgs}) {
         if (key == 'muscles.biceps') return 'Biceps Muscle';
         if (key == 'genders.female') return 'Woman';
@@ -81,18 +83,18 @@ void main() {
       // Reset translator
       MuscleAnatomyLocalization.translator = (key, {namedArgs}) => key;
     });
-  }, skip: true);
+  });
 
   group('Anatomy Parsing', () {
-    test('Invalid gender throws ArgumentError', () {
+    test('Invalid gender throws ArgumentError', () async {
       expect(() => Anatomy('invalid'), throwsArgumentError);
     });
 
     test('Valid gender names work', () async {
-      expect(await Anatomy('male').front(), isNotNull);
-      expect(await Anatomy('M').front(), isNotNull);
-      expect(await Anatomy('female').front(), isNotNull);
-      expect(await Anatomy('f').front(), isNotNull);
+      expect(Anatomy('male').front(), isNotNull);
+      expect(Anatomy('M').front(), isNotNull);
+      expect(Anatomy('female').front(), isNotNull);
+      expect(Anatomy('f').front(), isNotNull);
     });
   });
 }
