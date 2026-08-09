@@ -5,6 +5,7 @@
 library;
 
 import 'core/assets/svg_assets.dart';
+import 'core/core.dart';
 
 export 'body/body.dart' show Male, Female, MuscleAnatomy, Anatomy, ViewScale, MuscleInteractiveView;
 export 'core/core.dart'
@@ -16,11 +17,11 @@ export 'core/core.dart'
         MuscleLocalization,
         BodyViewLocalization,
         MusclePositionLocalization,
-        GenderLocalization,
-        MuscleAnatomyLocalization;
+        GenderLocalization;
 
 class FlutterMuscleAnatomy {
- static Future<void> initialize() async {
+  static Future<void> initialize({MuscleAnatomyTranslator? translator}) async {
     await SvgAssets.initialize();
+    if (translator != null) MuscleAnatomyLocalization.translator = translator;
   }
 }

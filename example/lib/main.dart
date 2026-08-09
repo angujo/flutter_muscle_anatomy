@@ -1,4 +1,3 @@
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:example/view_only.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +8,9 @@ import 'interactive_view.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-  await FlutterMuscleAnatomy().initialize();
-
-  // Initialize the library's translator to use easy_localization
-  MuscleAnatomyLocalization.translator = (key, {namedArgs}) =>
-      key.tr(namedArgs: namedArgs);
+  await FlutterMuscleAnatomy.initialize(
+    translator: (key, {namedArgs}) => key.tr(namedArgs: namedArgs),
+  );
 
   runApp(
     EasyLocalization(
@@ -46,9 +43,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: context.supportedLocales,
       locale: context.locale,
       title: 'ui.app_title'.tr(),
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
+      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple)),
       home: MyHomePage(title: 'ui.app_title'.tr()),
     );
   }

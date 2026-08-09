@@ -1,3 +1,10 @@
+## 1.3.0-beta.2
+
+* **BREAKING CHANGE**: Mandatory library initialization is now required. Call `await FlutterMuscleAnatomy.initialize();` in your `main()` function before using any anatomy models.
+* Added comprehensive documentation and code examples for using `MultiAssetLoader` to merge app and package translations.
+* Improved README layout for library initialization and localization setup.
+* Converted `initialize` to a **static method** for easier access without instantiation.
+
 ## 1.3.0-beta.1
 
 * **BREAKING CHANGE**: Mandatory library initialization is now required. Call `await FlutterMuscleAnatomy().initialize();` in your `main()` function before using any anatomy models.
