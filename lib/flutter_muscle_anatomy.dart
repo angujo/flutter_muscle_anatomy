@@ -20,7 +20,7 @@ export 'core/core.dart'
         MuscleAnatomyLocalization;
 
 class FlutterMuscleAnatomy {
-  Future<void> initialize() async {
+ static Future<void> initialize() async {
     await SvgAssets.initialize();
   }
 }
