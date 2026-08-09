@@ -1,3 +1,7 @@
+## 1.3.0-beta.3
+
+* Downgrade XML from ^7.0.1 to ^6.1.0 for compatibility with more packages.
+
 ## 1.3.0-beta.2
 
 * **BREAKING CHANGE**: Mandatory library initialization is now required. Call `await FlutterMuscleAnatomy.initialize();` in your `main()` function before using any anatomy models.
