@@ -3,14 +3,6 @@ import 'package:flutter_muscle_anatomy/flutter_muscle_anatomy.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('Test Muscles', () {
-    test('All muscles are defined', () {
-      for (final muscle in Muscle.values) {
-        print(muscle.name);
-      }
-    });
-  });
-
   group('Test Canvas drawings', () {
     testWidgets('Render Front Male', (WidgetTester tester) async {
       final mf = Male.front();
