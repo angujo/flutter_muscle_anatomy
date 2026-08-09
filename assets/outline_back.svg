@@ -232,16 +232,16 @@
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 20.461484,34.047415 c 0.02605,1.316203 -0.299824,2.62738 -0.543232,3.896154 -0.255532,-0.323318 -0.295899,-1.044954 -0.496994,-1.522629 -0.165737,-0.789776 0.455838,-1.453432 0.79037,-2.122856 0.08328,-0.08357 0.166573,-0.167111 0.249856,-0.250669 z"
-     id="right_iliotibial_tact">
+     id="right_iliotibial_tract">
     <title
-       id="title232">iliotibial_tact</title>
+       id="title232">iliotibial_tract</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 8.931503,34.047415 c -0.026051,1.316203 0.2998238,2.62738 0.5432316,3.896154 0.255532,-0.323318 0.295897,-1.044954 0.496995,-1.522629 C 10.137466,35.631164 9.5158906,34.967508 9.1813588,34.298084 9.0980818,34.214514 9.0147856,34.130973 8.931503,34.047415 Z"
-     id="left_iliotibial_tact">
+     id="left_iliotibial_tract">
     <title
-       id="title264">iliotibial_tact</title>
+       id="title264">iliotibial_tract</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
@@ -288,16 +288,16 @@
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 16.473992,39.040763 c 0.0822,2.067146 0.240946,4.154313 0.0294,6.214269 -0.06665,0.977505 -0.325004,-0.292148 -0.436732,-0.616233 -0.225066,-1.209001 -0.117241,-2.455679 0.147618,-3.653499 0.0309,-0.655319 0.184592,-1.293985 0.25973,-1.944537 z"
-     id="right_semimebranosus">
+     id="right_semimembranosus">
     <title
-       id="title228">semimebranosus</title>
+       id="title228">semimembranosus</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113093;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 12.918995,39.040763 c -0.0822,2.067146 -0.240946,4.154313 -0.0294,6.214269 0.06665,0.977505 0.325002,-0.292148 0.436732,-0.616233 0.225066,-1.209001 0.117241,-2.455679 -0.147618,-3.653499 -0.03089,-0.655319 -0.184592,-1.293985 -0.25973,-1.944537 z"
-     id="left_semimebranosus">
+     id="left_semimembranosus">
     <title
-       id="title268">semimebranosus</title>
+       id="title268">semimembranosus</title>
   </path>
   <path
      id="right_gastrocnemius"

@@ -1,3 +1,10 @@
+## 1.2.8
+
+* Enhanced `MuscleInteractiveView` with support for default icons (`zoomInIcon`, `zoomOutIcon`, `flipViewIcon`).
+* Improved button layout logic in `MuscleInteractiveView` using `Alignment` bias for better control positioning.
+* Added `Muscle.search` for fuzzy muscle discovery and optimized muscle grouping logic.
+* Minor internal optimizations and documentation refinements.
+
 ## 1.2.7
 
 * Added `MuscleInstance.copyWith` to allow easy duplication and modification of muscle instances.

@@ -116,16 +116,16 @@
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113226;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 15.485079,15.359308 c 1.038055,-0.270195 2.284865,-0.263201 3.064095,0.546698 0.845291,0.782614 1.269111,1.940901 1.359079,3.039652 -1.234745,0.53844 -2.474278,1.357318 -3.889141,1.228968 -0.588471,-0.307046 -0.87485,-0.903975 -0.711777,-1.532515 0.05449,-1.094486 0.119193,-2.188507 0.177744,-3.282803 z"
-     id="left_pectolaris_major">
+     id="left_pectoralis_major">
     <title
-       id="title131">pectolaris_major</title>
+       id="title131">pectoralis_major</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113226;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 14.880698,15.359308 c -1.038049,-0.270195 -2.284852,-0.263201 -3.064079,0.546698 -0.845291,0.782614 -1.269111,1.940901 -1.35908,3.039652 1.234746,0.53844 2.474273,1.357318 3.88913,1.228968 0.588466,-0.307046 0.874843,-0.903975 0.711772,-1.532515 -0.05449,-1.094486 -0.11919,-2.188507 -0.177743,-3.282803 z"
-     id="right_pectolaris_major">
+     id="right_pectoralis_major">
     <title
-       id="title141">pectolaris_major</title>
+       id="title141">pectoralis_major</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113226;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"

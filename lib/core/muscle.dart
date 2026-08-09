@@ -48,8 +48,6 @@ enum Muscle {
 
   /// The gluteus maximus muscle, the main extensor muscle of the hip.
   gluteusMaximus(view: BodyView.back),
-  @Deprecated("Use iliotibialTract instead")
-  iliotibialTact(view: BodyView.back),
 
   /// The iliotibial tract, a longitudinal fibrous reinforcement of the fascia lata.
   iliotibialTract(view: BodyView.back),
@@ -65,8 +63,6 @@ enum Muscle {
 
   /// The semimembranosus muscle, the most medial of the three hamstring muscles.
   semimembranosus(view: BodyView.back),
-  @Deprecated("Use semimembranosus instead")
-  semimebranosus(view: BodyView.back),
 
   /// The gastrocnemius muscle, a powerful superficial bipennate muscle that is in the back part of the lower leg.
   gastrocnemius(view: BodyView.both),
@@ -94,8 +90,6 @@ enum Muscle {
 
   /// The pectoralis major muscle, a thick, fan-shaped muscle, situated at the chest of the human body.
   pectoralisMajor(view: BodyView.front),
-  @Deprecated("Use pectoralisMajor instead")
-  pectolarisMajor(view: BodyView.front),
 
   /// The rectus abdominis muscle, also known as the "abs".
   rectusAbdominis(view: BodyView.front),

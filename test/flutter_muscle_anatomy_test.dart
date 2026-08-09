@@ -3,76 +3,61 @@ import 'package:flutter_muscle_anatomy/flutter_muscle_anatomy.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  group('Test Muscles', () {
+    test('All muscles are defined', () {
+      for (final muscle in Muscle.values) {
+        print(muscle.name);
+      }
+    });
+  });
+
   group('Test Canvas drawings', () {
     testWidgets('Render Front Male', (WidgetTester tester) async {
       final mf = Male.front();
-      mf.highlight(
-        Muscle.biceps,
-        position: MuscleSide.right,
-        color: Colors.green,
-      );
-      mf.highlights([
-        Muscle.brachialis,
-        Muscle.extensorDigitorumLongus,
-      ], color: Colors.blue);
+      mf.highlight(Muscle.biceps, position: MuscleSide.right, color: Colors.green);
+      mf.highlightAll([Muscle.brachialis, Muscle.extensorDigitorumLongus], color: Colors.blue);
 
       final svg = mf.toString();
       expect(svg, contains('<svg'));
-      // expect(svg, contains('id="right_biceps_front"'));
-      // expect(svg, contains('id="brachialis_front"'));
-      expect(svg, contains('id="extensorDigitorumLongus_front"'));
-      // expect(svg, contains('fill:#4CAF50')); // Colors.green
+      expect(svg, contains('id="biceps_right_front"'));
+      expect(svg, contains('id="brachialis_left_front"'));
+      expect(svg, contains('id="extensor_digitorum_longus_left_front"'));
+      expect(svg, contains('fill:#4CAF50')); // Colors.green
       expect(svg, contains('fill:#2196F3')); // Colors.blue
     });
 
     testWidgets('Render Back Male', (WidgetTester tester) async {
       final mf = Male.back();
-      mf.highlight(
-        Muscle.triceps,
-        position: MuscleSide.right,
-        color: Colors.green,
-      );
-      mf.highlightAll([
-        Muscle.trapezius,
-        Muscle.extensorDigitorumLongus,
-      ], color: Colors.blue);
+      mf.highlight(Muscle.triceps, position: MuscleSide.right, color: Colors.green);
+      mf.highlightAll([Muscle.trapezius, Muscle.extensorDigitorumLongus], color: Colors.blue);
 
       final svg = mf.toString();
       expect(svg, contains('<svg'));
-      expect(svg, contains('id="right_triceps_back"'));
-      expect(svg, contains('id="trapezius_back"'));
+      expect(svg, contains('id="triceps_right_back"'));
+      expect(svg, contains('id="trapezius_left_back"'));
       expect(svg, contains('fill:#4CAF50')); // Colors.green
     });
 
     testWidgets('Render Both Male', (WidgetTester tester) async {
       final mf = Male.backFront();
-      mf.highlight(
-        Muscle.triceps,
-        position: MuscleSide.right,
-        color: Colors.green,
-      );
-      mf.highlightAll([
-        Muscle.soleus,
-      ], color: Colors.blue);
+      mf.highlight(Muscle.triceps, position: MuscleSide.right, color: Colors.green);
+      mf.highlightAll([Muscle.soleus], color: Colors.blue);
 
       final svg = mf.toString();
       expect(svg, contains('id="skeletal_0"'));
       expect(svg, contains('id="skeletal_1"'));
-      expect(svg, contains('id="right_triceps_back"'));
-      expect(svg, contains('id="soleus_front"'));
+      expect(svg, contains('id="triceps_right_back"'));
+      expect(svg, contains('id="soleus_left_both"'));
+      expect(svg, contains('id="soleus_right_both"'));
     });
 
     testWidgets('Render Front Female', (WidgetTester tester) async {
       final mf = Female.front();
-      mf.highlight(
-        Muscle.biceps,
-        position: MuscleSide.right,
-        color: Colors.green,
-      );
+      mf.highlight(Muscle.biceps, position: MuscleSide.right, color: Colors.green);
 
       final svg = mf.toString();
       expect(svg, contains('<svg'));
-      expect(svg, contains('id="right_biceps_front"'));
+      expect(svg, contains('id="biceps_right_front"'));
     });
 
     testWidgets('Render ByMuscles Female', (WidgetTester tester) async {
