@@ -34,6 +34,11 @@ jobs:
       - name: Analyze project source
         run: flutter analyze
 
+      - name: Check Git state
+        run: |
+          git status --short
+          git diff --exit-code
+
       - name: Validate package
         run: flutter pub publish --dry-run
 
