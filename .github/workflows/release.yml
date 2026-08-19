@@ -19,14 +19,16 @@ jobs:
         uses: actions/checkout@v4
 
       # 1. Add the official Dart action to provision OIDC tokens
-      - name: Setup Dart Environment
-        uses: dart-lang/setup-dart@v1
+      # - name: Setup Dart Environment
+      #   uses: dart-lang/setup-dart@v1
 
       # 2. Keep the Flutter setup right after
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: '3.44.8'
+          flutter-version: '3.44.8'
+          channel: stable
+          cache: true
 
       - name: Install dependencies
         run: flutter pub get
