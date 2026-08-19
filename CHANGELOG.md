@@ -1,3 +1,8 @@
+## 1.3.0-beta.4
+
+* Updated muscle labels across all supported languages to use common/layman names for better accessibility.
+* Improved README documentation and examples.
+
 ## 1.3.0-beta.3
 
 * Downgrade XML from ^7.0.1 to ^6.1.0 for compatibility with more packages.
