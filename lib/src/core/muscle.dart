@@ -224,10 +224,9 @@ enum Muscle {
     final backAny = backCount > 0;
 
     if (frontAny && backAny) {
-      return [
-        backCount > frontCount ? BodyView.back : BodyView.front,
-        backCount > frontCount ? BodyView.front : BodyView.back,
-      ];
+      final v = [BodyView.front, BodyView.back];
+      if (backCount > frontCount) return v.reversed.toList();
+      return v;
     }
 
     return [backAny ? BodyView.back : BodyView.front];

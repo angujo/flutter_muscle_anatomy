@@ -2,7 +2,7 @@ library;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_muscle_anatomy/core/utils.dart';
+import '../utils.dart';
 
 enum SvgAssetType { maleFront, maleBack, femaleBack, femaleFront }
 
