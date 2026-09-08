@@ -1,3 +1,11 @@
+## 1.3.0-beta.5
+
+* **Refactor**: Relocated `body/` and `core/` directories to `lib/src/` to follow standard Dart package structure conventions.
+* **Refactor**: Updated `lib/flutter_muscle_anatomy.dart` to export libraries from their new locations in `src`, maintaining backward compatibility for most users.
+* **Internal**: Optimized `Muscle.views` logic in `lib/src/core/muscle.dart` for better clarity and performance.
+* **Documentation**: Updated `README.md` to clarify `flutter_svg` dependency usage.
+* **Example**: Updated example files to use the main package entry point for imports.
+
 ## 1.3.0-beta.4
 
 * Updated muscle labels across all supported languages to use common/layman names for better accessibility.
