@@ -1,3 +1,7 @@
+## 1.3.0
+
+* Stable release merging pre-release branch into master.
+
 ## 1.3.0-beta.6
 
 * Added `Muscle.tryParse` static method to safely parse strings into `Muscle` instances.
