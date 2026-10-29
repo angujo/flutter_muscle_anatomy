@@ -1,3 +1,8 @@
+## 1.3.0-beta.6
+
+* Added `Muscle.tryParse` static method to safely parse strings into `Muscle` instances.
+* Updated latissimus dorsi element IDs in `assets/female_front.svg` (`left_latissimus_dorsi` and `right_latissimus_dorsi`).
+
 ## 1.3.0-beta.5
 
 * **Refactor**: Relocated `body/` and `core/` directories to `lib/src/` to follow standard Dart package structure conventions.
