@@ -241,6 +241,18 @@ enum Muscle {
   static List<Muscle> search(String query, {int? top}) {
     return _MuscleSearch.search(query, top: top).map((g) => g.muscles).expand((m) => m).toList();
   }
+
+  static Muscle? tryParse(String? value) {
+    if (value == null || value.trim().isEmpty) return null;
+    final input = value.trim().toLowerCase();
+    try {
+      return Muscle.values.firstWhere(
+        (m) => m.name.toLowerCase() == input || m.toString().toLowerCase() == input,
+      );
+    } catch (_) {
+      return null;
+    }
+  }
 }
 
 /// Represents raw SVG path data for a muscle.
