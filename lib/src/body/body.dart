@@ -2,7 +2,7 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_muscle_anatomy/core/core.dart';
+import '../core/core.dart';
 import 'dart:math' as math;
 import 'package:collection/collection.dart';
 

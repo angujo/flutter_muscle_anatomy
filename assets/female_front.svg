@@ -144,14 +144,14 @@
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113226;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 19.571581,19.359038 c -0.33524,0.493576 -1.031298,0.879834 -0.777529,1.5486 0.03609,1.052863 0.273034,-0.09682 0.31034,-0.48946 0.235736,-0.300071 0.29861,-0.717818 0.467189,-1.05914 z"
-     id="left_latissimus_dorsi_f">
+     id="left_latissimus_dorsi">
     <title
        id="title129">latissimus_dorsi</title>
   </path>
   <path
      style="fill:none;stroke:#000000;stroke-width:0.113226;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke fill markers"
      d="m 10.794212,19.359038 c 0.33524,0.493576 1.031298,0.879834 0.777529,1.5486 -0.03609,1.052863 -0.273034,-0.09683 -0.310341,-0.48946 -0.235735,-0.300071 -0.298609,-0.717818 -0.467188,-1.05914 z"
-     id="path144">
+     id="right_latissimus_dorsi">
     <title
        id="title143">latissimus_dorsi</title>
   </path>

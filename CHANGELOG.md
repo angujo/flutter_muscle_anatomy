@@ -1,3 +1,38 @@
+## 1.3.0-beta.6
+
+* Added `Muscle.tryParse` static method to safely parse strings into `Muscle` instances.
+* Updated latissimus dorsi element IDs in `assets/female_front.svg` (`left_latissimus_dorsi` and `right_latissimus_dorsi`).
+
+## 1.3.0-beta.5
+
+* **Refactor**: Relocated `body/` and `core/` directories to `lib/src/` to follow standard Dart package structure conventions.
+* **Refactor**: Updated `lib/flutter_muscle_anatomy.dart` to export libraries from their new locations in `src`, maintaining backward compatibility for most users.
+* **Internal**: Optimized `Muscle.views` logic in `lib/src/core/muscle.dart` for better clarity and performance.
+* **Documentation**: Updated `README.md` to clarify `flutter_svg` dependency usage.
+* **Example**: Updated example files to use the main package entry point for imports.
+
+## 1.3.0-beta.4
+
+* Updated muscle labels across all supported languages to use common/layman names for better accessibility.
+* Improved README documentation and examples.
+
+## 1.3.0-beta.3
+
+* Downgrade XML from ^7.0.1 to ^6.1.0 for compatibility with more packages.
+
+## 1.3.0-beta.2
+
+* **BREAKING CHANGE**: Mandatory library initialization is now required. Call `await FlutterMuscleAnatomy.initialize();` in your `main()` function before using any anatomy models.
+* Added comprehensive documentation and code examples for using `MultiAssetLoader` to merge app and package translations.
+* Improved README layout for library initialization and localization setup.
+* Converted `initialize` to a **static method** for easier access without instantiation.
+
+## 1.3.0-beta.1
+
+* **BREAKING CHANGE**: Mandatory library initialization is now required. Call `await FlutterMuscleAnatomy().initialize();` in your `main()` function before using any anatomy models.
+* Optimized asset loading: SVG files are now pre-loaded during initialization, significantly improving performance when switching between views.
+* Reverted factory methods (`Male.*`, `Female.*`, `Anatomy.*`) to synchronous signatures for better developer experience after initial loading.
+
 ## 1.2.8
 
 * Enhanced `MuscleInteractiveView` with support for default icons (`zoomInIcon`, `zoomOutIcon`, `flipViewIcon`).

@@ -224,10 +224,9 @@ enum Muscle {
     final backAny = backCount > 0;
 
     if (frontAny && backAny) {
-      return [
-        backCount > frontCount ? BodyView.back : BodyView.front,
-        backCount > frontCount ? BodyView.front : BodyView.back,
-      ];
+      final v = [BodyView.front, BodyView.back];
+      if (backCount > frontCount) return v.reversed.toList();
+      return v;
     }
 
     return [backAny ? BodyView.back : BodyView.front];
@@ -241,6 +240,18 @@ enum Muscle {
   /// [top] can be used to limit the number of search results.
   static List<Muscle> search(String query, {int? top}) {
     return _MuscleSearch.search(query, top: top).map((g) => g.muscles).expand((m) => m).toList();
+  }
+
+  static Muscle? tryParse(String? value) {
+    if (value == null || value.trim().isEmpty) return null;
+    final input = value.trim().toLowerCase();
+    try {
+      return Muscle.values.firstWhere(
+        (m) => m.name.toLowerCase() == input || m.toString().toLowerCase() == input,
+      );
+    } catch (_) {
+      return null;
+    }
   }
 }
 

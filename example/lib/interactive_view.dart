@@ -1,7 +1,6 @@
 import 'package:example/selection_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_muscle_anatomy/body/body.dart';
-import 'package:flutter_muscle_anatomy/core/core.dart';
+import 'package:flutter_muscle_anatomy/flutter_muscle_anatomy.dart';
 
 class InteractiveView extends StatefulWidget {
   const InteractiveView({super.key});

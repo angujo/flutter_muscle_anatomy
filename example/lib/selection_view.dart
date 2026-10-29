@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_muscle_anatomy/core/core.dart';
+import 'package:flutter_muscle_anatomy/flutter_muscle_anatomy.dart';
 
 enum Gender { male, female }
 

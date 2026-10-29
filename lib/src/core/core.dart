@@ -1,9 +1,9 @@
-library;
+
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_muscle_anatomy/core/assets/svg_assets.dart';
-import 'package:flutter_muscle_anatomy/core/utils.dart';
+import 'assets/svg_assets.dart';
+import 'utils.dart';
 import 'package:path_drawing/path_drawing.dart';
 import 'package:xml/xml.dart';
 

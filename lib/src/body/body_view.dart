@@ -99,9 +99,7 @@ class _MuscleInteractiveViewState extends State<MuscleInteractiveView> {
   void initState() {
     super.initState();
     _size = widget.size;
-    _view = Muscle.dominantView(
-      widget.highlightedMuscles.map((hm) => hm.$1).toSet(),
-    );
+    _view = Muscle.dominantView(widget.highlightedMuscles.map((hm) => hm.$1).toSet());
     _highlightedMuscles.addAll(widget.highlightedMuscles);
     _setAnatomy();
   }
@@ -203,15 +201,9 @@ class _MuscleInteractiveViewState extends State<MuscleInteractiveView> {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (widget.alignment.x < 0) ...[
-            buttons,
-            const SizedBox(width: _btnAllowance),
-          ],
+          if (widget.alignment.x < 0) ...[buttons, const SizedBox(width: _btnAllowance)],
           painter,
-          if (widget.alignment.x > 0) ...[
-            const SizedBox(width: _btnAllowance),
-            buttons,
-          ],
+          if (widget.alignment.x > 0) ...[const SizedBox(width: _btnAllowance), buttons],
         ],
       );
     } else {
@@ -219,15 +211,9 @@ class _MuscleInteractiveViewState extends State<MuscleInteractiveView> {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (widget.alignment.y < 0) ...[
-            buttons,
-            const SizedBox(height: _btnAllowance),
-          ],
+          if (widget.alignment.y < 0) ...[buttons, const SizedBox(height: _btnAllowance)],
           painter,
-          if (widget.alignment.y > 0) ...[
-            const SizedBox(height: _btnAllowance),
-            buttons,
-          ],
+          if (widget.alignment.y > 0) ...[const SizedBox(height: _btnAllowance), buttons],
         ],
       );
     }
@@ -248,31 +234,27 @@ class _MuscleInteractiveViewState extends State<MuscleInteractiveView> {
 
   List<Widget> _zoomInBtn() {
     return [
-      if (widget.zoomIn != null)
-        widget.zoomIn!(context, () => _zoom(widget.zoomStep)),
+      if (widget.zoomIn != null) widget.zoomIn!(context, () => _zoom(widget.zoomStep)),
       if (widget.zoomIn == null && widget.zoomInIcon != null)
         IconButton.filledTonal(
           onPressed: () => _zoom(widget.zoomStep),
           icon: Icon(widget.zoomInIcon),
           tooltip: MuscleAnatomyLocalization.translator('ui.zoom_in'),
         ),
-      if (widget.zoomIn != null || widget.zoomInIcon != null)
-        const SizedBox(height: 5),
+      if (widget.zoomIn != null || widget.zoomInIcon != null) const SizedBox(height: 5),
     ];
   }
 
   List<Widget> _zoomOutBtn() {
     return [
-      if (widget.zoomOut != null)
-        widget.zoomOut!(context, () => _zoom(1.0 / widget.zoomStep)),
+      if (widget.zoomOut != null) widget.zoomOut!(context, () => _zoom(1.0 / widget.zoomStep)),
       if (widget.zoomOut == null && widget.zoomOutIcon != null)
         IconButton.filledTonal(
           onPressed: () => _zoom(1.0 / widget.zoomStep),
           icon: Icon(widget.zoomOutIcon),
           tooltip: MuscleAnatomyLocalization.translator('ui.zoom_out'),
         ),
-      if (widget.zoomOut != null || widget.zoomOutIcon != null)
-        const SizedBox(height: 5),
+      if (widget.zoomOut != null || widget.zoomOutIcon != null) const SizedBox(height: 5),
     ];
   }
 
@@ -295,8 +277,7 @@ class _MuscleInteractiveViewState extends State<MuscleInteractiveView> {
           icon: Icon(widget.flipViewIcon),
           tooltip: MuscleAnatomyLocalization.translator('ui.flip_view'),
         ),
-      if (widget.flipView != null || widget.flipViewIcon != null)
-        const SizedBox(height: 5),
+      if (widget.flipView != null || widget.flipViewIcon != null) const SizedBox(height: 5),
     ];
   }
 
@@ -324,14 +305,8 @@ class _AnatomyPainter extends CustomPainter {
     // Draw all muscles
     for (final muscleMember in anatomy.getMuscleMembers()) {
       for (final path in muscleMember.paths) {
-        canvas.drawPath(
-          path.transform(matrix.storage),
-          muscleMember.decoration.strokePaint(),
-        );
-        canvas.drawPath(
-          path.transform(matrix.storage),
-          muscleMember.decoration.fillPaint(),
-        );
+        canvas.drawPath(path.transform(matrix.storage), muscleMember.decoration.strokePaint());
+        canvas.drawPath(path.transform(matrix.storage), muscleMember.decoration.fillPaint());
       }
     }
 

@@ -34,8 +34,23 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_muscle_anatomy: ^1.2.7
-  flutter_svg: ^2.0.0
+  flutter_muscle_anatomy: <latest>
+  flutter_svg: ^2.0.0 # optional, depending on your usage
+```
+
+## Initialization
+
+Before using the library, you must initialize it to pre-load the SVG assets. This is a static method and is typically called in your `main()` function.
+
+```dart
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize the library
+  await FlutterMuscleAnatomy.initialize();
+  
+  runApp(const MyApp());
+}
 ```
 
 ## Usage
@@ -138,16 +153,51 @@ The library is localization-ready. To use localized muscle names, you can provid
 
 #### Usage with easy_localization:
 
-1. Initialize your localization package as usual.
-2. Set the `MuscleAnatomyLocalization.translator` in your `main()` function:
+1. Initialize your localization package. If you want to use the library's built-in translations, point the `path` to the package assets:
+
+    ```dart
+    EasyLocalization(
+      supportedLocales: [Locale('en'), Locale('es')],
+      // Path to library's translation files
+      path: 'packages/flutter_muscle_anatomy/assets/translations', 
+      fallbackLocale: Locale('en'),
+      child: MyApp(),
+    )
+    ```
+
+    > [!TIP]
+    > If your app has its own translations, you can use the [easy_localization_loader](https://pub.dev/packages/easy_localization_loader) package (which includes `MultiAssetLoader`) to load both your app's and the library's assets simultaneously:
+    >
+    > ```dart
+    > import 'package:easy_localization_loader/easy_localization_loader.dart';
+    >
+    > // ...
+    >
+    > EasyLocalization(
+    >   supportedLocales: [Locale('en'), Locale('es')],
+    >   path: 'assets/translations', // This path is ignored when using MultiAssetLoader
+    >   assetLoader: MultiAssetLoader([
+    >     // Load your app's translations
+    >     JsonAssetLoader(), 
+    >     // Load library's translations using the package path
+    >     JsonAssetLoader(path: 'packages/flutter_muscle_anatomy/assets/translations'),
+    >   ]),
+    >   fallbackLocale: Locale('en'),
+    >   child: MyApp(),
+    > )
+    > ```
+
+2. Link the library to your translator in `main()`:
     
     ```dart
     void main() async {
       WidgetsFlutterBinding.ensureInitialized();
       await EasyLocalization.ensureInitialized();
-    
-      // Link the library to easy_localization
-      MuscleAnatomyLocalization.translator = (key, {namedArgs}) => key.tr(namedArgs: namedArgs);
+      
+      // Initialize the library with the translator
+      await FlutterMuscleAnatomy.initialize(
+        translator: (key, {namedArgs}) => key.tr(namedArgs: namedArgs),
+      );
     
       runApp(EasyLocalization(...));
     }

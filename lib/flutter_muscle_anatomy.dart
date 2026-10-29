@@ -1,25 +1,14 @@
-/// A Flutter library for displaying and interacting with muscle anatomy models.
-///
-/// It supports both male and female body types, front and back views,
-/// and allows for precise muscle highlighting.
 library;
 
-export 'body/body.dart'
-    show
-        Male,
-        Female,
-        MuscleAnatomy,
-        Anatomy,
-        ViewScale,
-        MuscleInteractiveView;
-export 'core/core.dart'
-    show
-        Muscle,
-        MuscleSide,
-        MuscleDecoration,
-        BodyView,
-        MuscleLocalization,
-        BodyViewLocalization,
-        MusclePositionLocalization,
-        GenderLocalization,
-        MuscleAnatomyLocalization;
+export 'src/core/core.dart';
+export 'src/body/body.dart';
+
+import 'src/core/assets/svg_assets.dart';
+import 'src/core/core.dart';
+
+class FlutterMuscleAnatomy {
+  static Future<void> initialize({MuscleAnatomyTranslator? translator}) async {
+    await SvgAssets.initialize();
+    if (translator != null) MuscleAnatomyLocalization.translator = translator;
+  }
+}
